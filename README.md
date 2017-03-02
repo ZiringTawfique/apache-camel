@@ -23,9 +23,9 @@ AllSpark:GCI Billing Engine
 |----------	|:-------------:	|------:	|
 | Java 	|  1.8 	| 	|
 | MariaDB 	|    5.x   	|    	|
-| CentOS 	|  	|   	|
-| Spring 	|  	|   	|
-| Glassfish 	|  4.11	|   	|
+| CentOS 	|  	|   	|        
+| Spring 	|  	|   	|      
+| Glassfish |	|  4.11	|   	
 
 # Getting Started with Dev Environment
 
@@ -64,4 +64,16 @@ Type following on command prompt
 	git --version //validate git
 	
 	java -version //validate java
+	
+	
+	
+# An Approach to Development
+
+For all features and epic development, we'll be following popular [GITFlow](http://nvie.com/posts/a-successful-git-branching-model/) branching model as depicted below. 
+![Gitflow branching model](git-model@2x.png "Gitflow") 
+
+&copy; GCI
+
+
+
 
