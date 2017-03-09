@@ -10,9 +10,13 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+/**
+ * Class to represent CDR (Call Details Class) entity
+ *
+ */
 @Entity(name = "gci_cdr")
 @Table(name = "gci_cdr")
-public class GCICDR extends AbstractCDR implements Serializable {
+public class GCICDR extends BaseEntity implements Serializable {
 
     /**
 	 * 

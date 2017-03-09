@@ -12,29 +12,40 @@ import org.springframework.stereotype.Component;
 
 import net.gcicom.cdr.processor.entity.audit.AuditEvent;
 
+/**
+ * Class to handle auditing. 
+ * TODO This needs more work
+ *
+ */
 @Component
-public class Auditor implements Processor {
+public final class Auditor implements Processor {
 
-	Logger logger = LoggerFactory.getLogger(Auditor.class);
+	private Logger logger = LoggerFactory.getLogger(Auditor.class);
 	
 	@Autowired
 	private CDRProcessorAuditService service;
 	
 	@Override
-	public void process(Exchange exchange) throws Exception {
+	public void process(final Exchange exchange) throws Exception {
 		
 		logger.info("hi there ");
 		
 	}
 	
-	public void startEvent(Exchange exchange) {
+	/**
+	 * @param exchange
+	 */
+	public void startEvent(final Exchange exchange) {
 		
 		logger.info("startEvent ");
 			handleEvent(exchange, "FILE_PROCESSING_START");
 
 	}
 	
-	public void endEvent(Exchange exchange) {
+	/**
+	 * @param exchange
+	 */
+	public void endEvent(final Exchange exchange) {
 		
 		logger.info("endEvent ");
 		handleEvent(exchange, "FILE_PROCESSING_FINISHED");
@@ -42,14 +53,21 @@ public class Auditor implements Processor {
 
 	}
 	
-	public void errorEvent(Exchange exchange) {
+	/**
+	 * @param exchange
+	 */
+	public void errorEvent(final Exchange exchange) {
 		
 		logger.info("errorEvent ");
 		handleEvent(exchange, "FILE_PROCESSING_ERROR");
 
 	}
 	
-	private void handleEvent(Exchange exchange, String eventType) {
+	/**
+	 * @param exchange
+	 * @param eventType
+	 */
+	private void handleEvent(final Exchange exchange, final String eventType) {
 		
 		Map<String, String> data = new HashMap<>();
 		data.put("file",  exchange.getIn().getHeader("CamelFileNameConsumed", String.class));
@@ -58,12 +76,15 @@ public class Auditor implements Processor {
 		service.audit(event);
 	}
 	
-	private AuditEvent getAuditEvent(String eventType) {
+	/**
+	 * @param eventType
+	 * @return
+	 */
+	private AuditEvent getAuditEvent(final String eventType) {
 		
 		AuditEvent event = new AuditEvent();
 		event.setAuditEventType(eventType);
 		return event;
 		
 	}
-
 }

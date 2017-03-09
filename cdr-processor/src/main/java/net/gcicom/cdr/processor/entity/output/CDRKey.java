@@ -7,12 +7,14 @@ import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+/**
+ * Key class for CDR (Call Details Class)
+ * Any addition/deletion to this class must ensure appropriate equals and hashCode implementation
+ *
+ */
 @Embeddable
 public class CDRKey implements Serializable {
  
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
  

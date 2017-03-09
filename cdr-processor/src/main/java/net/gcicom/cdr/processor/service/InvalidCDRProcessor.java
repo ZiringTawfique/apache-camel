@@ -9,6 +9,10 @@ import org.springframework.stereotype.Component;
 
 import net.gcicom.cdr.processor.entity.output.InvalidCDR;
 
+/**
+ * Invalid CDR record processor. This insert actual CDR received from supplier and reason for failure to invalid_cdr table
+ *
+ */
 @Component
 public class InvalidCDRProcessor implements Processor {
 
@@ -17,6 +21,9 @@ public class InvalidCDRProcessor implements Processor {
 	@Autowired
 	InvalidCDRService service;
 	
+	/* (non-Javadoc)
+	 * @see org.apache.camel.Processor#process(org.apache.camel.Exchange)
+	 */
 	@Override
 	public void process(Exchange exchange) throws Exception {
 

@@ -1,16 +1,22 @@
 package net.gcicom.cdr.processor.entity.output;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
+/**
+ * Class to represent invalid CDR (Call Details Class) feed. 
+ * Basically represents a row from cdr file + other details
+ *
+ */
 @Entity(name = "invalid_cdr")
-public class InvalidCDR extends AbstractCDR implements Serializable {
+@Table(name = "invalid_cdr")
+public class InvalidCDR extends BaseEntity implements Serializable {
 
 	/**
 	 * 
@@ -18,15 +24,15 @@ public class InvalidCDR extends AbstractCDR implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-	Long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+	private Long id;
 	
-	String cdr;
+	private String cdr;
 	
-	String reason;
+	private String reason;
 	
     @Column(name = "cdr_file")
-	String cdrFile;
+    private String cdrFile;
     
 	
 	@Override

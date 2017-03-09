@@ -7,7 +7,10 @@ import org.springframework.stereotype.Component;
 
 import net.gcicom.cdr.processor.entity.output.InvalidCDR;
 import net.gcicom.cdr.processor.repository.InvalidCDRRepository;
-
+/**
+ * Invalid CDR service 
+ *
+ */
 @Component
 public class InvalidCDRService {
 	
@@ -16,6 +19,9 @@ public class InvalidCDRService {
 	@Autowired
 	private InvalidCDRRepository repo;
 			
+	/**
+	 * @param invalid
+	 */
 	public void handleInvalidCDR(InvalidCDR invalid) {
 		
 		logger.debug("Csv supplied has a invalid record : " + invalid);

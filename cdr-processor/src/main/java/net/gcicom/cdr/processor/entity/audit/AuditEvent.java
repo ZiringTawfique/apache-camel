@@ -5,6 +5,9 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
+import net.gcicom.cdr.processor.entity.output.BaseEntity;
+
 import java.util.HashMap;
 import java.util.Map;
 /**
@@ -12,7 +15,7 @@ import java.util.Map;
 */
 @Entity
 @Table(name = "audit_event")
-public class AuditEvent implements Serializable {
+public class AuditEvent extends BaseEntity implements Serializable {
 
     /**
 	 * 
@@ -43,9 +46,6 @@ public class AuditEvent implements Serializable {
     @Column(name = "created_by", nullable = false, length = 50, updatable = false)
     private String createdBy = "cdr-processor";
 
-	@Column(name="timestamp", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false, updatable = false)
-    private Timestamp createdDate;
-    
     
     public Long getId() {
         return id;

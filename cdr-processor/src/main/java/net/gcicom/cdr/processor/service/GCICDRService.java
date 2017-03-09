@@ -10,7 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import net.gcicom.cdr.processor.entity.output.GCICDR;
 import net.gcicom.cdr.processor.repository.GCICDRRepository;
-
+/**
+ * Service to add all {@link GCICDR} to database. Preferably db insert should be batched
+ * It needs more work as in business validation etc  
+ *
+ */
 @Component("gciCDRService")
 @Transactional
 public class GCICDRService {
@@ -21,6 +25,9 @@ public class GCICDRService {
 	GCICDRRepository gciCDR;
 	
 	
+	/**
+	 * @param cdrs
+	 */
 	public void addCDR(List<GCICDR> cdrs) {
 		
 		for (GCICDR cdr : cdrs) {

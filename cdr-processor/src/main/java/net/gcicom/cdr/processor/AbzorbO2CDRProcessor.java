@@ -22,7 +22,7 @@ import net.gcicom.cdr.processor.service.InvalidCDRProcessor;
 
 
 /**
- * @author Prashant.Nema
+ * A Simple Camel route builder to process AbzorbO2 CDR feed
  *
  */
 @Component

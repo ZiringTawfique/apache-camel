@@ -3,6 +3,7 @@ package net.gcicom.cdr.processor.service;
 import java.util.ArrayList;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.dataformat.bindy.BindyCsvFactory;
 import org.apache.camel.processor.aggregate.CompletionAwareAggregationStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,12 @@ import org.springframework.stereotype.Component;
 
 import net.gcicom.cdr.processor.entity.output.GCICDR;
 
+/**
+ * This class support {@link GCICDR} object aggregation while consuming 
+ * {@link BindyCsvFactory} messages after mapping to {@link GCICDR} so that db insert can be done in batches
+
+ *
+ */
 @Component
 public class CDRAggregator implements CompletionAwareAggregationStrategy  {
 
