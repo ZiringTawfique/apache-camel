@@ -1,4 +1,4 @@
-AllSpark:GCI Billing Engine : CDR File processor
+AllSpark:GCI Billing Engine:CDR File processor
 =================================================
  	
 
