@@ -87,4 +87,27 @@ public final class Auditor implements Processor {
 		return event;
 		
 	}
+	
+	
+	
+
+	public void handleEventInvalidCdr(Exchange exchange) throws Exception {
+
+		
+		AuditEvent event = getAuditEvent("INVALID_CDR");
+		Map<String, String> data = new HashMap<>();
+		data.put("file",  exchange.getIn().getHeader("CamelFileNameConsumed", String.class));
+		Throwable reason = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
+		logger.debug("Reason of failure : " + reason.getMessage());
+
+		data.put("cdr", exchange.getIn().getBody(String.class));
+		data.put("reason", reason.getMessage());
+		
+		event.setData(data);
+		
+		service.audit(event);
+		
+		
+		
+	}
 }

@@ -18,8 +18,6 @@ import net.gcicom.cdr.processor.service.Auditor;
 import net.gcicom.cdr.processor.service.CDRAggregator;
 import net.gcicom.cdr.processor.service.CDRProcessorErrorHandler;
 import net.gcicom.cdr.processor.service.GCICDRService;
-import net.gcicom.cdr.processor.service.InvalidCDRProcessor;
-
 
 /**
  * A Simple Camel route builder to process AbzorbO2 CDR feed
@@ -31,6 +29,7 @@ public class AbzorbO2CDRProcessor extends SpringRouteBuilder {
 	
 	Logger logger = LoggerFactory.getLogger(AbzorbO2CDRProcessor.class);
 	
+	String HEADER = "Call Type, Customer CLI, Telephone Number, Call Date, Call Time, Duration, Mb, Description, Time Band, Salesprice, Extension, User, Department, Country of Origin, Network, Chargecode, Tariff, Mobile Class, Remote Network";
 	
 	@Value("${gci.abzorb2cdr.file.in.location}")
 	private String inFileLocation;
@@ -70,8 +69,6 @@ public class AbzorbO2CDRProcessor extends SpringRouteBuilder {
 	@Autowired
 	private GCICDRService service;
 	
-	@Autowired
-	private InvalidCDRProcessor iProcessor;
 	
 	@Autowired
 	private Auditor auditor;
@@ -106,8 +103,9 @@ public class AbzorbO2CDRProcessor extends SpringRouteBuilder {
         from("direct:save-to-database")
 	        .onException(IllegalArgumentException.class)
 		    	.handled(true)
-		    	.process(iProcessor)
+		    	.bean(auditor, "handleEventInvalidCdr")
 		    .end()
+			.filter(body().isNotEqualTo(constant(HEADER)))//need to filter header of cvs/
     		.unmarshal()
     			.bindy(BindyType.Csv, AbzorbO2CDR.class)
     			.bean(mapper, "convertToGCICDR")
