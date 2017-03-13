@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,27 +17,21 @@ import net.gcicom.cdr.processor.entity.audit.AuditEvent;
  *
  */
 @Component
-public final class Auditor implements Processor {
+public final class Auditor {
 
 	private Logger logger = LoggerFactory.getLogger(Auditor.class);
 	
 	@Autowired
 	private CDRProcessorAuditService service;
 	
-	@Override
-	public void process(final Exchange exchange) throws Exception {
-		
-		logger.info("hi there ");
-		
-	}
 	
 	/**
 	 * @param exchange
 	 */
 	public void startEvent(final Exchange exchange) {
 		
-		logger.info("startEvent ");
-			handleEvent(exchange, "FILE_PROCESSING_START");
+		logger.debug("startEvent ");
+		handleEvent(exchange, "FILE_PROCESSING_START");
 
 	}
 	
@@ -47,8 +40,13 @@ public final class Auditor implements Processor {
 	 */
 	public void endEvent(final Exchange exchange) {
 		
-		logger.info("endEvent ");
-		handleEvent(exchange, "FILE_PROCESSING_FINISHED");
+		logger.debug("endEvent ");
+
+		if (exchange.getProperty(Exchange.SPLIT_COMPLETE, Boolean.class)) {
+			
+			handleEvent(exchange, "FILE_PROCESSING_FINISHED");
+
+		}
 
 
 	}
@@ -71,6 +69,13 @@ public final class Auditor implements Processor {
 		
 		Map<String, String> data = new HashMap<>();
 		data.put("file",  exchange.getIn().getHeader("CamelFileNameConsumed", String.class));
+		Throwable reason = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
+		if (reason != null) {
+			
+			data.put("exception", reason.getMessage());
+
+		} 
+		
 		AuditEvent event = getAuditEvent(eventType);
 		event.setData(data);
 		service.audit(event);
@@ -91,7 +96,11 @@ public final class Auditor implements Processor {
 	
 	
 
-	public void handleEventInvalidCdr(Exchange exchange) throws Exception {
+	/**
+	 * @param exchange
+	 * @throws Exception
+	 */
+	public void handleEventInvalidCdr(final Exchange exchange) throws Exception {
 
 		
 		AuditEvent event = getAuditEvent("INVALID_CDR");
@@ -110,4 +119,22 @@ public final class Auditor implements Processor {
 		
 		
 	}
+	
+	public void handleLoading(final String fileName, final String hex) throws Exception {
+
+		
+		AuditEvent event = getAuditEvent("MD5_HEX");
+		Map<String, String> data = new HashMap<>();
+		data.put("file",  fileName);
+		data.put("hex", hex);
+		
+		event.setData(data);
+		
+		service.audit(event);
+		
+		
+		
+	}
+	
+	
 }

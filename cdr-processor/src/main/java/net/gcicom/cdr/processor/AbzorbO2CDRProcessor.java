@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import net.gcicom.cdr.processor.entity.input.AbzorbO2CDR;
 import net.gcicom.cdr.processor.entity.output.Abzorbo2CDRToGciCDRMapper;
+import net.gcicom.cdr.processor.service.AlreadyProcessedFileException;
 import net.gcicom.cdr.processor.service.Auditor;
 import net.gcicom.cdr.processor.service.CDRAggregator;
 import net.gcicom.cdr.processor.service.CDRProcessorErrorHandler;
@@ -89,14 +90,20 @@ public class AbzorbO2CDRProcessor extends SpringRouteBuilder {
 		//delay in millisec for next polling 
 		//In production make noop false
         from("file:" + inFileLocation + "?initialDelay="+ initDelay 
-        		+ "&delay="+ nextRunDelay +"&include="+filePattern+"&noop="+isNoop+"&move=." + outFileLocation)
+        		+ "&delay="+ nextRunDelay +"&include="+filePattern+"&noop="+isNoop+"&move=" + outFileLocation)
+        	.onException(AlreadyProcessedFileException.class)
+				.bean(CDRProcessorErrorHandler.class, "handleError")
+        		.to("direct:move-error-file")
+    		.end()
         	.log(LoggingLevel.INFO, logger, "START : Processing ${file:name} file")
     		.bean(auditor, "startEvent")
+    		.bean(service, "validateMd5")
         	.split(body()
         			.tokenize("\n"))
         			.parallelProcessing()
         			.streaming()
         	.to("direct:save-to-database")
+        	.bean(auditor, "endEvent")
         	.end();
         
         //get the data and save in db
@@ -116,7 +123,8 @@ public class AbzorbO2CDRProcessor extends SpringRouteBuilder {
     			.log(LoggingLevel.DEBUG, logger, "END : Add CVS rows to table.");
  
 		from("direct:move-error-file")
-			.to("file:"+ outFileLocation + "/error")
+			.errorHandler(deadLetterChannel("file:"+ outFileLocation + "/error"))
+			.log(LoggingLevel.ERROR, logger, "END : Could not move file to error location.")
 			.end();
 	}
 	

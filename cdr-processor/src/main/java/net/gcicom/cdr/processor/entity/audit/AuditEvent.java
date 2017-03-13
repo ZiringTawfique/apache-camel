@@ -39,6 +39,7 @@ public class AuditEvent extends BaseEntity implements Serializable {
 
     @ElementCollection
     @MapKeyColumn(name = "name")
+    @Lob
     @Column(name = "value")
     @CollectionTable(name = "audit_event_data", joinColumns=@JoinColumn(name="event_id"))
     private Map<String, String> data = new HashMap<>();

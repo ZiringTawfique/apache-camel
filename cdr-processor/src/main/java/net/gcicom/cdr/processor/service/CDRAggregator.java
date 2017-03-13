@@ -7,7 +7,6 @@ import org.apache.camel.dataformat.bindy.BindyCsvFactory;
 import org.apache.camel.processor.aggregate.CompletionAwareAggregationStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import net.gcicom.cdr.processor.entity.output.GCICDR;
@@ -23,8 +22,6 @@ public class CDRAggregator implements CompletionAwareAggregationStrategy  {
 
 	private Logger logger = LoggerFactory.getLogger(CDRAggregator.class); 
 	
-	@Autowired
-	private Auditor auditor;
 	
 	@Override
 	public Exchange aggregate(Exchange oldExchange, Exchange newExchange) {
@@ -52,8 +49,8 @@ public class CDRAggregator implements CompletionAwareAggregationStrategy  {
 	@Override
 	public void onCompletion(Exchange exchange) {
 
-		logger.info("Aggregation completed");
-		auditor.endEvent(exchange);
+		logger.info("Aggregation completed but is split  completed?, " + exchange.getProperty(Exchange.SPLIT_COMPLETE, Boolean.class));
+		//auditor.endEvent(exchange);
 		
 	}
 }
