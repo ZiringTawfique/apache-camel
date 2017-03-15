@@ -74,7 +74,7 @@ public class GCICDRService {
 			
 		} else {
 
-			throw new AlreadyProcessedFileException(String.format("File %s, with Hex %s already processed", hex, fileName));
+			throw new AlreadyProcessedFileException(String.format("File %s, with Hex %s already processed", fileName, hex));
 		}
 		
 		

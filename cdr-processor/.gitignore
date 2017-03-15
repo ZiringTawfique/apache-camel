@@ -24,3 +24,8 @@ nbdist/
 .nb-gradle/
 /.mvn/
 /logFile.log
+
+## data .error and .success folders
+
+/src/test/data/**/.error
+/src/test/data/**/.success

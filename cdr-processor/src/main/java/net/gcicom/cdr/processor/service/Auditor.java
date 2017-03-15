@@ -72,8 +72,8 @@ public final class Auditor {
 		Throwable reason = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
 		if (reason != null) {
 			
-			data.put("exception", reason.getMessage());
-
+			data.put("reason", reason.getMessage());
+			data.put("stacktrace", String.format("Details stack trace %s", reason));
 		} 
 		
 		AuditEvent event = getAuditEvent(eventType);

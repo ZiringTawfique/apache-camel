@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import net.gcicom.cdr.processor.entity.output.CDRKey;
 import net.gcicom.cdr.processor.entity.output.GCICDR;
 import net.gcicom.cdr.processor.repository.GCICDRRepository;
 
@@ -30,7 +29,7 @@ public class CdrProcessorApplicationTests {
 			System.out.println("-----------here you go-------------------------------------------" + cdr);
 		}
 		
-		GCICDR cdrs = repo.findOne(new CDRKey());
+		//GCICDR cdrs = repo.findOne(new CDRKey());
 				
 		
 		
