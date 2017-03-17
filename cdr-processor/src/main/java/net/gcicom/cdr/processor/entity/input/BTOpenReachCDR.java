@@ -74,7 +74,7 @@ public class BTOpenReachCDR {
 	@DataField(pos = 18)
 	private String pbxSuffix;
 	
-	@DataField(pos = 19, required = true)
+	@DataField(pos = 19, required = true, pattern="hh:mm:ss.zz")
 	private String duration;
 	
 	@DataField(pos = 20)

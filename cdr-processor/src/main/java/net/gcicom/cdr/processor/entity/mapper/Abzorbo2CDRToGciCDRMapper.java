@@ -10,6 +10,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import net.gcicom.cdr.processor.entity.input.AbzorbO2CDR;
 import net.gcicom.cdr.processor.entity.output.CDRMapper;
@@ -38,12 +39,14 @@ public class Abzorbo2CDRToGciCDRMapper implements CDRMapper<AbzorbO2CDR> {
 				LOG.debug("Converting AbzorbO2CDR to GCICDR" + source.toString());
 				GCICDR cdr = new GCICDR();
 				
+				String dialedNumber = StringUtils.isEmpty(source.getDialedNumber()) ? source.getDescription() : source.getDialedNumber();
+				
 				cdr.setAccountingPeriod(DUMMY);
 				cdr.setAccountNumber(DUMMY);
 				cdr.setCountry(DUMMY);
 				cdr.setCustomerId(L_DUMMY);
-				cdr.setDialledCLI(source.getDialedNumber());
-				cdr.setEventDurationSecs(source.getDuration());
+				cdr.setDialledCLI(dialedNumber);
+				cdr.setEventDurationSecs(DateTimeUtil.getDurationInSeconds(source.getDuration()));
 				cdr.setEventFileId(L_DUMMY);
 				cdr.setEventReference(source.getOriginatingNumber());
 				cdr.setEventReferenceId(L_DUMMY);
@@ -62,7 +65,7 @@ public class Abzorbo2CDRToGciCDRMapper implements CDRMapper<AbzorbO2CDR> {
 				cdr.setSupplierRatingPattern(source.getMobileClass() + "_" + source.getTimeBand());
 				cdr.setSupplierRecordReference(DUMMY);
 				cdr.setSupplierServiceType(source.getNetwork() + "_" + source.getCallType());
-				cdr.setTerminatingCLI(source.getDialedNumber());
+				cdr.setTerminatingCLI(dialedNumber);
 				cdr.setTimePeriod(DUMMY);
 				cdr.setWeekDayFlag(DateTimeUtil.getWeekDayFlag(source.getDate().atTime(LocalTime.parse(source.getTime(), DateTimeFormatter.ISO_LOCAL_TIME))));
 				cdr.setSupplierTariffPlanId(source.getTariff());

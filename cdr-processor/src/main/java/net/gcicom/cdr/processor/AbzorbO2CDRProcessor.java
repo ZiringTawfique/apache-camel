@@ -25,7 +25,7 @@ import net.gcicom.cdr.processor.service.Auditor;
 public class AbzorbO2CDRProcessor extends BaseProcessor {
 	
 	
-	private static final Logger logger = LoggerFactory.getLogger(AbzorbO2CDRProcessor.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AbzorbO2CDRProcessor.class);
 	
 	private static final String HEADER = "Call Type, Customer CLI, Telephone Number, Call Date, Call Time, Duration, Mb, Description, Time Band, Salesprice, Extension, User, Department, Country of Origin, Network, Chargecode, Tariff, Mobile Class, Remote Network";
 	
@@ -54,12 +54,16 @@ public class AbzorbO2CDRProcessor extends BaseProcessor {
 		
 		super.configure();
 
-		pollFiles(inFileLocation, filePattern, cron);
-		
+		//1
         moveFileOnError(outFileLocation);
+        
+		//2
+		pollFiles(inFileLocation, filePattern, cron);
 
+        //3
         mapCSVRowToVendorCdr();
         
+        //4
         addCdr(mapper);
 		
 	}
@@ -71,6 +75,8 @@ public class AbzorbO2CDRProcessor extends BaseProcessor {
 	 */
 	@Override
 	void mapCSVRowToVendorCdr() {
+		
+		LOG.debug("mapCSVRowToVendorCdr");
 		
 		String processorName = this.getClass().getCanonicalName();
 		

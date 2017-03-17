@@ -181,7 +181,7 @@ public class AbzorbO2CDR {
 	@DataField(pos = 2, required = true, length = 17)
 	String originatingNumber;
 	
-	@DataField(pos = 3, required = true)
+	@DataField(pos = 3)
 	String dialedNumber;
 	
 	@DataField(pos = 4, pattern = "dd/MM/yyyy", required = true)

@@ -29,3 +29,4 @@ nbdist/
 
 /src/test/data/**/.error
 /src/test/data/**/.success
+/src/test/data/**/.compressed

@@ -1,5 +1,6 @@
 package net.gcicom.cdr.processor.service;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ import net.gcicom.cdr.processor.entity.audit.AuditEvent;
 @Component
 public final class Auditor {
 
-	private Logger logger = LoggerFactory.getLogger(Auditor.class);
+	private static final Logger LOG = LoggerFactory.getLogger(Auditor.class);
 	
 	@Autowired
 	private CDRProcessorAuditService service;
@@ -30,8 +31,8 @@ public final class Auditor {
 	 */
 	public void startEvent(final Exchange exchange) {
 		
-		logger.debug("startEvent ");
-		handleEvent(exchange, "FILE_PROCESSING_START");
+		LOG.debug("startEvent ");
+		handleEvent(exchange, EventTypes.FILE_PROCESSING_START);
 
 	}
 	
@@ -40,11 +41,11 @@ public final class Auditor {
 	 */
 	public void endEvent(final Exchange exchange) {
 		
-		logger.debug("endEvent ");
+		LOG.debug("endEvent ");
 
 		if (exchange.getProperty(Exchange.SPLIT_COMPLETE, Boolean.class)) {
 			
-			handleEvent(exchange, "FILE_PROCESSING_FINISHED");
+			handleEvent(exchange, EventTypes.FILE_PROCESSING_FINISHED);
 
 		}
 
@@ -56,8 +57,8 @@ public final class Auditor {
 	 */
 	public void errorEvent(final Exchange exchange) {
 		
-		logger.info("errorEvent ");
-		handleEvent(exchange, "FILE_PROCESSING_ERROR");
+		LOG.info(EventTypes.FILE_PROCESSING_ERROR);
+		handleEvent(exchange, EventTypes.FILE_PROCESSING_ERROR);
 
 	}
 	
@@ -72,10 +73,13 @@ public final class Auditor {
 		Throwable reason = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
 		if (reason != null) {
 			
+			LOG.error("Handled event has following error \n", reason);
 			data.put("reason", reason.getMessage());
-			data.put("stacktrace", String.format("Details stack trace %s", reason));
+			data.put("stacktrace", MessageFormat.format("Detail stack trace {0}", reason));
+			data.put("cdr", exchange.getIn().getBody(String.class));
+
 		} 
-		
+
 		AuditEvent event = getAuditEvent(eventType);
 		event.setData(data);
 		service.audit(event);
@@ -102,28 +106,14 @@ public final class Auditor {
 	 */
 	public void handleEventInvalidCdr(final Exchange exchange) throws Exception {
 
-		
-		AuditEvent event = getAuditEvent("INVALID_CDR");
-		Map<String, String> data = new HashMap<>();
-		data.put("file",  exchange.getIn().getHeader("CamelFileNameConsumed", String.class));
-		Throwable reason = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
-		logger.debug("Reason of failure : " + reason.getMessage());
-
-		data.put("cdr", exchange.getIn().getBody(String.class));
-		data.put("reason", reason.getMessage());
-		
-		event.setData(data);
-		
-		service.audit(event);
-		
-		
+		handleEvent(exchange, EventTypes.INVALID_CDR);
 		
 	}
 	
 	public void handleLoading(final String fileName, final String hex) throws Exception {
 
 		
-		AuditEvent event = getAuditEvent("MD5_HEX");
+		AuditEvent event = getAuditEvent(EventTypes.DIGEST);
 		Map<String, String> data = new HashMap<>();
 		data.put("file",  fileName);
 		data.put("hex", hex);

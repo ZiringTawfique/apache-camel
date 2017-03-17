@@ -76,7 +76,7 @@ public class GCICDR extends BaseEntity implements Serializable {
 	private Timestamp eventTime;
 	
 	@Column(name = "event_duration_secs", nullable = false)
-	private String eventDurationSecs;
+	private Integer eventDurationSecs;
 	
 	@Column(name = "week_day_flag", nullable = false)
 	private Integer weekDayFlag;
@@ -153,11 +153,11 @@ public class GCICDR extends BaseEntity implements Serializable {
 		this.accountingPeriod = accountingPeriod;
 	}
 	
-	public String getEventDurationSecs() {
+	public Integer getEventDurationSecs() {
 		return eventDurationSecs;
 	}
 
-	public void setEventDurationSecs(String eventDurationSecs) {
+	public void setEventDurationSecs(Integer eventDurationSecs) {
 		this.eventDurationSecs = eventDurationSecs;
 	}
 

@@ -37,7 +37,7 @@ public class BTOpenReachCDRProcessor extends BaseProcessor {
 	@Value("${gci.btopenreach.file.name.pattern}")
 	private String filePattern;
 	
-	@Value("${gci.abzorb2cdr.timer}")
+	@Value("${gci.btopenreach.timer}")
 	private String cron;
 	
 	@Autowired

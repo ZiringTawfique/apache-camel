@@ -44,7 +44,7 @@ public class BTOpenReachCDRMapper implements CDRMapper<BTOpenReachCDR> {
 				cdr.setCountry(DUMMY);
 				cdr.setCustomerId(L_DUMMY);
 				cdr.setDialledCLI(source.getDialedNumber());
-				cdr.setEventDurationSecs(source.getDuration());
+				cdr.setEventDurationSecs(DateTimeUtil.getDurationInSeconds(source.getDuration()));
 				cdr.setEventFileId(L_DUMMY);
 				cdr.setEventReference(source.getOriginatingNumber());
 				cdr.setEventReferenceId(L_DUMMY);

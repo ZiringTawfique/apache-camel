@@ -1,6 +1,8 @@
 package net.gcicom.cdr.processor;
 
+import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
+import org.apache.camel.Processor;
 import org.apache.camel.spring.SpringRouteBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,13 +15,15 @@ import net.gcicom.cdr.processor.entity.output.GCICDR;
 import net.gcicom.cdr.processor.service.AlreadyProcessedFileException;
 import net.gcicom.cdr.processor.service.Auditor;
 import net.gcicom.cdr.processor.service.CDRAggregator;
-import net.gcicom.cdr.processor.service.CDRProcessorErrorHandler;
 import net.gcicom.cdr.processor.service.GCICDRService;
+import net.gcicom.cdr.processor.service.InvalidCDRException;
+import net.gcicom.cdr.processor.service.ValidationFailedException;
+import net.gcicom.cdr.processor.util.ArchiveFileUtil;
 
 @Component
 public abstract class BaseProcessor extends SpringRouteBuilder {
 
-	private static final Logger logger = LoggerFactory.getLogger(BaseProcessor.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BaseProcessor.class);
 	
 	@Value("${gci.route.tracing}")
 	private boolean tracing = true;
@@ -57,9 +61,9 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 		from(RouteNames.MOVE_FILE_ON_ERROR + processorName)
 		.description(RouteNames.MOVE_FILE_ON_ERROR + processorName, String.format("This route moves file to %s in case of error", fileLocation), null)
 		.errorHandler(deadLetterChannel("file:"+ fileLocation + "/error")
-			    .allowRedeliveryWhileStopping(false)
-			    .maximumRedeliveries(0))
-		.log(LoggingLevel.ERROR, logger, "Moving file")
+		  .allowRedeliveryWhileStopping(false)
+		  .maximumRedeliveries(0))
+		.log(LoggingLevel.ERROR, LOG, "Moving file")
 		.end();
 	}
 	
@@ -74,11 +78,14 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 		
 		String processorName = this.getClass().getCanonicalName();
 
+		inflate(inFileLocation);//uncompress file and stop there
+		
 		//route to get file and schedule it for parallel processing
 		//delay in millisec for next polling 
 		//In production make noop false
         from("file:" + inFileLocation + "?initialDelay=" + initDelay 
-        		+ "&include=" + filePattern 
+        		+ "&include=" + filePattern
+        		+ "&exclude=.*\\.(zip$)|.*\\.(tar$)|.*\\.(gz$)"
         		+ "&noop=" + isNoop 
         		+ "&move=.success"
                 + "&moveFailed=.error"
@@ -86,35 +93,44 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 	    	.description("Polling files ".concat(processorName), String.format("This route poll files based on given cron expression %s "
 	    			+ "from %s for matching %s file name pattern", cronExpression, inFileLocation, filePattern), null)
 	    	.onException(AlreadyProcessedFileException.class)
-				.bean(CDRProcessorErrorHandler.class, "handleError")
+				.bean(auditor, "errorEvent")
 	    		.to(RouteNames.MOVE_FILE_ON_ERROR.concat(processorName))
 			.end()
-	    	.log(LoggingLevel.INFO, logger, "START : Processing ${file:name} file")
-			.bean(auditor, "startEvent")
+			.log(LoggingLevel.INFO, LOG, "START : Processing ${file:name} file")
+	    	.bean(auditor, "startEvent")
 			.bean(service, "validateMd5")
 	    	.split(body()
 	    			.tokenize("\n"))
 	    	.to(RouteNames.MAP_CSV_ROW_TO_VENDOR_CDR.concat(processorName))
 	    	.bean(auditor, "endEvent")
 	    	.end();
+        
 	}
 	
 	/**Convert vendor specific CDR using {@link CDRMapper} to {@link GCICDR}
 	 * and then insert {@link GCICDR} to database
 	 * @param mapper
 	 */
+	@SuppressWarnings("unchecked")
 	public void addCdr(@SuppressWarnings("rawtypes") final CDRMapper mapper) {
 		
 		String processorName = this.getClass().getCanonicalName();
 
 		 from(RouteNames.ADD_CDR.concat(processorName))
 			.description(RouteNames.ADD_CDR + processorName, String.format("This route adds cdr records to database"), null)
+			.onException(InvalidCDRException.class, ValidationFailedException.class, IllegalArgumentException.class)
+				.handled(true)
+				.bean(auditor, "handleEventInvalidCdr")
+				.useOriginalMessage()
+				.logHandled(true)
+				.logStackTrace(true)
+			.end()
 	       	.bean(mapper, "convertToGCICDR")
 			.aggregate(constant(true), cdrAggregator)
 	       	.completionSize(batchSize)
 	       	.completionTimeout(aggregationTimeOut)//just in case cvs rows are less than batch size
 			.bean(service, "addCDR")
-			.log(LoggingLevel.DEBUG, logger, "END : Add CVS rows to table.");
+			.log(LoggingLevel.DEBUG, LOG, "END : Add CVS rows to table.");
 	}
 
 
@@ -124,9 +140,49 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 		getContext().setTracing(tracing);
 		
 		onException(Exception.class)
-			.bean(CDRProcessorErrorHandler.class, "handleError")
+			.logStackTrace(true)
+		    .bean(auditor, "errorEvent")
 			.to(RouteNames.MOVE_FILE_ON_ERROR.concat(this.getClass().getCanonicalName()));
 		
+	}
+	
+	/**
+	 * @param location
+	 */
+	private void inflate(String location) {
+		
+		from("file:" + location + "/.compressed/?include=.*\\.(zip$)|.*\\.(tar$)|.*\\.(gz$)" 
+        		+ "&noop=false" 
+        		+ "&move=.processed"
+                + "&moveFailed=.processed"
+        		+ "&scheduler=spring&scheduler.cron=0/2+*+*+*+*+*")
+		.log("Processing compressed files")
+		.process(new Processor() {
+			
+			@Override
+			public void process(Exchange exchange) throws Exception {
+				
+				String abosulteFilePath = exchange.getIn().getHeader(Exchange.FILE_PATH, String.class);
+				String ifName = exchange.getIn().getHeader(Exchange.FILE_NAME_CONSUMED, String.class);
+				
+				LOG.info("uncompressing {}", abosulteFilePath);
+
+				if (ifName.endsWith(".gz")) {
+					String ofName = ifName.substring(0, ifName.lastIndexOf('.'));
+					
+					ArchiveFileUtil.unGzip(abosulteFilePath, location+ofName);
+
+				} else {
+					//any other archive. Only tar, zip, jar are supported
+					ArchiveFileUtil.unCompress(abosulteFilePath, location);
+
+				}
+				
+				
+				
+			}
+		})
+		.end();
 	}
 	
 	/**This method implementation must ensure proper chaining of routes after mapping to CSV row to vendor
@@ -134,6 +190,5 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 	 * 
 	 */
 	abstract void  mapCSVRowToVendorCdr();
-	
 	
 }
