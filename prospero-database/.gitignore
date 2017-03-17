@@ -1,0 +1,4 @@
+*.bak
+
+# Excel/etc backups
+~$*.*
