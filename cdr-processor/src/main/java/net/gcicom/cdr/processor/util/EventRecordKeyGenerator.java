@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.ObjectUtils;
 
-import net.gcicom.cdr.processor.entity.output.GCICDR;
+import net.gcicom.domain.imported.events.ImportedEvent;
 
 @Component
 public abstract class EventRecordKeyGenerator {
@@ -56,7 +56,7 @@ public abstract class EventRecordKeyGenerator {
 	/**
 	 * @param cdr
 	 */
-	public static String getEventRecordHash(final GCICDR cdr) {
+	public static String getEventRecordHash(final ImportedEvent cdr) {
 		
 		if (cdr == null) {
 			
@@ -66,16 +66,16 @@ public abstract class EventRecordKeyGenerator {
 		}
 		
 		return EventRecordKeyGenerator.getEventRecordHash(
-				cdr.getSupplierId(),
-				cdr.getCustomerId(),
+				cdr.getSupplierID(),
+				cdr.getCustomerID(),
 				cdr.getOriginatingCLI(),
 				cdr.getDialledCLI(),
 				cdr.getTerminatingCLI(),
 				cdr.getEventTime(),
-				cdr.getEventTypeId(),
+				cdr.getEventTypeID(),
 				cdr.getEventDurationSecs(),
 				cdr.getPreRatedEventFlag(),
-				cdr.getEventFileId(),
+				cdr.getEventFileID(),
 				cdr.getSupplierAccountNumber());
 	}
 

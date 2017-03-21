@@ -1,10 +1,12 @@
 package net.gcicom.cdr.processor.entity.mapper;
 
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -13,10 +15,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import net.gcicom.cdr.processor.entity.input.AbzorbO2CDR;
-import net.gcicom.cdr.processor.entity.output.CDRMapper;
-import net.gcicom.cdr.processor.entity.output.GCICDR;
 import net.gcicom.cdr.processor.util.DateTimeUtil;
 import net.gcicom.cdr.processor.util.EventRecordKeyGenerator;
+import net.gcicom.domain.imported.events.ImportedEvent;
 
 
 @Component
@@ -30,28 +31,29 @@ public class Abzorbo2CDRToGciCDRMapper implements CDRMapper<AbzorbO2CDR> {
 		/* (non-Javadoc)
 		 * @see net.gcicom.cdr.processor.entity.output.CDRMapper#convertToGCICDR(java.util.List)
 		 */
-		public List<GCICDR> convertToGCICDR(final List<AbzorbO2CDR> input) {
+		public List<ImportedEvent> convertToGCICDR(final List<AbzorbO2CDR> input) {
 			
-			List<GCICDR> cdrs = new ArrayList<>();
+			List<ImportedEvent> cdrs = new ArrayList<>();
 
 			for (AbzorbO2CDR source : input) {
 				
 				LOG.debug("Converting AbzorbO2CDR to GCICDR" + source.toString());
-				GCICDR cdr = new GCICDR();
+				ImportedEvent cdr = new ImportedEvent();
 				
 				String dialedNumber = StringUtils.isEmpty(source.getDialedNumber()) ? source.getDescription() : source.getDialedNumber();
 				
 				cdr.setAccountingPeriod(DUMMY);
 				cdr.setAccountNumber(DUMMY);
 				cdr.setCountry(DUMMY);
-				cdr.setCustomerId(L_DUMMY);
+				cdr.setCustomerID(L_DUMMY);
 				cdr.setDialledCLI(dialedNumber);
 				cdr.setEventDurationSecs(DateTimeUtil.getDurationInSeconds(source.getDuration()));
-				cdr.setEventFileId(L_DUMMY);
+				cdr.setEventFileID(L_DUMMY);
 				cdr.setEventReference(source.getOriginatingNumber());
-				cdr.setEventReferenceId(L_DUMMY);
-				cdr.setEventTime(Timestamp.valueOf(source.getDate().atTime(LocalTime.parse(source.getTime(), DateTimeFormatter.ISO_LOCAL_TIME))));
-				cdr.setEventTypeId(L_DUMMY);
+				cdr.setEventReferenceID(L_DUMMY);
+				LocalDateTime dt = source.getDate().atTime(LocalTime.parse(source.getTime(), DateTimeFormatter.ISO_LOCAL_TIME));
+				cdr.setEventTime(Date.from(dt.toInstant(ZoneOffset.UTC)));
+				cdr.setEventTypeID(L_DUMMY);
 				cdr.setNumberRange(DUMMY);
 				cdr.setNumberRangeClassification(DUMMY);
 				cdr.setNumberRangeType(DUMMY);
@@ -60,7 +62,7 @@ public class Abzorbo2CDRToGciCDRMapper implements CDRMapper<AbzorbO2CDR> {
 				cdr.setPresentationCLI(DUMMY);
 				cdr.setSupplierAccountNumber(DUMMY);
 				cdr.setSupplierCost(source.getSalesprice());
-				cdr.setSupplierId(L_DUMMY);
+				cdr.setSupplierID(L_DUMMY);
 				cdr.setSupplierNumberRangeMap(DUMMY);
 				cdr.setSupplierRatingPattern(source.getMobileClass() + "_" + source.getTimeBand());
 				cdr.setSupplierRecordReference(DUMMY);
@@ -68,7 +70,7 @@ public class Abzorbo2CDRToGciCDRMapper implements CDRMapper<AbzorbO2CDR> {
 				cdr.setTerminatingCLI(dialedNumber);
 				cdr.setTimePeriod(DUMMY);
 				cdr.setWeekDayFlag(DateTimeUtil.getWeekDayFlag(source.getDate().atTime(LocalTime.parse(source.getTime(), DateTimeFormatter.ISO_LOCAL_TIME))));
-				cdr.setSupplierTariffPlanId(source.getTariff());
+				cdr.setSupplierTariffPlanID(source.getTariff());
 				cdr.setCreatedBy("CDR-PROCESSOR");
 				
 				//generate only after populating all the field in cdrs

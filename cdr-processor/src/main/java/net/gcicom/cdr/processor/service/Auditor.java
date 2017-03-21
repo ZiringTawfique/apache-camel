@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import net.gcicom.cdr.processor.entity.audit.AuditEvent;
+import net.gcicom.domain.imported.events.AuditEvent;
 
 /**
  * Class to handle auditing. 

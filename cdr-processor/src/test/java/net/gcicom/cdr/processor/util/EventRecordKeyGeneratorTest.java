@@ -11,7 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import net.gcicom.cdr.processor.entity.output.GCICDR;
+import net.gcicom.domain.imported.events.ImportedEvent;
 
 public class EventRecordKeyGeneratorTest {
 
@@ -67,19 +67,19 @@ public class EventRecordKeyGeneratorTest {
 	@Test
 	public void testGetEventRecordHashFromCDR() {
 		
-		GCICDR cdr = new GCICDR();
+		ImportedEvent cdr = new ImportedEvent();
 		
-		cdr.setCustomerId(L_DUMMY);
+		cdr.setCustomerID(L_DUMMY);
 		cdr.setDialledCLI(DUMMY);
 		cdr.setEventDurationSecs(2);
-		cdr.setEventFileId(L_DUMMY);
+		cdr.setEventFileID(L_DUMMY);
 		cdr.setEventTime(Timestamp.valueOf(LocalDateTime.now()));
-		cdr.setEventTypeId(L_DUMMY);
+		cdr.setEventTypeID(L_DUMMY);
 		cdr.setOriginatingCLI(DUMMY);
 		cdr.setPreRatedEventFlag(DUMMY);
 		cdr.setPresentationCLI(DUMMY);
 		cdr.setSupplierAccountNumber(DUMMY);
-		cdr.setSupplierId(L_DUMMY);
+		cdr.setSupplierID(L_DUMMY);
 		cdr.setTerminatingCLI(DUMMY);
 
 		String digest = EventRecordKeyGenerator.getEventRecordHash(cdr);
@@ -92,7 +92,7 @@ public class EventRecordKeyGeneratorTest {
 	@Test
 	public void testGetEventRecordHashEmptyCDR() {
 		thrown.expect(IllegalArgumentException.class);
-		EventRecordKeyGenerator.getEventRecordHash(new GCICDR());
+		EventRecordKeyGenerator.getEventRecordHash(new ImportedEvent());
 	}
 
 }

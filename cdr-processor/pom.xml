@@ -99,7 +99,14 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.3</version>
 		</dependency>
-
+		
+		<!-- dependency of local libraries -->
+		<dependency>
+			<groupId>net.gcicom</groupId>
+			<artifactId>imported-event-model</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>

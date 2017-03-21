@@ -1,10 +1,11 @@
 package net.gcicom.cdr.processor.entity.mapper;
 
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -13,11 +14,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import net.gcicom.cdr.processor.entity.input.BTOpenReachCDR;
-import net.gcicom.cdr.processor.entity.output.CDRMapper;
-import net.gcicom.cdr.processor.entity.output.GCICDR;
 import net.gcicom.cdr.processor.service.ValidationFailedException;
 import net.gcicom.cdr.processor.util.DateTimeUtil;
 import net.gcicom.cdr.processor.util.EventRecordKeyGenerator;
+import net.gcicom.domain.imported.events.ImportedEvent;
 
 
 @Component
@@ -29,27 +29,27 @@ public class BTOpenReachCDRMapper implements CDRMapper<BTOpenReachCDR> {
 		private static final String DUMMY = "DUMMY";
 		private static final Long L_DUMMY = 1L;
 
-		public List<GCICDR> convertToGCICDR(final List<BTOpenReachCDR> input) throws Exception {
+		public List<ImportedEvent> convertToGCICDR(final List<BTOpenReachCDR> input) throws Exception {
 			
-			List<GCICDR> cdrs = new ArrayList<>();
+			List<ImportedEvent> cdrs = new ArrayList<>();
 
 			for (BTOpenReachCDR source : input) {
 				
 				LOG.debug("Converting a BTOpenReachCDR to GCICDR" + source.toString());
 
-				GCICDR cdr = new GCICDR();
+				ImportedEvent cdr = new ImportedEvent();
 				
 				cdr.setAccountingPeriod(DUMMY);
 				cdr.setAccountNumber(DUMMY);
 				cdr.setCountry(DUMMY);
-				cdr.setCustomerId(L_DUMMY);
+				cdr.setCustomerID(L_DUMMY);
 				cdr.setDialledCLI(source.getDialedNumber());
 				cdr.setEventDurationSecs(DateTimeUtil.getDurationInSeconds(source.getDuration()));
-				cdr.setEventFileId(L_DUMMY);
+				cdr.setEventFileID(L_DUMMY);
 				cdr.setEventReference(source.getOriginatingNumber());
-				cdr.setEventReferenceId(L_DUMMY);
-				cdr.setEventTime(Timestamp.valueOf(getDateTime(source.getEventTime())));
-				cdr.setEventTypeId(L_DUMMY);
+				cdr.setEventReferenceID(L_DUMMY);
+				cdr.setEventTime(Date.from(getDateTime(source.getEventTime()).toInstant(ZoneOffset.UTC)));
+				cdr.setEventTypeID(L_DUMMY);
 				cdr.setNumberRange(DUMMY);
 				cdr.setNumberRangeClassification(DUMMY);
 				cdr.setNumberRangeType(DUMMY);
@@ -58,7 +58,7 @@ public class BTOpenReachCDRMapper implements CDRMapper<BTOpenReachCDR> {
 				cdr.setPresentationCLI(source.getDialedNumber());
 				cdr.setSupplierAccountNumber(source.getAccountNumber());
 				cdr.setSupplierCost(source.getWholesalePrice());
-				cdr.setSupplierId(L_DUMMY);
+				cdr.setSupplierID(L_DUMMY);
 				cdr.setSupplierNumberRangeMap(source.getPhoneBookCode());
 				cdr.setSupplierRatingPattern(source.getPhoneBookCode() + "_" + source.getReRateIndicator());
 				cdr.setSupplierRecordReference(source.getDunsId());

@@ -1,27 +1,17 @@
 package net.gcicom.cdr.processor;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.spring.SpringRouteBuilder;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import net.gcicom.cdr.processor.entity.output.GCICDR;
-import net.gcicom.cdr.processor.repository.GCICDRRepository;
 
 @RunWith(SpringRunner.class)
 public class CdrProcessorApplicationTests extends SpringRouteBuilder {

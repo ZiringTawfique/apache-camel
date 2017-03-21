@@ -5,7 +5,6 @@ import javax.persistence.*;
 
 import java.util.Date;
 import java.util.Objects;
-import java.math.BigInteger;
 
 
 /**
@@ -32,22 +31,22 @@ public class ImportedEvent implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdDate;
 
-	private BigInteger customerID;
+	private Long customerID;
 
 	private String dialledCLI;
 
-	private BigInteger eventDurationSecs;
+	private Integer eventDurationSecs;
 
-	private BigInteger eventFileID;
+	private Long eventFileID;
 
 	private String eventReference;
 
-	private BigInteger eventReferenceID;
+	private Long eventReferenceID;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date eventTime;
 
-	private BigInteger eventTypeID;
+	private Long eventTypeID;
 
 	private String lastModifiedBy;
 
@@ -68,9 +67,9 @@ public class ImportedEvent implements Serializable {
 
 	private String supplierAccountNumber;
 
-	private double supplierCost;
+	private String supplierCost;
 
-	private BigInteger supplierID;
+	private Long supplierID;
 
 	private String supplierNumberRange;
 
@@ -82,7 +81,7 @@ public class ImportedEvent implements Serializable {
 
 	private String supplierServiceType;
 
-	private BigInteger supplierTariffPlanID;
+	private Long supplierTariffPlanID;
 
 	private String terminatingCLI;
 
@@ -141,11 +140,11 @@ public class ImportedEvent implements Serializable {
 		this.createdDate = createdDate;
 	}
 
-	public BigInteger getCustomerID() {
+	public Long getCustomerID() {
 		return this.customerID;
 	}
 
-	public void setCustomerID(BigInteger customerID) {
+	public void setCustomerID(Long customerID) {
 		this.customerID = customerID;
 	}
 
@@ -157,19 +156,19 @@ public class ImportedEvent implements Serializable {
 		this.dialledCLI = dialledCLI;
 	}
 
-	public BigInteger getEventDurationSecs() {
+	public Integer getEventDurationSecs() {
 		return this.eventDurationSecs;
 	}
 
-	public void setEventDurationSecs(BigInteger eventDurationSecs) {
+	public void setEventDurationSecs(Integer eventDurationSecs) {
 		this.eventDurationSecs = eventDurationSecs;
 	}
 
-	public BigInteger getEventFileID() {
+	public Long getEventFileID() {
 		return this.eventFileID;
 	}
 
-	public void setEventFileID(BigInteger eventFileID) {
+	public void setEventFileID(Long eventFileID) {
 		this.eventFileID = eventFileID;
 	}
 
@@ -181,11 +180,11 @@ public class ImportedEvent implements Serializable {
 		this.eventReference = eventReference;
 	}
 
-	public BigInteger getEventReferenceID() {
+	public Long getEventReferenceID() {
 		return this.eventReferenceID;
 	}
 
-	public void setEventReferenceID(BigInteger eventReferenceID) {
+	public void setEventReferenceID(Long eventReferenceID) {
 		this.eventReferenceID = eventReferenceID;
 	}
 
@@ -197,11 +196,11 @@ public class ImportedEvent implements Serializable {
 		this.eventTime = eventTime;
 	}
 
-	public BigInteger getEventTypeID() {
+	public Long getEventTypeID() {
 		return this.eventTypeID;
 	}
 
-	public void setEventTypeID(BigInteger eventTypeID) {
+	public void setEventTypeID(Long eventTypeID) {
 		this.eventTypeID = eventTypeID;
 	}
 
@@ -277,19 +276,19 @@ public class ImportedEvent implements Serializable {
 		this.supplierAccountNumber = supplierAccountNumber;
 	}
 
-	public double getSupplierCost() {
+	public String getSupplierCost() {
 		return this.supplierCost;
 	}
 
-	public void setSupplierCost(double supplierCost) {
+	public void setSupplierCost(String supplierCost) {
 		this.supplierCost = supplierCost;
 	}
 
-	public BigInteger getSupplierID() {
+	public Long getSupplierID() {
 		return this.supplierID;
 	}
 
-	public void setSupplierID(BigInteger supplierID) {
+	public void setSupplierID(Long supplierID) {
 		this.supplierID = supplierID;
 	}
 
@@ -333,11 +332,11 @@ public class ImportedEvent implements Serializable {
 		this.supplierServiceType = supplierServiceType;
 	}
 
-	public BigInteger getSupplierTariffPlanID() {
+	public Long getSupplierTariffPlanID() {
 		return this.supplierTariffPlanID;
 	}
 
-	public void setSupplierTariffPlanID(BigInteger supplierTariffPlanID) {
+	public void setSupplierTariffPlanID(Long supplierTariffPlanID) {
 		this.supplierTariffPlanID = supplierTariffPlanID;
 	}
 

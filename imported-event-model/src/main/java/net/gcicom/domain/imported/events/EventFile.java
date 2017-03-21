@@ -3,7 +3,6 @@ package net.gcicom.domain.imported.events;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
-import java.math.BigInteger;
 import java.util.List;
 
 
@@ -18,7 +17,7 @@ public class EventFile implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private String eventFileID;
+	private Long eventFileID;
 
 	private String createdBy;
 
@@ -39,7 +38,7 @@ public class EventFile implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastModifiedDate;
 
-	private BigInteger supplierID;
+	private Long supplierID;
 
 	//bi-directional many-to-one association to EventFileDetail
 	@OneToMany(mappedBy="eventFile")
@@ -48,11 +47,11 @@ public class EventFile implements Serializable {
 	public EventFile() {
 	}
 
-	public String getEventFileID() {
+	public Long getEventFileID() {
 		return this.eventFileID;
 	}
 
-	public void setEventFileID(String eventFileID) {
+	public void setEventFileID(Long eventFileID) {
 		this.eventFileID = eventFileID;
 	}
 
@@ -120,11 +119,11 @@ public class EventFile implements Serializable {
 		this.lastModifiedDate = lastModifiedDate;
 	}
 
-	public BigInteger getSupplierID() {
+	public Long getSupplierID() {
 		return this.supplierID;
 	}
 
-	public void setSupplierID(BigInteger supplierID) {
+	public void setSupplierID(Long supplierID) {
 		this.supplierID = supplierID;
 	}
 

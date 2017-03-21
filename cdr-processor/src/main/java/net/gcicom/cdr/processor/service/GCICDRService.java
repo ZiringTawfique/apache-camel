@@ -13,10 +13,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
-import net.gcicom.cdr.processor.entity.output.GCICDR;
-import net.gcicom.cdr.processor.entity.output.MD5;
+import net.gcicom.cdr.processor.repository.EventFileRepository;
 import net.gcicom.cdr.processor.repository.GCICDRRepository;
-import net.gcicom.cdr.processor.repository.Md5Repository;
+import net.gcicom.domain.imported.events.EventFile;
+import net.gcicom.domain.imported.events.ImportedEvent;
 /**
  * Service to add all {@link GCICDR} to database. Preferably db insert should be batched
  * It needs more work as in business validation etc  
@@ -32,7 +32,7 @@ public class GCICDRService {
 	GCICDRRepository gciCDR;
 	
 	@Autowired
-	Md5Repository md5Repo;
+	EventFileRepository eventRepo;
 	
 	@Autowired
 	Auditor auditor;
@@ -40,14 +40,14 @@ public class GCICDRService {
 	/**
 	 * @param cdrs
 	 */
-	public void addCDR(List<GCICDR> cdrs) {
+	public void addCDR(List<ImportedEvent> cdrs) {
 		
-		for (GCICDR cdr : cdrs) {
+		for (ImportedEvent cdr : cdrs) {
 			
 			//business validation here then just batch insert or insert in invalid cdr
 			logger.debug("Adding to db" + cdr.toString() );
 			
-			GCICDR result = gciCDR.save(cdr);
+			ImportedEvent result = gciCDR.save(cdr);
 			
 			logger.debug("Saved CDR " + result.toString() );
 
@@ -58,23 +58,23 @@ public class GCICDRService {
 	
 	public void validateMd5(final @Header("CamelFileNameConsumed") String fileName, final @Body InputStream is) throws IOException, AlreadyProcessedFileException {
 		
-		String hex = DigestUtils.md5DigestAsHex(is);
-		logger.info("Hex -----------------------" + hex + "and file " + fileName );
+		String eventFileChecksum = DigestUtils.md5DigestAsHex(is);
+		logger.info("eventFileChecksum -----------------------" + eventFileChecksum + "and file " + fileName );
 
-		List<MD5> md5s= md5Repo.findByHex(hex);
+		List<EventFile> md5s= eventRepo.findByEventFileChecksum(eventFileChecksum);
 		is.close();//require for smooth file handling later once they processed by camel consumer
 		if (md5s.size() == 0) {
 			
-			MD5 md5 = new MD5();
-			md5.setHex(hex);
-			md5.setFile(fileName);
+			EventFile ef = new EventFile();
+			ef.setEventFileChecksum(eventFileChecksum);
+			ef.setEventFileName(fileName);
 			
-			md5Repo.save(md5);
+			eventRepo.save(ef);
 			
 			
 		} else {
 
-			throw new AlreadyProcessedFileException(String.format("File %s, with Hex %s already processed", fileName, hex));
+			throw new AlreadyProcessedFileException(String.format("File %s, with Hex %s already processed", fileName, eventFileChecksum));
 		}
 		
 		

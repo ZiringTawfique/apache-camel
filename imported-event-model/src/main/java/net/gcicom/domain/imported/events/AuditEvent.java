@@ -1,88 +1,60 @@
 package net.gcicom.domain.imported.events;
 
+
 import java.io.Serializable;
 import javax.persistence.*;
+
 import java.util.Date;
-import java.util.List;
-
-
+import java.util.HashMap;
+import java.util.Map;
 /**
- * The persistent class for the AuditEvent database table.
- * 
- */
+ * modeled after similar jhipster audit entity
+*/
 @Entity
-@NamedQuery(name="AuditEvent.findAll", query="SELECT a FROM AuditEvent a")
+@Table(name = "audit_event")
 public class AuditEvent implements Serializable {
-	private static final long serialVersionUID = 1L;
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2207213257930690690L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private String eventID;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "EventID")
+    private Long id;
+
+	@Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "EventDate")
+    private Date auditEventDate;
+    
+    @Column(name = "EventType")
+    private String auditEventType;
+
+    @ElementCollection
+    @MapKeyColumn(name = "DataName")
+    @Lob
+    @Column(name = "Value")
+    @CollectionTable(name = "AuditEventData", joinColumns=@JoinColumn(name="EventID"))
+    private Map<String, String> data = new HashMap<>();
 
 	private String createdBy;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdDate;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date eventDate;
-
-	private String eventType;
-
 	private String lastModifiedBy;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date lastModifiedDate;
-
-	//bi-directional many-to-one association to AuditEventData
-	@OneToMany(mappedBy="auditEvent")
-	private List<AuditEventData> auditEventData;
-
-	public AuditEvent() {
-	}
-
-	public String getEventID() {
-		return this.eventID;
-	}
-
-	public void setEventID(String eventID) {
-		this.eventID = eventID;
-	}
-
-	public String getCreatedBy() {
-		return this.createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
 	public Date getCreatedDate() {
-		return this.createdDate;
+		return createdDate;
 	}
 
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
 
-	public Date getEventDate() {
-		return this.eventDate;
-	}
-
-	public void setEventDate(Date eventDate) {
-		this.eventDate = eventDate;
-	}
-
-	public String getEventType() {
-		return this.eventType;
-	}
-
-	public void setEventType(String eventType) {
-		this.eventType = eventType;
-	}
-
 	public String getLastModifiedBy() {
-		return this.lastModifiedBy;
+		return lastModifiedBy;
 	}
 
 	public void setLastModifiedBy(String lastModifiedBy) {
@@ -90,33 +62,64 @@ public class AuditEvent implements Serializable {
 	}
 
 	public Date getLastModifiedDate() {
-		return this.lastModifiedDate;
+		return lastModifiedDate;
 	}
 
 	public void setLastModifiedDate(Date lastModifiedDate) {
 		this.lastModifiedDate = lastModifiedDate;
 	}
 
-	public List<AuditEventData> getAuditEventData() {
-		return this.auditEventData;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastModifiedDate;
+    
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Date getAuditEventDate() {
+        return auditEventDate;
+    }
+
+    public void setAuditEventDate(Date auditEventDate) {
+        this.auditEventDate = auditEventDate;
+    }
+
+    public String getAuditEventType() {
+        return auditEventType;
+    }
+
+    public void setAuditEventType(String auditEventType) {
+        this.auditEventType = auditEventType;
+    }
+
+    public Map<String, String> getData() {
+        return data;
+    }
+
+    public void setData(Map<String, String> data) {
+        this.data = data;
+    }
+    
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+    
+    
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "[Audit Event :id- " + this.id + " auditEventDate " 
+					+ this.auditEventDate + " auditEventType " + this.auditEventType 
+					+ " createdBy " + this.createdBy + " ]";
 	}
-
-	public void setAuditEventData(List<AuditEventData> auditEventData) {
-		this.auditEventData = auditEventData;
-	}
-
-	public AuditEventData addAuditEventData(AuditEventData auditEventData) {
-		getAuditEventData().add(auditEventData);
-		auditEventData.setAuditEvent(this);
-
-		return auditEventData;
-	}
-
-	public AuditEventData removeAuditEventData(AuditEventData auditEventData) {
-		getAuditEventData().remove(auditEventData);
-		auditEventData.setAuditEvent(null);
-
-		return auditEventData;
-	}
-
 }
+

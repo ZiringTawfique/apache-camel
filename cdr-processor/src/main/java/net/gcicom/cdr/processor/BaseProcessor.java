@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import net.gcicom.cdr.processor.entity.output.CDRMapper;
-import net.gcicom.cdr.processor.entity.output.GCICDR;
+import net.gcicom.cdr.processor.entity.mapper.CDRMapper;
 import net.gcicom.cdr.processor.service.AlreadyProcessedFileException;
 import net.gcicom.cdr.processor.service.Auditor;
 import net.gcicom.cdr.processor.service.CDRAggregator;
