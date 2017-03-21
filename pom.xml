@@ -20,6 +20,8 @@
 	</properties>
 
   <modules>
-    <module>rating-file-processor</module>
+  	<!-- build domain model pojos so that down stream project can use it-->
+    <module>imported-event-model</module>
+    <module>rating-model</module>
   </modules>
 </project>
