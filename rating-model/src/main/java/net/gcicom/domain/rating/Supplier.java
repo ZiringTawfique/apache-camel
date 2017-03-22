@@ -15,18 +15,18 @@ public class Supplier implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private String supplierID;
+	private Long supplierID;
 
 	private String supplierName;
 
 	public Supplier() {
 	}
 
-	public String getSupplierID() {
+	public Long getSupplierID() {
 		return this.supplierID;
 	}
 
-	public void setSupplierID(String supplierID) {
+	public void setSupplierID(Long supplierID) {
 		this.supplierID = supplierID;
 	}
 

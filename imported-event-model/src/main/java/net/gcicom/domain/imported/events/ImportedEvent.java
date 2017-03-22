@@ -1,6 +1,9 @@
 package net.gcicom.domain.imported.events;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
 import javax.persistence.*;
 
 import java.util.Date;
@@ -29,7 +32,7 @@ public class ImportedEvent implements Serializable {
 	private String createdBy;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date createdDate;
+	private Date createdDate = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC));
 
 	private Long customerID;
 

@@ -36,6 +36,6 @@
 	
 	<logger name="org.springframework" level="info" />
 	<logger name="org.apache.camel" level="info" />
-	<logger name="net.gcicom" level="info" />
+	<logger name="net.gcicom" level="debug" />
 
 </configuration>

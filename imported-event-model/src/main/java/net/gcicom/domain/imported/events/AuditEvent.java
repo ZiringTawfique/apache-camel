@@ -2,6 +2,9 @@ package net.gcicom.domain.imported.events;
 
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
 import javax.persistence.*;
 
 import java.util.Date;
@@ -11,7 +14,7 @@ import java.util.Map;
  * modeled after similar jhipster audit entity
 */
 @Entity
-@Table(name = "audit_event")
+@Table(name = "AuditEvent")
 public class AuditEvent implements Serializable {
 
     /**
@@ -33,15 +36,15 @@ public class AuditEvent implements Serializable {
 
     @ElementCollection
     @MapKeyColumn(name = "DataName")
-    @Lob
-    @Column(name = "Value")
+    @Column(name = "Value", columnDefinition = "text")
     @CollectionTable(name = "AuditEventData", joinColumns=@JoinColumn(name="EventID"))
     private Map<String, String> data = new HashMap<>();
 
 	private String createdBy;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date createdDate;
+	@Column(name = "createdDate", columnDefinition = "", updatable = false)
+	private Date createdDate = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC));
 
 	private String lastModifiedBy;
 

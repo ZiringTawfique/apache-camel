@@ -1,4 +1,6 @@
 package net.gcicom.cdr.processor.service;
+import static net.gcicom.cdr.processor.common.AppConstants.CDR_PROCESSOR_USER;
+import static net.gcicom.cdr.processor.util.DateTimeUtil.getTodaysDate;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,7 +70,9 @@ public class GCICDRService {
 			EventFile ef = new EventFile();
 			ef.setEventFileChecksum(eventFileChecksum);
 			ef.setEventFileName(fileName);
-			
+			ef.setCreatedBy(CDR_PROCESSOR_USER);
+			ef.setDateProcessed(getTodaysDate());
+			ef.setCreatedDate(getTodaysDate());
 			eventRepo.save(ef);
 			
 			

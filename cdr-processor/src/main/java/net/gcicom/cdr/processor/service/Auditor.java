@@ -1,5 +1,8 @@
 package net.gcicom.cdr.processor.service;
 
+import static net.gcicom.cdr.processor.common.AppConstants.CDR_PROCESSOR_USER;
+import static net.gcicom.cdr.processor.util.DateTimeUtil.getTodaysDate;
+
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +24,8 @@ import net.gcicom.domain.imported.events.AuditEvent;
 public final class Auditor {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Auditor.class);
-	
+
+
 	@Autowired
 	private CDRProcessorAuditService service;
 	
@@ -93,6 +97,8 @@ public final class Auditor {
 		
 		AuditEvent event = new AuditEvent();
 		event.setAuditEventType(eventType);
+		event.setAuditEventDate(getTodaysDate());
+		event.setCreatedBy(CDR_PROCESSOR_USER);
 		return event;
 		
 	}
@@ -107,22 +113,6 @@ public final class Auditor {
 	public void handleEventInvalidCdr(final Exchange exchange) throws Exception {
 
 		handleEvent(exchange, EventTypes.INVALID_CDR);
-		
-	}
-	
-	public void handleLoading(final String fileName, final String hex) throws Exception {
-
-		
-		AuditEvent event = getAuditEvent(EventTypes.DIGEST);
-		Map<String, String> data = new HashMap<>();
-		data.put("file",  fileName);
-		data.put("hex", hex);
-		
-		event.setData(data);
-		
-		service.audit(event);
-		
-		
 		
 	}
 	

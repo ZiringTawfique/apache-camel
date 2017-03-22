@@ -18,11 +18,12 @@ public class NumberRangeMap implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private String numberRangeMapID;
+	private Long numberRangeMapID;
 
-	private BigInteger numberRange;
+	private Long numberRange;
 
-	private byte numberRangeBespokeFlag;
+	@Column(columnDefinition = "BIT", length = 1)
+	private boolean numberRangeBespokeFlag;
 
 	private String numberRangeClassification;
 
@@ -39,27 +40,27 @@ public class NumberRangeMap implements Serializable {
 	public NumberRangeMap() {
 	}
 
-	public String getNumberRangeMapID() {
+	public Long getNumberRangeMapID() {
 		return this.numberRangeMapID;
 	}
 
-	public void setNumberRangeMapID(String numberRangeMapID) {
+	public void setNumberRangeMapID(Long numberRangeMapID) {
 		this.numberRangeMapID = numberRangeMapID;
 	}
 
-	public BigInteger getNumberRange() {
+	public Long getNumberRange() {
 		return this.numberRange;
 	}
 
-	public void setNumberRange(BigInteger numberRange) {
+	public void setNumberRange(Long numberRange) {
 		this.numberRange = numberRange;
 	}
 
-	public byte getNumberRangeBespokeFlag() {
+	public boolean getNumberRangeBespokeFlag() {
 		return this.numberRangeBespokeFlag;
 	}
 
-	public void setNumberRangeBespokeFlag(byte numberRangeBespokeFlag) {
+	public void setNumberRangeBespokeFlag(boolean numberRangeBespokeFlag) {
 		this.numberRangeBespokeFlag = numberRangeBespokeFlag;
 	}
 

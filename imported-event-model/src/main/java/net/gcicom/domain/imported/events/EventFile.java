@@ -1,6 +1,9 @@
 package net.gcicom.domain.imported.events;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +14,7 @@ import java.util.List;
  * 
  */
 @Entity
+@Table(name = "EventFile")
 @NamedQuery(name="EventFile.findAll", query="SELECT e FROM EventFile e")
 public class EventFile implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -22,7 +26,7 @@ public class EventFile implements Serializable {
 	private String createdBy;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date createdDate;
+	private Date createdDate = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC));
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateProcessed;

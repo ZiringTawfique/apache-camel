@@ -1,4 +1,4 @@
-package net.gcicom.cdr.processor;
+package net.gcicom.cdr.processor.config;
 
 import org.h2.server.web.WebServlet;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;

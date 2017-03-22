@@ -2,7 +2,9 @@ package net.gcicom.cdr.processor.util;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeParseException;
+import java.util.Date;
 
 import org.springframework.util.ObjectUtils;
 
@@ -49,10 +51,15 @@ public abstract class DateTimeUtil {
 			
 			throw new IllegalArgumentException("Input duration must be in java.time.format.DateTimeFormatter.ISO_LOCAL_TIME format", e);
 		}
-		
-		
-		
+	}
 	
+	
+	/**
+	 * @return Today's date for UTC tz
+	 */
+	public static Date getTodaysDate() {
+		
+		return Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC));
 	}
 	
 }

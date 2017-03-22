@@ -14,91 +14,96 @@ import javax.persistence.*;
 public class EventFileDetail implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private int duplicateRecordCount;
+	private Integer duplicateRecordCount;
 
-	private int errorRecordCount;
+	private Integer errorRecordCount;
 
-	private int errorRunsCount;
+	private Integer errorRunsCount;
 
-	private int eventRecordCount;
+	private Integer eventRecordCount;
 
-	private int headerAndTrailerRecordCount;
+	private Integer headerAndTrailerRecordCount;
 
-	private int killedRecordCount;
+	private Integer killedRecordCount;
 
-	private int numberOfRecords;
+	private Integer numberOfRecords;
 
-	private int successRecordCount;
+	private Integer successRecordCount;
+	
+	@Id
+	private Long id;
+	
 
 	//bi-directional many-to-one association to EventFile
 	@ManyToOne
 	@JoinColumn(name="EventFileID")
+	@MapsId
 	private EventFile eventFile;
 
 	public EventFileDetail() {
 	}
 
-	public int getDuplicateRecordCount() {
+	public Integer getDuplicateRecordCount() {
 		return this.duplicateRecordCount;
 	}
 
-	public void setDuplicateRecordCount(int duplicateRecordCount) {
+	public void setDuplicateRecordCount(Integer duplicateRecordCount) {
 		this.duplicateRecordCount = duplicateRecordCount;
 	}
 
-	public int getErrorRecordCount() {
+	public Integer getErrorRecordCount() {
 		return this.errorRecordCount;
 	}
 
-	public void setErrorRecordCount(int errorRecordCount) {
+	public void setErrorRecordCount(Integer errorRecordCount) {
 		this.errorRecordCount = errorRecordCount;
 	}
 
-	public int getErrorRunsCount() {
+	public Integer getErrorRunsCount() {
 		return this.errorRunsCount;
 	}
 
-	public void setErrorRunsCount(int errorRunsCount) {
+	public void setErrorRunsCount(Integer errorRunsCount) {
 		this.errorRunsCount = errorRunsCount;
 	}
 
-	public int getEventRecordCount() {
+	public Integer getEventRecordCount() {
 		return this.eventRecordCount;
 	}
 
-	public void setEventRecordCount(int eventRecordCount) {
+	public void setEventRecordCount(Integer eventRecordCount) {
 		this.eventRecordCount = eventRecordCount;
 	}
 
-	public int getHeaderAndTrailerRecordCount() {
+	public Integer getHeaderAndTrailerRecordCount() {
 		return this.headerAndTrailerRecordCount;
 	}
 
-	public void setHeaderAndTrailerRecordCount(int headerAndTrailerRecordCount) {
+	public void setHeaderAndTrailerRecordCount(Integer headerAndTrailerRecordCount) {
 		this.headerAndTrailerRecordCount = headerAndTrailerRecordCount;
 	}
 
-	public int getKilledRecordCount() {
+	public Integer getKilledRecordCount() {
 		return this.killedRecordCount;
 	}
 
-	public void setKilledRecordCount(int killedRecordCount) {
+	public void setKilledRecordCount(Integer killedRecordCount) {
 		this.killedRecordCount = killedRecordCount;
 	}
 
-	public int getNumberOfRecords() {
+	public Integer getNumberOfRecords() {
 		return this.numberOfRecords;
 	}
 
-	public void setNumberOfRecords(int numberOfRecords) {
+	public void setNumberOfRecords(Integer numberOfRecords) {
 		this.numberOfRecords = numberOfRecords;
 	}
 
-	public int getSuccessRecordCount() {
+	public Integer getSuccessRecordCount() {
 		return this.successRecordCount;
 	}
 
-	public void setSuccessRecordCount(int successRecordCount) {
+	public void setSuccessRecordCount(Integer successRecordCount) {
 		this.successRecordCount = successRecordCount;
 	}
 

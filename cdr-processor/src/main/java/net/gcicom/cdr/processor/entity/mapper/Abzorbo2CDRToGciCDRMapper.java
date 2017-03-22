@@ -1,5 +1,6 @@
 package net.gcicom.cdr.processor.entity.mapper;
 
+import static net.gcicom.cdr.processor.common.AppConstants.CDR_PROCESSOR_USER;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -71,7 +72,7 @@ public class Abzorbo2CDRToGciCDRMapper implements CDRMapper<AbzorbO2CDR> {
 				cdr.setTimePeriod(DUMMY);
 				cdr.setWeekDayFlag(DateTimeUtil.getWeekDayFlag(source.getDate().atTime(LocalTime.parse(source.getTime(), DateTimeFormatter.ISO_LOCAL_TIME))));
 				cdr.setSupplierTariffPlanID(source.getTariff());
-				cdr.setCreatedBy("CDR-PROCESSOR");
+				cdr.setCreatedBy(CDR_PROCESSOR_USER);
 				
 				//generate only after populating all the field in cdrs
 				cdr.setEventRecordKey(EventRecordKeyGenerator.getEventRecordHash(cdr));

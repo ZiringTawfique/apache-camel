@@ -1,5 +1,6 @@
 package net.gcicom.cdr.processor.entity.mapper;
 
+import static net.gcicom.cdr.processor.common.AppConstants.CDR_PROCESSOR_USER;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -66,7 +67,7 @@ public class BTOpenReachCDRMapper implements CDRMapper<BTOpenReachCDR> {
 				cdr.setTerminatingCLI(source.getDialedNumber());
 				cdr.setTimePeriod(DUMMY);
 				cdr.setWeekDayFlag(DateTimeUtil.getWeekDayFlag(getDateTime(source.getEventTime())));
-				cdr.setCreatedBy("CDR-PROCESSOR");
+				cdr.setCreatedBy(CDR_PROCESSOR_USER);
 				
 				//generate only after populating all the field in cdrs
 				cdr.setEventRecordKey(EventRecordKeyGenerator.getEventRecordHash(cdr));
