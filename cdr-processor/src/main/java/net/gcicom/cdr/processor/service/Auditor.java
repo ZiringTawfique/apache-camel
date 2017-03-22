@@ -1,6 +1,13 @@
 package net.gcicom.cdr.processor.service;
 
 import static net.gcicom.cdr.processor.common.AppConstants.CDR_PROCESSOR_USER;
+import static net.gcicom.cdr.processor.service.EventTypes.FILE_PROCESSING_ERROR;
+import static net.gcicom.cdr.processor.service.EventTypes.FILE_PROCESSING_FINISHED;
+import static net.gcicom.cdr.processor.service.EventTypes.FILE_PROCESSING_START;
+import static net.gcicom.cdr.processor.service.EventTypes.INVALID_CDR;
+import static org.apache.camel.Exchange.FILE_NAME_CONSUMED;
+import static org.apache.camel.Exchange.EXCEPTION_CAUGHT;
+
 import static net.gcicom.cdr.processor.util.DateTimeUtil.getTodaysDate;
 
 import java.text.MessageFormat;
@@ -36,7 +43,7 @@ public final class Auditor {
 	public void startEvent(final Exchange exchange) {
 		
 		LOG.debug("startEvent ");
-		handleEvent(exchange, EventTypes.FILE_PROCESSING_START);
+		handleEvent(exchange, FILE_PROCESSING_START);
 
 	}
 	
@@ -49,7 +56,7 @@ public final class Auditor {
 
 		if (exchange.getProperty(Exchange.SPLIT_COMPLETE, Boolean.class)) {
 			
-			handleEvent(exchange, EventTypes.FILE_PROCESSING_FINISHED);
+			handleEvent(exchange, FILE_PROCESSING_FINISHED);
 
 		}
 
@@ -61,8 +68,8 @@ public final class Auditor {
 	 */
 	public void errorEvent(final Exchange exchange) {
 		
-		LOG.info(EventTypes.FILE_PROCESSING_ERROR);
-		handleEvent(exchange, EventTypes.FILE_PROCESSING_ERROR);
+		LOG.info(FILE_PROCESSING_ERROR);
+		handleEvent(exchange, FILE_PROCESSING_ERROR);
 
 	}
 	
@@ -73,14 +80,14 @@ public final class Auditor {
 	private void handleEvent(final Exchange exchange, final String eventType) {
 		
 		Map<String, String> data = new HashMap<>();
-		data.put("file",  exchange.getIn().getHeader("CamelFileNameConsumed", String.class));
-		Throwable reason = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
+		data.put("file",  exchange.getIn().getHeader(FILE_NAME_CONSUMED, String.class));
+		Throwable reason = exchange.getProperty(EXCEPTION_CAUGHT, Throwable.class);
 		if (reason != null) {
 			
 			LOG.error("Handled event has following error \n", reason);
 			data.put("reason", reason.getMessage());
 			data.put("stacktrace", MessageFormat.format("Detail stack trace {0}", reason));
-			if (!reason.getClass().equals(AlreadyProcessedFileException.class)) {
+			if (!(reason instanceof AlreadyProcessedFileException)) {
 				
 				data.put("cdr", exchange.getIn().getBody(String.class));
 			}
@@ -116,7 +123,7 @@ public final class Auditor {
 	 */
 	public void handleEventInvalidCdr(final Exchange exchange) throws Exception {
 
-		handleEvent(exchange, EventTypes.INVALID_CDR);
+		handleEvent(exchange, INVALID_CDR);
 		
 	}
 	

@@ -1,5 +1,12 @@
 package net.gcicom.cdr.processor;
 
+import static net.gcicom.cdr.processor.RouteNames.ADD_CDR;
+import static net.gcicom.cdr.processor.RouteNames.MAP_CSV_ROW_TO_VENDOR_CDR;
+import static net.gcicom.cdr.processor.RouteNames.MOVE_FILE_ON_ERROR;
+import static org.apache.camel.Exchange.FILE_PATH;
+import static org.apache.camel.Exchange.FILE_NAME_CONSUMED;
+
+
 import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.Processor;
@@ -57,8 +64,8 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 		
 		String processorName = this.getClass().getCanonicalName();
 		
-		from(RouteNames.MOVE_FILE_ON_ERROR + processorName)
-		.description(RouteNames.MOVE_FILE_ON_ERROR + processorName, String.format("This route moves file to %s in case of error", fileLocation), null)
+		from(MOVE_FILE_ON_ERROR + processorName)
+		.description(MOVE_FILE_ON_ERROR + processorName, String.format("This route moves file to %s in case of error", fileLocation), null)
 		.errorHandler(deadLetterChannel("file:"+ fileLocation + "/error")
 		  .allowRedeliveryWhileStopping(false)
 		  .maximumRedeliveries(0))
@@ -93,14 +100,14 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 	    			+ "from %s for matching %s file name pattern", cronExpression, inFileLocation, filePattern), null)
 	    	.onException(AlreadyProcessedFileException.class)
 				.bean(auditor, "errorEvent")
-	    		.to(RouteNames.MOVE_FILE_ON_ERROR.concat(processorName))
+	    		.to(MOVE_FILE_ON_ERROR.concat(processorName))
 			.end()
 			.log(LoggingLevel.INFO, LOG, "START : Processing ${file:name} file")
 	    	.bean(auditor, "startEvent")
 			.bean(service, "validateMd5")
 	    	.split(body()
 	    			.tokenize("\n"))
-	    	.to(RouteNames.MAP_CSV_ROW_TO_VENDOR_CDR.concat(processorName))
+	    	.to(MAP_CSV_ROW_TO_VENDOR_CDR.concat(processorName))
 	    	.bean(auditor, "endEvent")
 	    	.end();
         
@@ -115,8 +122,8 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 		
 		String processorName = this.getClass().getCanonicalName();
 
-		 from(RouteNames.ADD_CDR.concat(processorName))
-			.description(RouteNames.ADD_CDR + processorName, String.format("This route adds cdr records to database"), null)
+		 from(ADD_CDR.concat(processorName))
+			.description(ADD_CDR + processorName, String.format("This route adds cdr records to database"), null)
 			.onException(InvalidCDRException.class, ValidationFailedException.class, IllegalArgumentException.class)
 				.handled(true)
 				.bean(auditor, "handleEventInvalidCdr")
@@ -141,7 +148,7 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 		onException(Exception.class)
 			.logStackTrace(true)
 		    .bean(auditor, "errorEvent")
-			.to(RouteNames.MOVE_FILE_ON_ERROR.concat(this.getClass().getCanonicalName()));
+			.to(MOVE_FILE_ON_ERROR.concat(this.getClass().getCanonicalName()));
 		
 	}
 	
@@ -161,8 +168,8 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 			@Override
 			public void process(Exchange exchange) throws Exception {
 				
-				String abosulteFilePath = exchange.getIn().getHeader(Exchange.FILE_PATH, String.class);
-				String ifName = exchange.getIn().getHeader(Exchange.FILE_NAME_CONSUMED, String.class);
+				String abosulteFilePath = exchange.getIn().getHeader(FILE_PATH, String.class);
+				String ifName = exchange.getIn().getHeader(FILE_NAME_CONSUMED, String.class);
 				
 				LOG.info("uncompressing {}", abosulteFilePath);
 
@@ -185,7 +192,7 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 	}
 	
 	/**This method implementation must ensure proper chaining of routes after mapping to CSV row to vendor
-	 * specific CDR pojo. Chaining must be from {@link RouteNames.MAP_CSV_ROW_TO_VENDOR_CDR} to {@link RouteNames.ADD_CDR}
+	 * specific CDR pojo. Chaining must be from {@link MAP_CSV_ROW_TO_VENDOR_CDR} to {@link ADD_CDR}
 	 * 
 	 */
 	abstract void  mapCSVRowToVendorCdr();
