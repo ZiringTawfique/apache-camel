@@ -80,7 +80,11 @@ public final class Auditor {
 			LOG.error("Handled event has following error \n", reason);
 			data.put("reason", reason.getMessage());
 			data.put("stacktrace", MessageFormat.format("Detail stack trace {0}", reason));
-			data.put("cdr", exchange.getIn().getBody(String.class));
+			if (!reason.getClass().equals(AlreadyProcessedFileException.class)) {
+				
+				data.put("cdr", exchange.getIn().getBody(String.class));
+			}
+			
 
 		} 
 
