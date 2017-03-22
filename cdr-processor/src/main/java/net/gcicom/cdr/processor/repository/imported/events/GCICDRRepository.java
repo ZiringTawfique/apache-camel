@@ -1,4 +1,4 @@
-package net.gcicom.cdr.processor.repository;
+package net.gcicom.cdr.processor.repository.imported.events;
 
 import org.springframework.data.repository.CrudRepository;
 

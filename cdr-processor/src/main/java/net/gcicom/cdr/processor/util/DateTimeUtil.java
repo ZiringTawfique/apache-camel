@@ -62,4 +62,12 @@ public abstract class DateTimeUtil {
 		return Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC));
 	}
 	
+	/** convert {@link LocalDateTime} to {@link Date}
+	 * @param dt
+	 * @return
+	 */
+	public static Date convertLocalDateTimeToDate(LocalDateTime dt) {
+		
+		return Date.from(dt.toInstant(ZoneOffset.UTC));
+	}
 }

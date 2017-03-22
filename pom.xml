@@ -23,5 +23,7 @@
   	<!-- build domain model pojos so that down stream project can use it-->
     <module>imported-event-model</module>
     <module>rating-model</module>
+    <module>allspark-model</module>
+    
   </modules>
 </project>

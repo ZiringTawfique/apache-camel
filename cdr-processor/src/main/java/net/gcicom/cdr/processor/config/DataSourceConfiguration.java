@@ -7,6 +7,9 @@ import static net.gcicom.cdr.processor.config.AppProperties.IMPORTED_EVENT_DB_US
 import static net.gcicom.cdr.processor.config.AppProperties.RATING_DB_PASSWORD_KEY;
 import static net.gcicom.cdr.processor.config.AppProperties.RATING_DB_URL_KEY;
 import static net.gcicom.cdr.processor.config.AppProperties.RATING_DB_USER_KEY;
+import static net.gcicom.cdr.processor.config.AppProperties.ALL_SPARK_DB_PASSWORD_KEY;
+import static net.gcicom.cdr.processor.config.AppProperties.ALL_SPARK_DB_URL_KEY;
+import static net.gcicom.cdr.processor.config.AppProperties.ALL_SPARK_DB_USER_KEY;
 
 import java.util.Properties;
 import javax.sql.DataSource;
@@ -78,6 +81,31 @@ public class DataSourceConfiguration {
         dataSource.setUrl(env.getProperty(RATING_DB_URL_KEY));
         dataSource.setUsername(env.getProperty(RATING_DB_USER_KEY));
         dataSource.setPassword(env.getProperty(RATING_DB_PASSWORD_KEY));
+
+        return dataSource;
+    }
+    
+    @Bean(name = "allsparkEntityMF")
+    public LocalContainerEntityManagerFactoryBean allsparkEntityMF() {
+        final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(getAllsparkDS());
+        em.setPackagesToScan(new String[] { "net.gcicom.domain.allspark" });
+        em.setPersistenceProvider(new HibernatePersistenceProvider());
+
+        Properties p = hibernateSpecificProperties();
+        p.setProperty("hibernate.ejb.entitymanager_factory_name", "allsparkEntityMF");
+        em.setJpaProperties(p);
+        return em;
+    }
+
+    @Bean(name = "getAllsparkDS")
+    public DataSource getAllsparkDS() {
+    	
+        final DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(env.getProperty(DRIVER_CLASS_NAME));
+        dataSource.setUrl(env.getProperty(ALL_SPARK_DB_URL_KEY));
+        dataSource.setUsername(env.getProperty(ALL_SPARK_DB_USER_KEY));
+        dataSource.setPassword(env.getProperty(ALL_SPARK_DB_PASSWORD_KEY));
 
         return dataSource;
     }

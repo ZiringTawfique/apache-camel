@@ -15,7 +15,6 @@ import java.util.List;
  */
 @Entity
 @Table(name = "EventFile")
-@NamedQuery(name="EventFile.findAll", query="SELECT e FROM EventFile e")
 public class EventFile implements Serializable {
 	private static final long serialVersionUID = 1L;
 

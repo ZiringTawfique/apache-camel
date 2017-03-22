@@ -111,8 +111,12 @@
 			<artifactId>rating-model</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>		
-		
-		
+		<dependency>
+			<groupId>net.gcicom</groupId>
+			<artifactId>allspark-model</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+				
 	</dependencies>
 
 	<build>
