@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import net.gcicom.cdr.processor.entity.input.BTOpenReachCDR;
@@ -99,16 +100,26 @@ public class BTOpenReachCDRMapper implements CDRMapper<BTOpenReachCDR> {
 			throw new ValidationFailedException(
 					String.format("Missing billing reference details for %s originating number and %s event time ",
 							originNbr, eventTime));
-		} else {
-			
-			for (BillingReference bf : bfs) {
-				
-				cdr.setAccountNumber(bf.getAccountNumber());
-				cdr.setCustomerID(bf.getCustomerID());
-				cdr.setEventReferenceID(bf.getBillingReferenceID());
-				break;
-			}
 		}
+
+		for (BillingReference bf : bfs) {
+			
+			String accountNbr = bf.getAccountNumber();
+			Long custId = bf.getCustomerID();
+			Long billRefId = bf.getBillingReferenceID();
+			
+			if (ObjectUtils.isEmpty(accountNbr) || ObjectUtils.isEmpty(custId) || ObjectUtils.isEmpty(billRefId)) {
+				
+				throw new ValidationFailedException(
+						String.format("Missing billing reference details for %s originating number and %s event time ",
+								originNbr, eventTime));
+			}
+			cdr.setAccountNumber(accountNbr);
+			cdr.setCustomerID(custId);
+			cdr.setEventReferenceID(billRefId);
+			break;
+		}
+	
 		
 	}
 
