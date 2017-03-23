@@ -1,8 +1,11 @@
 package net.gcicom.cdr.processor.util;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
 
@@ -69,5 +72,12 @@ public abstract class DateTimeUtil {
 	public static Date convertLocalDateTimeToDate(LocalDateTime dt) {
 		
 		return Date.from(dt.toInstant(ZoneOffset.UTC));
+	}
+	
+	public static String formatYYYYMM(LocalDateTime dt) {
+		
+		DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyyMM");
+		return dt.format(df);
+		
 	}
 }

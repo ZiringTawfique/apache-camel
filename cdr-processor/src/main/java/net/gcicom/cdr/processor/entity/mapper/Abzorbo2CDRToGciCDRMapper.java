@@ -1,6 +1,9 @@
 package net.gcicom.cdr.processor.entity.mapper;
 
 import static net.gcicom.cdr.processor.common.AppConstants.CDR_PROCESSOR_USER;
+import static net.gcicom.cdr.processor.util.EventRecordKeyGenerator.getEventRecordHash;
+import static net.gcicom.cdr.processor.util.DateTimeUtil.getWeekDayFlag;
+import static net.gcicom.cdr.processor.util.DateTimeUtil.getDurationInSeconds;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -16,8 +19,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import net.gcicom.cdr.processor.entity.input.AbzorbO2CDR;
-import net.gcicom.cdr.processor.util.DateTimeUtil;
-import net.gcicom.cdr.processor.util.EventRecordKeyGenerator;
 import net.gcicom.domain.imported.events.ImportedEvent;
 
 
@@ -32,7 +33,7 @@ public class Abzorbo2CDRToGciCDRMapper implements CDRMapper<AbzorbO2CDR> {
 		/* (non-Javadoc)
 		 * @see net.gcicom.cdr.processor.entity.output.CDRMapper#convertToGCICDR(java.util.List)
 		 */
-		public List<ImportedEvent> convertToGCICDR(final List<AbzorbO2CDR> input) {
+		public List<ImportedEvent> convertToGCICDR(final List<AbzorbO2CDR> input, final Long eventFileId, final String fileName) {
 			
 			List<ImportedEvent> cdrs = new ArrayList<>();
 
@@ -48,7 +49,7 @@ public class Abzorbo2CDRToGciCDRMapper implements CDRMapper<AbzorbO2CDR> {
 				cdr.setCountry(DUMMY);
 				cdr.setCustomerID(L_DUMMY);
 				cdr.setDialledCLI(dialedNumber);
-				cdr.setEventDurationSecs(DateTimeUtil.getDurationInSeconds(source.getDuration()));
+				cdr.setEventDurationSecs(getDurationInSeconds(source.getDuration()));
 				cdr.setEventFileID(L_DUMMY);
 				cdr.setEventReference(source.getOriginatingNumber());
 				cdr.setEventReferenceID(L_DUMMY);
@@ -70,12 +71,12 @@ public class Abzorbo2CDRToGciCDRMapper implements CDRMapper<AbzorbO2CDR> {
 				cdr.setSupplierServiceType(source.getNetwork() + "_" + source.getCallType());
 				cdr.setTerminatingCLI(dialedNumber);
 				cdr.setTimePeriod(DUMMY);
-				cdr.setWeekDayFlag(DateTimeUtil.getWeekDayFlag(source.getDate().atTime(LocalTime.parse(source.getTime(), DateTimeFormatter.ISO_LOCAL_TIME))));
+				cdr.setWeekDayFlag(getWeekDayFlag(source.getDate().atTime(LocalTime.parse(source.getTime(), DateTimeFormatter.ISO_LOCAL_TIME))));
 				cdr.setSupplierTariffPlanID(source.getTariff());
 				cdr.setCreatedBy(CDR_PROCESSOR_USER);
 				
 				//generate only after populating all the field in cdrs
-				cdr.setEventRecordKey(EventRecordKeyGenerator.getEventRecordHash(cdr));
+				cdr.setEventRecordKey(getEventRecordHash(cdr));
 				LOG.debug("Converted cdr " + cdr.toString());
 				cdrs.add(cdr);
 			}

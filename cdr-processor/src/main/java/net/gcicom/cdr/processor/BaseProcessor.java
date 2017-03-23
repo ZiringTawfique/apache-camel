@@ -5,6 +5,7 @@ import static net.gcicom.cdr.processor.RouteNames.MAP_CSV_ROW_TO_VENDOR_CDR;
 import static net.gcicom.cdr.processor.RouteNames.MOVE_FILE_ON_ERROR;
 import static org.apache.camel.Exchange.FILE_PATH;
 import static org.apache.camel.Exchange.FILE_NAME_CONSUMED;
+import static net.gcicom.cdr.processor.common.AppConstants.CDR_EVENT_FILE_ID;
 
 
 import org.apache.camel.Exchange;
@@ -131,7 +132,7 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 				.logHandled(true)
 				.logStackTrace(true)
 			.end()
-	       	.bean(mapper, "convertToGCICDR")
+	       	.bean(mapper, "convertToGCICDR(*, ${header."+ CDR_EVENT_FILE_ID +"}, ${header."+ FILE_NAME_CONSUMED +"})" )
 			.aggregate(constant(true), cdrAggregator)
 	       	.completionSize(batchSize)
 	       	.completionTimeout(aggregationTimeOut)//just in case cvs rows are less than batch size
@@ -161,7 +162,7 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
         		+ "&noop=false" 
         		+ "&move=.processed"
                 + "&moveFailed=.processed"
-        		+ "&scheduler=spring&scheduler.cron=0/2+*+*+*+*+*")
+        		+ "&scheduler=spring&scheduler.cron=0+0/45+8-9+*+*+*")
 		.log("Processing compressed files")
 		.process(new Processor() {
 			

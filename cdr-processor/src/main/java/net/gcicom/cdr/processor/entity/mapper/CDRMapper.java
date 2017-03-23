@@ -12,5 +12,5 @@ public interface CDRMapper<T> {
 	 * @return
 	 * @throws Exception any exception which occurred due to business validation
 	 */
-	public List<ImportedEvent> convertToGCICDR(final List<T> source) throws Exception;
+	public List<ImportedEvent> convertToGCICDR(final List<T> source, final Long eventFileId, final String fileName) throws Exception;
 }
