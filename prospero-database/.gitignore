@@ -1,4 +1,10 @@
 *.bak
 
+# Using Prospero directly instead of a model. May change later.
+*.mwb
+
+# Only include the script, removing the samples
+sample/csv/*
+
 # Excel/etc backups
 ~$*.*

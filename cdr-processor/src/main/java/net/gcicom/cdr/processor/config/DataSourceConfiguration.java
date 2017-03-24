@@ -7,6 +7,9 @@ import static net.gcicom.cdr.processor.config.AppProperties.IMPORTED_EVENT_DB_US
 import static net.gcicom.cdr.processor.config.AppProperties.RATING_DB_PASSWORD_KEY;
 import static net.gcicom.cdr.processor.config.AppProperties.RATING_DB_URL_KEY;
 import static net.gcicom.cdr.processor.config.AppProperties.RATING_DB_USER_KEY;
+import static net.gcicom.cdr.processor.config.AppProperties.ALL_SPARK_DB_PASSWORD_KEY;
+import static net.gcicom.cdr.processor.config.AppProperties.ALL_SPARK_DB_URL_KEY;
+import static net.gcicom.cdr.processor.config.AppProperties.ALL_SPARK_DB_USER_KEY;
 
 import java.util.Properties;
 import javax.sql.DataSource;
@@ -34,7 +37,7 @@ public class DataSourceConfiguration {
     public LocalContainerEntityManagerFactoryBean importedEventsEntityMF() {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setBeanName("importedEventsEntityMF");
-        em.setDataSource(getImportedEventsDS());
+        em.setDataSource(importedEventsDS());
         em.setPackagesToScan(new String[] { "net.gcicom.domain.imported.events" });
         
         em.setPersistenceProvider(new HibernatePersistenceProvider());
@@ -44,9 +47,9 @@ public class DataSourceConfiguration {
         return em;
     }
 
-    @Bean(name = "getImportedEventsDS")
+    @Bean(name = "importedEventsDS")
     @Primary
-    public DataSource getImportedEventsDS() {
+    public DataSource importedEventsDS() {
     	
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getProperty(DRIVER_CLASS_NAME));
@@ -60,7 +63,7 @@ public class DataSourceConfiguration {
     @Bean(name = "ratingEntityMF")
     public LocalContainerEntityManagerFactoryBean ratingEntityMF() {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(getRatingDS());
+        em.setDataSource(ratingDS());
         em.setPackagesToScan(new String[] { "net.gcicom.domain.rating" });
         em.setPersistenceProvider(new HibernatePersistenceProvider());
 
@@ -70,14 +73,39 @@ public class DataSourceConfiguration {
         return em;
     }
 
-    @Bean(name = "getRatingDS")
-    public DataSource getRatingDS() {
+    @Bean(name = "ratingDS")
+    public DataSource ratingDS() {
     	
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getProperty(DRIVER_CLASS_NAME));
         dataSource.setUrl(env.getProperty(RATING_DB_URL_KEY));
         dataSource.setUsername(env.getProperty(RATING_DB_USER_KEY));
         dataSource.setPassword(env.getProperty(RATING_DB_PASSWORD_KEY));
+
+        return dataSource;
+    }
+    
+    @Bean(name = "allsparkEntityMF")
+    public LocalContainerEntityManagerFactoryBean allsparkEntityMF() {
+        final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(allsparkDS());
+        em.setPackagesToScan(new String[] { "net.gcicom.domain.allspark" });
+        em.setPersistenceProvider(new HibernatePersistenceProvider());
+
+        Properties p = hibernateSpecificProperties();
+        p.setProperty("hibernate.ejb.entitymanager_factory_name", "allsparkEntityMF");
+        em.setJpaProperties(p);
+        return em;
+    }
+
+    @Bean(name = "allsparkDS")
+    public DataSource allsparkDS() {
+    	
+        final DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(env.getProperty(DRIVER_CLASS_NAME));
+        dataSource.setUrl(env.getProperty(ALL_SPARK_DB_URL_KEY));
+        dataSource.setUsername(env.getProperty(ALL_SPARK_DB_USER_KEY));
+        dataSource.setPassword(env.getProperty(ALL_SPARK_DB_PASSWORD_KEY));
 
         return dataSource;
     }

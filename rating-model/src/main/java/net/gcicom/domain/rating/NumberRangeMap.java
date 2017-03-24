@@ -3,7 +3,6 @@ package net.gcicom.domain.rating;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
-import java.math.BigInteger;
 
 
 /**
@@ -12,7 +11,6 @@ import java.math.BigInteger;
  */
 @Entity
 @Table(name = "NumberRangeMap")
-@NamedQuery(name="NumberRangeMap.findAll", query="SELECT n FROM NumberRangeMap n")
 public class NumberRangeMap implements Serializable {
 	private static final long serialVersionUID = 1L;
 

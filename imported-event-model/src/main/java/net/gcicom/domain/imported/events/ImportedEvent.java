@@ -16,7 +16,6 @@ import java.util.Objects;
  */
 @Entity
 @Table(name="ImportedEvents")
-@NamedQuery(name="ImportedEvent.findAll", query="SELECT i FROM ImportedEvent i")
 public class ImportedEvent implements Serializable {
 	private static final long serialVersionUID = 1L;
 

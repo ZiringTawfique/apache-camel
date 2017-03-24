@@ -1,3 +1,7 @@
+-- 1. run these queries in SSMS while connected to EclipseSQL-GCI
+-- 2. "Save Results As" CSV (may need to have/omit headers)
+-- 3. import with LOAD DATA INFILE (preset columns) or Table Data Import Wizard (slow)
+
 -- Customer
 select
   cust.[Customer ID] as CustomerID,
@@ -10,6 +14,15 @@ where cust.[Customer ID] >= 234200 and cust.[Customer ID] <= 234300
 
 -- Address
 select
+  1 as AddressID,
+  'Global House' as Line1,
+  '2 Crofton Close' as Line2,
+  'Lincoln' as Line3,
+  'Lincolnshire' as County,
+  'LN3 4NT' as Postcode,
+  'United Kingdom' as Country -- Customers in sample have 'UK' instead of 'United Kingdom'
+union all
+select
   cust.[Customer ID] as AddressID,
   cust.Address1 as Line1,
   cust.Address2 as Line2,
@@ -19,14 +32,14 @@ select
   cust.Country
 from [EclipseSQL-GCI].dbo.Customers cust
 where cust.[Customer ID] >= 234200 and cust.[Customer ID] <= 234300
-
+;
 
 -- CustomerProductCharge
 select
   bc.ID as CustomerProductChargeID,
   cust.[Customer ID] as CustomerID,
   cust.[Account Number] as AccountNumber,
-  --'NOT_YET_NEEDED' as OrderNumber,
+  null as OrderNumber,
   Tel_ID as BillingReferenceID,
   Product_ID as ProductID,
   prod.ProductDescription as DefaultProductDescription, -- "TempProductDuringCleanUp"
@@ -39,7 +52,10 @@ select
   Start as ChargeStartDate,
   [End] as ChargeEndDate,
   LastTo as ChargeBilledUntil,
-  -- SupplierStart/End, CustomerStart/End not yet needed
+  null as SupplierContractStartDate,
+  null as SupplierContractEndDate,
+  null as CustomerContractStartDate,
+  null as CustomerContractEndDate,
   Credit as AllowCreditBackFlag,
   CustomerReference as CustomerCustomReference,
   ChargeCreated as ChargeInstanceCreateDate,
@@ -59,17 +75,41 @@ where [Tel ID] = 1659852
 
 -- BillingReference
 -- "Billing Reference" Bill Phonenums x "Group" Bill Main
+	  -- other stuff from GenerateInvoiceBackups
+	  -- att.Custom11: CustomerReferenceBK
+	  -- (bill_charges) bc.CustomerReference: CustomerReferenceBC
+	  -- BC.SerialNo as ProjectNumber
+	  -- 'InChSum.ChargeInstanceDescription' - i don't have this
+	  -- BM.Name as GroupName
 select
   num.[Tel ID] as BillingReferenceID,
   cust.[Customer ID] as CustomerID,
   cust.[Account Number] as AccountNumber,
-  --??? as NodeID
-  --??? OrderNumber is ambiguous. BT_OrderNo + CPS_OrderNo are blank
+  null as OrderNumber, --??? OrderNumber is ambiguous. BT_OrderNo + CPS_OrderNo are blank
+  null as NodeID, --???
+  null as AssetID, --??? Not cross-referenced to Core yet.
   num.[Phonenumber] as BillingReference,
-  CONVERT(date,att.User_ContractDate) as BillingReferenceStartDate,
-  DATEADD(month,att.User_ContractLen, CONVERT(date,att.User_ContractDate)) as BillingReferenceEndDate, -- Start + Len
+  [Description] as BillingReferenceDescription,
+  CONVERT(date,att.ConDate) as BillingReferenceStartDate,
+  CONVERT(date,att.DConDate) as BillingReferenceEndDate,
+  CONVERT(date,att.User_ContractDate) as CustomerContractStartDate,
+  DATEADD(month,att.User_ContractLen, CONVERT(date,att.User_ContractDate)) as CustomerContractEndDate, -- Start + Len
   CONVERT(date,att.SP_ContractDate) as SupplierContractStartDate,
-  DATEADD(month,att.SP_ContractLen, CONVERT(date,att.SP_ContractDate)) as SupplierContractEndDate -- Start + Len
+  DATEADD(month,att.SP_ContractLen, CONVERT(date,att.SP_ContractDate)) as SupplierContractEndDate, -- Start + Len
+  null as BillingReferenceCreateDate,
+  null as BillingReferenceCreateUser,
+  att.Custom11 as CustomerCustomReference, -- as seen in GenerateInvoiceBackups, blank for sample so far
+  att.Custom6 as CustomerSiteName, -- as seen in GenerateInvoiceBackups, blank for sample so far
+  null as InstallationPostCode,
+  Costcode as CustomerCostCentre, -- as seen in GenerateInvoiceBackups, this works.
+  att.Custom2 as CustomerPONumber, -- as seen in GenerateInvoiceBackups, blank for sample so far
+  null as GCISalesManager,
+  null as SupplierReference_1,
+  null as SupplierReference_2,
+  null as SupplierReference_3,
+  null as GCICustomField_1,
+  null as GCICustomField_2,
+  null as GCICustomField_3
 from [EclipseSQL-GCI].dbo.[BILL Phonenum Add] att -- so far, looks like they're 1:1 w/ Phonenum
 inner join [EclipseSQL-GCI].dbo.[BILL Phonenums] num on att.[Tel ID] = num.[Tel ID]
 inner join [EclipseSQL-GCI].dbo.[BILL Main] gr on num.[Billing ID] = gr.[Billing ID]
@@ -91,16 +131,12 @@ select
   CustomerID,
   cust.[Account Number] as AccountNumber,
   Billed as BilledFlag,
-  ( case
-      when Billed = 1 then 0 -- dummy
-	  else null
-	end
-  ) as BilledInvoiceChargeSummary, -- "which CallCharges line was this billed in"
-  InvoiceNumber as BilledInvoiceNumber,
-  InvoiceBatchNum as BilledInvoiceBatchNumber,
+  null as BilledInvoiceChargeSummaryID, -- Migration? case when Billed = 1 then 0 else null end "which CallCharges line was this billed in"
+  null as BilledInvoiceNumber, --Migration? InvoiceNumber as BilledInvoiceNumber,
+  null as BilledInvoiceBatchNumber, --Migration? InvoiceBatchNum as BilledInvoiceBatchNumber,
   AccountingPeriod,
   SupplierRatingPattern as EventReference,
-  --EventID?, 'SupplierCDRID' is blank.
+  null as EventID, --?, 'SupplierCDRID' is blank.
   OriginatingCLI,
   DialledCLI,
   TerminatingCLI,
@@ -113,7 +149,7 @@ select
   Rate as TimePeriod, -- looks like 1, 2, 3. not sure of order.
   Band as EventBandID, -- This is a string, not an ID.
   CarrierCost,
-  --RatingPlanID? -- isn't recorded
+  null as RatingPlanID, -- not sure
   RateMethod as RateMethodID,
   MarkedUp as MarkedUpFlag,
   PreRatedCall as PreRatedCallFlag,
@@ -123,12 +159,19 @@ select
   RawCost as RawCustomerCharge, --?
   BundledDuration,
   BilledDuration,
+  null as CustomerCharge, --?
   VATable as VATFlag,
   VAT as VATCharge,
   ratedEvent.Country,
   [File_ID] as EventFileID,
   CarrierNo as CarrierID,
-  CarrierTariffCode as CarrierTariffID
+  CarrierTariffCode as CarrierTariffID,
+  CarrierNo as CarrierAccountID, -- CarrierAccountCode is text
+  null as SupplierRecordReference,
+  null as SupplierEventBand,
+  SupplierRatingPattern as SupplierRatingPattern,
+  ChargeTaxTypeFlag as ChargeTaxTypeFlag,
+  Duplicate as DuplicateFlag
 from [EclipseSQL-GCI].dbo.[Call Data] ratedEvent
 inner join [EclipseSQL-GCI].dbo.Customers cust on [CustomerID] = cust.[Customer ID]
 where [CustomerID] >= 234200 and [CustomerID] <= 234300 -- IS INDEXED ON CUSTOMER ID
@@ -167,3 +210,12 @@ select
   ) as Phonenums
 from [EclipseSQL-GCI].dbo.Customers cust
 where cust.[Customer ID] >= 234200 and cust.[Customer ID] <= 234300
+
+
+/*
+--InvoicingCompany
+SELECT 
+  [CompanyID] as InvoicingCompanyID,
+  [CoName] as InvoicingCompanyName
+FROM [EclipseSQL-GCI].[dbo].[Companies]
+*/

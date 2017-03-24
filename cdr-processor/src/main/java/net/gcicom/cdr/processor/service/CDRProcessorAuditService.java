@@ -3,8 +3,8 @@ package net.gcicom.cdr.processor.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import net.gcicom.cdr.processor.repository.imported.events.CDRAuditRepository;
 import net.gcicom.domain.imported.events.AuditEvent;
-import net.gcicom.cdr.processor.repository.CDRAuditRepository;
 
 /**
  * Audit service to handle auditing. 

@@ -10,7 +10,6 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="EventFileDetails")
-@NamedQuery(name="EventFileDetail.findAll", query="SELECT e FROM EventFileDetail e")
 public class EventFileDetail implements Serializable {
 	private static final long serialVersionUID = 1L;
 
