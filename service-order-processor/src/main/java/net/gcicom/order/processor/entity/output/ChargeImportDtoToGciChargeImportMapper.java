@@ -1,4 +1,4 @@
-package net.gcicom.cdr.processor.entity.output;
+package net.gcicom.order.processor.entity.output;
 
 
 import java.sql.Timestamp;
@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import net.gcicom.cdr.processor.entity.input.ChargeImportDto;
+import net.gcicom.order.processor.entity.input.ChargeImportDto;
 
 
 @Component

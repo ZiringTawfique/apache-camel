@@ -1,4 +1,4 @@
-package net.gcicom.cdr.processor.entity.output;
+package net.gcicom.order.processor.entity.output;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

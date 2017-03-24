@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import net.gcicom.cdr.processor.entity.output.CDRKey;
-import net.gcicom.cdr.processor.entity.output.GCIChargeImport;
-import net.gcicom.cdr.processor.repository.GCIChargeImportRepository;
+import net.gcicom.order.processor.entity.output.CDRKey;
+import net.gcicom.order.processor.entity.output.GCIChargeImport;
+import net.gcicom.order.processor.repository.GCIChargeImportRepository;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ServiceOrderProcessorApplicationTests {

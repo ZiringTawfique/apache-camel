@@ -1,10 +1,10 @@
-package net.gcicom.cdr.processor.repository;
+package net.gcicom.order.processor.repository;
 
 import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import net.gcicom.cdr.processor.entity.output.MD5;
+import net.gcicom.order.processor.entity.output.MD5;
 
 public interface Md5Repository extends CrudRepository<MD5, Long>{
 

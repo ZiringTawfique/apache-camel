@@ -1,4 +1,4 @@
-package net.gcicom.cdr.processor.service;
+package net.gcicom.order.processor.service;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import net.gcicom.cdr.processor.entity.audit.AuditEvent;
+import net.gcicom.order.processor.entity.audit.AuditEvent;
 
 /**
  * Class to handle auditing. 

@@ -1,4 +1,4 @@
-package net.gcicom.cdr.processor.entity.audit;
+package net.gcicom.order.processor.entity.audit;
 
 
 import java.io.Serializable;
@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-import net.gcicom.cdr.processor.entity.output.BaseEntity;
+import net.gcicom.order.processor.entity.output.BaseEntity;
 
 import java.util.HashMap;
 import java.util.Map;

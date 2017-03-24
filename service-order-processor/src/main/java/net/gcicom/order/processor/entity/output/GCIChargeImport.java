@@ -1,4 +1,4 @@
-package net.gcicom.cdr.processor.entity.output;
+package net.gcicom.order.processor.entity.output;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

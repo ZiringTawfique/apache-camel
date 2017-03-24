@@ -1,11 +1,11 @@
-package net.gcicom.cdr.processor.repository;
+package net.gcicom.order.processor.repository;
 /**
  * @author Sathish Natarajan
  *
  */
 import org.springframework.data.repository.CrudRepository;
 
-import net.gcicom.cdr.processor.entity.audit.AuditEvent;
+import net.gcicom.order.processor.entity.audit.AuditEvent;
 
 public interface CDRAuditRepository extends CrudRepository<AuditEvent, Long> {
 

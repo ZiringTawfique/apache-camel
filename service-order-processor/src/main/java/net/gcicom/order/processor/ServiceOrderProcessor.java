@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.gcicom.cdr.processor;
+package net.gcicom.order.processor;
 
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.model.dataformat.BindyType;
@@ -12,17 +12,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import net.gcicom.cdr.processor.entity.input.ChargeImportDto;
+import net.gcicom.order.processor.entity.input.ChargeImportDto;
 
-import net.gcicom.cdr.processor.entity.output.ChargeImportDtoToGciChargeImportMapper;
+import net.gcicom.order.processor.entity.output.ChargeImportDtoToGciChargeImportMapper;
 
-import net.gcicom.cdr.processor.service.AlreadyProcessedFileException;
-import net.gcicom.cdr.processor.service.Auditor;
+import net.gcicom.order.processor.service.AlreadyProcessedFileException;
+import net.gcicom.order.processor.service.Auditor;
 
-import net.gcicom.cdr.processor.service.CDRProcessorErrorHandler;
-import net.gcicom.cdr.processor.service.ChargeImportAggregator;
+import net.gcicom.order.processor.service.CDRProcessorErrorHandler;
+import net.gcicom.order.processor.service.ChargeImportAggregator;
 
-import net.gcicom.cdr.processor.service.GCIChargeImportService;
+import net.gcicom.order.processor.service.GCIChargeImportService;
 
 /**
  * A Simple Camel route builder to process AbzorbO2 CDR feed

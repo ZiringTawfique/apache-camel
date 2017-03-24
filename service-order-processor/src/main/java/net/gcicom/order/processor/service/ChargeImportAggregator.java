@@ -1,4 +1,4 @@
-package net.gcicom.cdr.processor.service;
+package net.gcicom.order.processor.service;
 
 import java.util.ArrayList;
 
@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 
-import net.gcicom.cdr.processor.entity.output.GCIChargeImport;
+import net.gcicom.order.processor.entity.output.GCIChargeImport;
 
 /**
  * This class support {@link GCIChargeImport} object aggregation while consuming 

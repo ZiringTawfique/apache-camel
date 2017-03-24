@@ -1,4 +1,4 @@
-package net.gcicom.cdr.processor.service;
+package net.gcicom.order.processor.service;
 
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;

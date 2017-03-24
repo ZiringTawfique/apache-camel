@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.gcicom.cdr.processor.entity.input;
+package net.gcicom.order.processor.entity.input;
 
 import java.time.LocalDate;
 

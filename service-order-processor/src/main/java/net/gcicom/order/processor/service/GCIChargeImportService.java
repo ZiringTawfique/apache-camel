@@ -1,4 +1,4 @@
-package net.gcicom.cdr.processor.service;
+package net.gcicom.order.processor.service;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,11 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 
-import net.gcicom.cdr.processor.entity.output.GCIChargeImport;
-import net.gcicom.cdr.processor.entity.output.MD5;
+import net.gcicom.order.processor.entity.output.GCIChargeImport;
+import net.gcicom.order.processor.entity.output.MD5;
 
-import net.gcicom.cdr.processor.repository.GCIChargeImportRepository;
-import net.gcicom.cdr.processor.repository.Md5Repository;
+import net.gcicom.order.processor.repository.GCIChargeImportRepository;
+import net.gcicom.order.processor.repository.Md5Repository;
 /**
  * Service to add all {@link GCIChargeImport} to database. Preferably db insert should be batched
  * It needs more work as in business validation etc  
