@@ -62,7 +62,7 @@ public abstract class EventRecordKeyGenerator {
 			
 			String msg = String.format("Null or empty input [ %s ] is not allowed in hash generation", cdr);
 			LOG.error(msg);
-			throw new IllegalArgumentException(msg);
+			throw new IllegalArgumentException("Mandatory records are missing");
 		}
 		
 		return EventRecordKeyGenerator.getEventRecordHash(
