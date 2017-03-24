@@ -21,10 +21,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import net.gcicom.cdr.processor.entity.input.BTOpenReachCDR;
-import net.gcicom.cdr.processor.service.GCICDRService;
 import net.gcicom.cdr.processor.service.ValidationFailedException;
 import net.gcicom.domain.imported.events.ImportedEvent;
-import net.gcicom.domain.rating.NumberRangeMap;
 
 @Component
 public class BTOpenReachCDRMapper implements CDRMapper<BTOpenReachCDR> {

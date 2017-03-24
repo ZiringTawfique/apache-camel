@@ -19,20 +19,25 @@ import net.gcicom.domain.imported.events.ImportedEvent;
 import net.gcicom.domain.rating.NumberRangeMap;
 import net.gcicom.domain.rating.Supplier;
 
+/**
+ * Container class for common reusable helper methods to support mapping of 
+ * supplied specific CDR POJO to {@link ImportedEvent} 
+ *
+ */
 @Component
-public final class CDRMapperHelper {
+final class CDRMapperHelper {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(CDRMapperHelper.class);
 	
 	@Autowired
 	private GCICDRService service;
 
-	/**
+	/**Gets supplied id for based on input file pattern
 	 * @param fileName
 	 * @return
 	 * @throws ValidationFailedException
 	 */
-	public Long getSupplierId(String fileName) throws ValidationFailedException {
+	public Long getSupplierId(final String fileName) throws ValidationFailedException {
 
 		final String sName = getSupplierName(fileName);
 		
@@ -102,7 +107,12 @@ public final class CDRMapperHelper {
 
 	}
 	
-	public NumberRangeMap getNumberRange(final String dialedNumber, Date eventTime) {
+	/** Retrieves {@link NumberRangeMap} for given dialed number and event time combination
+	 * @param dialedNumber
+	 * @param eventTime
+	 * @return
+	 */
+	private NumberRangeMap getNumberRange(final String dialedNumber, final Date eventTime) {
 		
 		List<Long> l = getNumberRanges(dialedNumber);
 		
@@ -128,6 +138,14 @@ public final class CDRMapperHelper {
 		
 	}
 
+	/**Populates {@link ImportedEvent#setNumberRange(Long)}, {@link ImportedEvent#setNumberRangeClassification(String)}
+	 * and {@link ImportedEvent#setNumberRangeType(String)} if available for given search criteria
+	 * Note - Internet (not dial up) may not have {@link NumberRangeMap}
+	 * @param cdr semi populated {@link ImportedEvent}
+	 * @param dialedNumber 
+	 * @param eventTime
+	 * @return
+	 */
 	public ImportedEvent populateNumberRangDetails(ImportedEvent cdr, String dialedNumber, Date eventTime) {
 		
 		NumberRangeMap nrm = getNumberRange(dialedNumber, eventTime);
