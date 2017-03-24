@@ -49,14 +49,11 @@ public class BTOpenReachCDRMapper implements CDRMapper<BTOpenReachCDR> {
 			cdr = h.populateBillingReferenceDetails(cdr, eventTime, source.getOriginatingNumber());
 
 			cdr.setAccountingPeriod(formatYYYYMM(getDateTime(source.getEventTime())));
-			// cdr.setAccountNumber(DUMMY);
 			cdr.setCountry(NA);
-			// cdr.setCustomerID(L_DUMMY);
 			cdr.setDialledCLI(source.getDialedNumber());
 			cdr.setEventDurationSecs(getDurationInSeconds(source.getDuration()));
 			cdr.setEventFileID(eventFileId);
 			cdr.setEventReference(source.getOriginatingNumber());
-			// cdr.setEventReferenceID(L_DUMMY);
 			cdr.setEventTime(eventTime);
 			cdr.setEventTypeID(L_DUMMY);
 			
@@ -66,7 +63,7 @@ public class BTOpenReachCDRMapper implements CDRMapper<BTOpenReachCDR> {
 			
 			
 			cdr.setOriginatingCLI(source.getOriginatingNumber());
-			cdr.setPreRatedEventFlag(DUMMY);
+			cdr.setPreRatedEventFlag(NA);
 			cdr.setPresentationCLI(source.getDialedNumber());
 			cdr.setSupplierAccountNumber(source.getAccountNumber());
 			cdr.setSupplierCost(source.getWholesalePrice());
