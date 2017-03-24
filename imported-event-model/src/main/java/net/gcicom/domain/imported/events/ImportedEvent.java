@@ -55,7 +55,7 @@ public class ImportedEvent implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastModifiedDate;
 
-	private String numberRange;
+	private Long numberRange;
 
 	private String numberRangeClassification;
 
@@ -222,11 +222,11 @@ public class ImportedEvent implements Serializable {
 		this.lastModifiedDate = lastModifiedDate;
 	}
 
-	public String getNumberRange() {
+	public Long getNumberRange() {
 		return this.numberRange;
 	}
 
-	public void setNumberRange(String numberRange) {
+	public void setNumberRange(Long numberRange) {
 		this.numberRange = numberRange;
 	}
 

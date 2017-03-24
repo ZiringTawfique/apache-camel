@@ -10,7 +10,7 @@ import java.util.Date;
  * 
  */
 @Entity
-@Table(name = "BillingReference")
+@NamedQuery(name="BillingReference.findAll", query="SELECT b FROM BillingReference b")
 public class BillingReference implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -66,17 +66,17 @@ public class BillingReference implements Serializable {
 
 	private String orderNumber;
 
+	private String serviceCode;
+
 	@Temporal(TemporalType.DATE)
 	private Date supplierContractEndDate;
 
 	@Temporal(TemporalType.DATE)
 	private Date supplierContractStartDate;
 
-	private String supplierReference_1;
+	private String supplierOrderNumber;
 
-	private String supplierReference_2;
-
-	private String supplierReference_3;
+	private String supplierServiceReference;
 
 	public BillingReference() {
 	}
@@ -265,6 +265,14 @@ public class BillingReference implements Serializable {
 		this.orderNumber = orderNumber;
 	}
 
+	public String getServiceCode() {
+		return this.serviceCode;
+	}
+
+	public void setServiceCode(String serviceCode) {
+		this.serviceCode = serviceCode;
+	}
+
 	public Date getSupplierContractEndDate() {
 		return this.supplierContractEndDate;
 	}
@@ -281,28 +289,20 @@ public class BillingReference implements Serializable {
 		this.supplierContractStartDate = supplierContractStartDate;
 	}
 
-	public String getSupplierReference_1() {
-		return this.supplierReference_1;
+	public String getSupplierOrderNumber() {
+		return this.supplierOrderNumber;
 	}
 
-	public void setSupplierReference_1(String supplierReference_1) {
-		this.supplierReference_1 = supplierReference_1;
+	public void setSupplierOrderNumber(String supplierOrderNumber) {
+		this.supplierOrderNumber = supplierOrderNumber;
 	}
 
-	public String getSupplierReference_2() {
-		return this.supplierReference_2;
+	public String getSupplierServiceReference() {
+		return this.supplierServiceReference;
 	}
 
-	public void setSupplierReference_2(String supplierReference_2) {
-		this.supplierReference_2 = supplierReference_2;
-	}
-
-	public String getSupplierReference_3() {
-		return this.supplierReference_3;
-	}
-
-	public void setSupplierReference_3(String supplierReference_3) {
-		this.supplierReference_3 = supplierReference_3;
+	public void setSupplierServiceReference(String supplierServiceReference) {
+		this.supplierServiceReference = supplierServiceReference;
 	}
 
 }

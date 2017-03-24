@@ -1,6 +1,7 @@
 package net.gcicom.cdr.processor.entity.mapper;
 
 import static net.gcicom.cdr.processor.common.SupplierMap.getSupplierName;
+import static net.gcicom.cdr.processor.util.NumberRangeUtils.getNumberRanges;
 
 import java.util.Date;
 import java.util.List;
@@ -15,6 +16,7 @@ import net.gcicom.cdr.processor.service.GCICDRService;
 import net.gcicom.cdr.processor.service.ValidationFailedException;
 import net.gcicom.domain.allspark.BillingReference;
 import net.gcicom.domain.imported.events.ImportedEvent;
+import net.gcicom.domain.rating.NumberRangeMap;
 import net.gcicom.domain.rating.Supplier;
 
 @Component
@@ -64,7 +66,7 @@ public final class CDRMapperHelper {
 				"Populating billing reference details for %s billing reference and for %s event date time", originNbr,
 				eventTime));
 		// get billing reference number if not found mark it error record
-		List<BillingReference> bfs = service.getBillingReference(originNbr, eventTime, eventTime);
+		List<BillingReference> bfs = service.getBillingReference(originNbr, eventTime);
 		if (bfs.size() == 0) {
 
 			throw new ValidationFailedException(
@@ -99,4 +101,47 @@ public final class CDRMapperHelper {
 		return cdr;
 
 	}
+	
+	public NumberRangeMap getNumberRange(final String dialedNumber, Date eventTime) {
+		
+		List<Long> l = getNumberRanges(dialedNumber);
+		
+		if (l.isEmpty()) {
+			
+			return null;
+			
+		}
+		List<NumberRangeMap> r = service.getNumberRanges(l, eventTime);
+		
+		for (Long range : l) {
+			
+			for (NumberRangeMap nrm : r) {
+				
+				if(range.equals(nrm.getNumberRange())) {
+					
+					return nrm;
+				}
+			}
+		}
+		
+		return null;
+		
+	}
+
+	public ImportedEvent populateNumberRangDetails(ImportedEvent cdr, String dialedNumber, Date eventTime) {
+		
+		NumberRangeMap nrm = getNumberRange(dialedNumber, eventTime);
+		
+		if (!ObjectUtils.isEmpty(nrm)) {
+			
+			cdr.setNumberRange(nrm.getNumberRange());
+			cdr.setNumberRangeClassification(nrm.getNumberRangeClassification());
+			cdr.setNumberRangeType(nrm.getNumberRangeType());
+			
+		}
+
+		return cdr;
+	}
+	
+
 }

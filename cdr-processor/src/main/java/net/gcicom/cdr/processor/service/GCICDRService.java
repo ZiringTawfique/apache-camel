@@ -23,10 +23,12 @@ import org.springframework.util.DigestUtils;
 import net.gcicom.cdr.processor.repository.allspark.BillingReferenceRepository;
 import net.gcicom.cdr.processor.repository.imported.events.EventFileRepository;
 import net.gcicom.cdr.processor.repository.imported.events.GCICDRRepository;
+import net.gcicom.cdr.processor.repository.rating.NumberRangeMapRepository;
 import net.gcicom.cdr.processor.repository.rating.SupplierRepository;
 import net.gcicom.domain.allspark.BillingReference;
 import net.gcicom.domain.imported.events.EventFile;
 import net.gcicom.domain.imported.events.ImportedEvent;
+import net.gcicom.domain.rating.NumberRangeMap;
 import net.gcicom.domain.rating.Supplier;
 
 /**
@@ -38,22 +40,23 @@ import net.gcicom.domain.rating.Supplier;
 @Transactional
 public class GCICDRService {
 
-	Logger logger = LoggerFactory.getLogger(GCICDRService.class);
+	private static final Logger logger = LoggerFactory.getLogger(GCICDRService.class);
 
 	@Autowired
-	GCICDRRepository gciCDR;
+	private GCICDRRepository gciCDR;
 
 	@Autowired
-	EventFileRepository eventRepo;
+	private EventFileRepository eventRepo;
 
 	@Autowired
-	BillingReferenceRepository billRefRepo;
+	private BillingReferenceRepository billRefRepo;
 	
 	@Autowired
-	SupplierRepository sRepo;
-
+	private SupplierRepository sRepo;
+	
 	@Autowired
-	Auditor auditor;
+	private NumberRangeMapRepository nrRepo;
+
 
 	/**
 	 * Adds valid call details records to {@link ImportedEvent} table in
@@ -121,11 +124,11 @@ public class GCICDRService {
 	 * @param endDt
 	 * @return
 	 */
-	public List<BillingReference> getBillingReference(String billRef, Date startDt, Date endDt) {
+	public List<BillingReference> getBillingReference(String billRef, Date eventTime) {
 
 		return billRefRepo
 				.findBillingReferenceDetails(
-						billRef, startDt, endDt);
+						billRef, eventTime);
 	}
 	
 	/**
@@ -137,5 +140,16 @@ public class GCICDRService {
 		return sRepo.findBySupplierName(supplierName);
 	}
 	
+	/** Gets number range for given dialed number range and start date and end date
+	 * @param dialedNumbers
+	 * @param startDt
+	 * @param endDt
+	 * @return
+	 */
+	public List<NumberRangeMap> getNumberRanges(List<Long> dialedNumbers, Date eventTime) {
+		
+		return nrRepo.findNumberRangeMap(dialedNumbers, eventTime);
+		
+	}
 	
 }
