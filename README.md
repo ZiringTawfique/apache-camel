@@ -89,7 +89,14 @@ Billing database has number of schemas as listed here. Please see project prospe
 	user - billingUser
 
 	password - Ask any team member
- 
+	
+# Debug Mode
+
+One can run any java process in debug mode by passing command line parameters as shown below. 8082 port number where debug process will be run and can be attached using any IDE.
+
+
+	"-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8082"
+	
 # An Approach to Development
 
 For all features and epic development, we'll be following popular [GITFlow](http://nvie.com/posts/a-successful-git-branching-model/) branching model as depicted below. 

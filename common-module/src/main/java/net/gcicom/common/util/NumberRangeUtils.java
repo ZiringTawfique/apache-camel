@@ -1,4 +1,4 @@
-package net.gcicom.cdr.processor.util;
+package net.gcicom.common.util;
 
 import java.util.ArrayList;
 import java.util.Collections;

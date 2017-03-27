@@ -22,6 +22,7 @@
 
   <modules>
   	<!-- build domain model pojos so that down stream project can use it-->
+    <module>common-module</module>
     <module>imported-event-model</module>
     <module>rating-model</module>
     <module>allspark-model</module>    

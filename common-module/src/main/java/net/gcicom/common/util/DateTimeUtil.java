@@ -1,4 +1,4 @@
-package net.gcicom.cdr.processor.util;
+package net.gcicom.common.util;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
