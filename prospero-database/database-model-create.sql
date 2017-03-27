@@ -719,6 +719,24 @@ ENGINE = InnoDB;
 USE `ImportedEventsDB` ;
 
 -- -----------------------------------------------------
+-- Table `RatingDB`.`TimePeriodMap`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `RatingDB`.`TimePeriodMap` ;
+
+CREATE TABLE `RatingDB`.`TimePeriodMap` (
+  `TimePeriodID` smallint(8) DEFAULT NULL,
+  `TimePeriodCode` varchar(15) DEFAULT NULL,
+  `TimePeriodDescription` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `RatingDB`.`TimePeriodMap` 
+CHANGE COLUMN `TimePeriodID` `TimePeriodID` SMALLINT(8) NOT NULL ,
+ADD COLUMN `TimePeriodStartDay` INT NOT NULL COMMENT 'any one value from 1-7 for MON-SUN respectively' AFTER `TimePeriodDescription`,
+ADD COLUMN `TimePeriodEndDay` INT NOT NULL COMMENT 'any one value from 1-7 for MON-SUN respectively' AFTER `TimePeriodStartDay`,
+ADD COLUMN `TimePeriodStartTime` TIME NOT NULL COMMENT '\'HH:MM:SS\' format' AFTER `TimePeriodEndDay`,
+ADD COLUMN `TimePeriodEndTime` TIME NOT NULL COMMENT '\'HH:MM:SS\' format' AFTER `TimePeriodStartTime`,
+ADD PRIMARY KEY (`TimePeriodID`);
+
+-- -----------------------------------------------------
 -- Table `ImportedEventsDB`.`EventFile`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `ImportedEventsDB`.`EventFile` ;
