@@ -15,56 +15,37 @@ public class BillingReference implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long billingReferenceID;
+	
+	private Long customerID;
 
 	private String accountNumber;
+	
+	private String orderNumber;
+	
+
+
+	private Long nodeID;
 
 	private Long assetID;
+	
+	private String serviceCode;	
 
 	private String billingReference;
-
+	
+	private String billingReferenceDescription;
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date billingReferenceCreateDate;
 
 	private String billingReferenceCreateUser;
 
-	private String billingReferenceDescription;
-
-	@Temporal(TemporalType.DATE)
-	private Date billingReferenceEndDate;
-
 	@Temporal(TemporalType.DATE)
 	private Date billingReferenceStartDate;
 
 	@Temporal(TemporalType.DATE)
-	private Date customerContractEndDate;
-
-	@Temporal(TemporalType.DATE)
-	private Date customerContractStartDate;
-
-	private String customerCostCentre;
-
-	private String customerCustomReference;
-
-	private Long customerID;
-
-	private String customerPONumber;
-
-	private String customerSiteName;
-
-	private String GCICustomField_1;
-
-	private String GCICustomField_2;
-
-	private String GCICustomField_3;
-
-	private String GCISalesManager;
-
-	private String installationPostCode;
-
-	private Long nodeID;
-
-	private String orderNumber;
+	private Date billingReferenceEndDate;
 
 	@Temporal(TemporalType.DATE)
 	private Date supplierContractEndDate;
@@ -72,11 +53,76 @@ public class BillingReference implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date supplierContractStartDate;
 
-	private String supplierReference_1;
+	@Temporal(TemporalType.DATE)
+	private Date customerContractEndDate;
 
-	private String supplierReference_2;
+	@Temporal(TemporalType.DATE)
+	private Date customerContractStartDate;
+	
 
-	private String supplierReference_3;
+	private String customerCostCentre;
+
+	private String installationPostCode;
+	
+	private String customerCustomReference;
+
+	private String customerPONumber;
+
+	private String customerSiteName;
+	
+	private String GCISalesManager;
+
+	private String GCICustomField_1;
+
+	private String GCICustomField_2;
+
+	private String GCICustomField_3;
+
+	
+
+	private String supplierOrderNumber;
+	private String supplierServiceReference;
+
+
+
+	//private String supplierReference_1;
+
+	//private String supplierReference_2;
+
+	//private String supplierReference_3;
+
+	
+	public String getOrderNumber() {
+		return orderNumber;
+	}
+
+	public void setOrderNumber(String orderNumber) {
+		this.orderNumber = orderNumber;
+	}
+	
+	public String getServiceCode() {
+		return serviceCode;
+	}
+
+	public void setServiceCode(String serviceCode) {
+		this.serviceCode = serviceCode;
+	}
+
+	public String getSupplierOrderNumber() {
+		return supplierOrderNumber;
+	}
+
+	public void setSupplierOrderNumber(String supplierOrderNumber) {
+		this.supplierOrderNumber = supplierOrderNumber;
+	}
+
+	public String getSupplierServiceReference() {
+		return supplierServiceReference;
+	}
+
+	public void setSupplierServiceReference(String supplierServiceReference) {
+		this.supplierServiceReference = supplierServiceReference;
+	}
 
 	public BillingReference() {
 	}
@@ -257,13 +303,7 @@ public class BillingReference implements Serializable {
 		this.nodeID = nodeID;
 	}
 
-	public String getOrderNumber() {
-		return this.orderNumber;
-	}
 
-	public void setOrderNumber(String orderNumber) {
-		this.orderNumber = orderNumber;
-	}
 
 	public Date getSupplierContractEndDate() {
 		return this.supplierContractEndDate;
@@ -281,7 +321,7 @@ public class BillingReference implements Serializable {
 		this.supplierContractStartDate = supplierContractStartDate;
 	}
 
-	public String getSupplierReference_1() {
+	/*public String getSupplierReference_1() {
 		return this.supplierReference_1;
 	}
 
@@ -303,6 +343,6 @@ public class BillingReference implements Serializable {
 
 	public void setSupplierReference_3(String supplierReference_3) {
 		this.supplierReference_3 = supplierReference_3;
-	}
+	}*/
 
 }

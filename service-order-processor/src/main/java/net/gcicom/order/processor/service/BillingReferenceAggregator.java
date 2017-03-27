@@ -9,8 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-
-import net.gcicom.order.processor.entity.output.GCIChargeImport;
+import net.gcicom.domain.allspark.BillingReference;
+//import net.gcicom.order.processor.entity.output.GCIChargeImport;
 
 /**
  * This class support {@link GCIChargeImport} object aggregation while consuming 
@@ -19,22 +19,22 @@ import net.gcicom.order.processor.entity.output.GCIChargeImport;
  *
  */
 @Component
-public class ChargeImportAggregator implements CompletionAwareAggregationStrategy  {
+public class BillingReferenceAggregator implements CompletionAwareAggregationStrategy  {
 
-	private Logger logger = LoggerFactory.getLogger(ChargeImportAggregator.class); 
+	private Logger logger = LoggerFactory.getLogger(BillingReferenceAggregator.class); 
 	
 	
 	@Override
 	public Exchange aggregate(Exchange oldExchange, Exchange newExchange) {
 
-		GCIChargeImport cdr = newExchange.getIn().getBody(GCIChargeImport.class);
+		BillingReference cdr = newExchange.getIn().getBody(BillingReference.class);
 		logger.debug("Aggregating " + cdr);
 
-		ArrayList<GCIChargeImport> cdrs = null;
+		ArrayList<BillingReference> cdrs = null;
 	
 		if (oldExchange == null) {
 			
-			cdrs = new ArrayList<GCIChargeImport>();
+			cdrs = new ArrayList<BillingReference>();
 			cdrs.add(cdr);
 			newExchange.getIn().setBody(cdrs);
 			return newExchange;
