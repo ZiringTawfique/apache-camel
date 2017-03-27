@@ -63,7 +63,7 @@ public class BTOpenReachCDRMapper implements CDRMapper<BTOpenReachCDR> {
 			
 			
 			cdr.setOriginatingCLI(source.getOriginatingNumber());
-			cdr.setPreRatedEventFlag(NA);
+			cdr.setPreRatedEventFlag(0);
 			cdr.setPresentationCLI(source.getDialedNumber());
 			cdr.setSupplierAccountNumber(source.getAccountNumber());
 			cdr.setSupplierCost(source.getWholesalePrice());

@@ -60,7 +60,7 @@ public class Abzorbo2CDRToGciCDRMapper implements CDRMapper<AbzorbO2CDR> {
 				cdr.setNumberRangeClassification(DUMMY);
 				cdr.setNumberRangeType(DUMMY);
 				cdr.setOriginatingCLI(source.getOriginatingNumber());
-				cdr.setPreRatedEventFlag(DUMMY);
+				cdr.setPreRatedEventFlag(0);
 				cdr.setPresentationCLI(DUMMY);
 				cdr.setSupplierAccountNumber(DUMMY);
 				cdr.setSupplierCost(source.getSalesprice());

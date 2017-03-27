@@ -804,6 +804,11 @@ CREATE TABLE IF NOT EXISTS `ImportedEventsDB`.`ImportedEvent` (
   PRIMARY KEY (`EventRecordKey`))
 ENGINE = InnoDB;
 
+ALTER TABLE `ImportedEventsDB`.`ImportedEvents` 
+CHANGE COLUMN `PreRatedEventFlag` `PreRatedEventFlag` INT NOT NULL COMMENT 'Flag to store flag as 1 if imported cdr records are already rated' ;
+ALTER TABLE `ImportedEventsDB`.`ImportedEvents` 
+ADD COLUMN `rated` INT NULL COMMENT 'Flag to mark records rated as true once rating process perform caluclation on this record' AFTER `LastModifiedDate`;
+
 
 -- -----------------------------------------------------
 -- Table `ImportedEventsDB`.`AuditEvent`
