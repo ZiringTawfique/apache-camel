@@ -55,7 +55,7 @@ public class ImportedEvent implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastModifiedDate;
 
-	private String numberRange;
+	private Long numberRange;
 
 	private String numberRangeClassification;
 
@@ -63,7 +63,7 @@ public class ImportedEvent implements Serializable {
 
 	private String originatingCLI;
 
-	private String preRatedEventFlag;
+	private Integer preRatedEventFlag;
 
 	private String presentationCLI;
 
@@ -90,8 +90,19 @@ public class ImportedEvent implements Serializable {
 	private String timePeriod;
 
 	private Integer weekDayFlag;
+	
+	//flag to mark record if rating processing completed or not
+	private Integer rated;
 
 	public ImportedEvent() {
+	}
+	
+	public Integer getRated() {
+		return rated;
+	}
+
+	public void setRated(Integer rated) {
+		this.rated = rated;
 	}
 
 	public String getEventRecordKey() {
@@ -222,11 +233,11 @@ public class ImportedEvent implements Serializable {
 		this.lastModifiedDate = lastModifiedDate;
 	}
 
-	public String getNumberRange() {
+	public Long getNumberRange() {
 		return this.numberRange;
 	}
 
-	public void setNumberRange(String numberRange) {
+	public void setNumberRange(Long numberRange) {
 		this.numberRange = numberRange;
 	}
 
@@ -254,11 +265,11 @@ public class ImportedEvent implements Serializable {
 		this.originatingCLI = originatingCLI;
 	}
 
-	public String getPreRatedEventFlag() {
+	public Integer getPreRatedEventFlag() {
 		return this.preRatedEventFlag;
 	}
 
-	public void setPreRatedEventFlag(String preRatedEventFlag) {
+	public void setPreRatedEventFlag(Integer preRatedEventFlag) {
 		this.preRatedEventFlag = preRatedEventFlag;
 	}
 

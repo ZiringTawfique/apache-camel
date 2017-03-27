@@ -56,11 +56,11 @@ public class Abzorbo2CDRToGciCDRMapper implements CDRMapper<AbzorbO2CDR> {
 				LocalDateTime dt = source.getDate().atTime(LocalTime.parse(source.getTime(), DateTimeFormatter.ISO_LOCAL_TIME));
 				cdr.setEventTime(Date.from(dt.toInstant(ZoneOffset.UTC)));
 				cdr.setEventTypeID(L_DUMMY);
-				cdr.setNumberRange(DUMMY);
+				cdr.setNumberRange(L_DUMMY);
 				cdr.setNumberRangeClassification(DUMMY);
 				cdr.setNumberRangeType(DUMMY);
 				cdr.setOriginatingCLI(source.getOriginatingNumber());
-				cdr.setPreRatedEventFlag(DUMMY);
+				cdr.setPreRatedEventFlag(0);
 				cdr.setPresentationCLI(DUMMY);
 				cdr.setSupplierAccountNumber(DUMMY);
 				cdr.setSupplierCost(source.getSalesprice());

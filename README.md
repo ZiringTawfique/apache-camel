@@ -25,7 +25,7 @@ AllSpark:GCI Billing Engine
 | MariaDB 	|    5.x   	|    	|
 | CentOS 	|  	|   	|        
 | Spring 	|  	|   	|      
-| Glassfish |	|  4.11	|   	
+| Glassfish |4.11		|  |   	
 
 # Getting Started with Dev Environment
 
@@ -39,7 +39,7 @@ git version 2.12.0.windows.1
 
 #### Install Prerequisite
 
-Go to dev (\\ws-sma-bd01\AllSpark ) folder and copy full dev folder or required programs and install it. It is better to keep everything development in `C:/dev` as it minimizes variation in every developer machine
+Go to dev (** \\ws-sma-bd01\AllSpark **) folder and copy full dev folder or required programs and install it. It is better to keep everything development in `C:/dev` as it minimizes variation in every developer machine
 
 While installing GIT you can keep all default option as is.
 
@@ -65,7 +65,37 @@ Type following on command prompt
 	
 	java -version //validate java
 	
+# Databases
+
+Billing database has number of schemas as listed here. Please see project prospero-database to see tables and schema in details
+
+
+|  Schema | Usage  |
+|---|---|
+| _AllSpark_   | Common database for horizontally related tables  |
+|  _ChargingDB_  | Database for charging feature  |
+|  _RatingDB_  | Database for rating feature  |
+|  _ImportedEventsDB_  | Database to store imported events after processing CDR files received from suppliers  |
+|  _EventDB_  | Database for events feature  |
+|  _CustomerDB_  | Database to store customer details  |
+|  _InvoiceDB_  | Database to store invoice details  |
+|  _RatedEventsDB_  | Database to store rated events  |
+|  _ReferenceDB_  | TODO  |	
+
+**Development database** 
+
+	Host - 213.130.128.206
+
+	user - billingUser
+
+	password - Ask any team member
 	
+# Debug Mode
+
+One can run any java process in debug mode by passing command line parameters as shown below. 8082 port number where debug process will be run and can be attached using any IDE.
+
+
+	"-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8082"
 	
 # An Approach to Development
 

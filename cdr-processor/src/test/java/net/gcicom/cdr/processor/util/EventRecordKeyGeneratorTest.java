@@ -76,7 +76,7 @@ public class EventRecordKeyGeneratorTest {
 		cdr.setEventTime(Timestamp.valueOf(LocalDateTime.now()));
 		cdr.setEventTypeID(L_DUMMY);
 		cdr.setOriginatingCLI(DUMMY);
-		cdr.setPreRatedEventFlag(DUMMY);
+		cdr.setPreRatedEventFlag(0);
 		cdr.setPresentationCLI(DUMMY);
 		cdr.setSupplierAccountNumber(DUMMY);
 		cdr.setSupplierID(L_DUMMY);

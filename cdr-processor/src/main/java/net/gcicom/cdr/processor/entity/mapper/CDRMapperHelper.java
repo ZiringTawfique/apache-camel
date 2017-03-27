@@ -1,6 +1,7 @@
 package net.gcicom.cdr.processor.entity.mapper;
 
 import static net.gcicom.cdr.processor.common.SupplierMap.getSupplierName;
+import static net.gcicom.cdr.processor.util.NumberRangeUtils.getNumberRanges;
 
 import java.util.Date;
 import java.util.List;
@@ -15,22 +16,28 @@ import net.gcicom.cdr.processor.service.GCICDRService;
 import net.gcicom.cdr.processor.service.ValidationFailedException;
 import net.gcicom.domain.allspark.BillingReference;
 import net.gcicom.domain.imported.events.ImportedEvent;
+import net.gcicom.domain.rating.NumberRangeMap;
 import net.gcicom.domain.rating.Supplier;
 
+/**
+ * Container class for common reusable helper methods to support mapping of 
+ * supplied specific CDR POJO to {@link ImportedEvent} 
+ *
+ */
 @Component
-public final class CDRMapperHelper {
+final class CDRMapperHelper {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(CDRMapperHelper.class);
 	
 	@Autowired
 	private GCICDRService service;
 
-	/**
+	/**Gets supplied id for based on input file pattern
 	 * @param fileName
 	 * @return
 	 * @throws ValidationFailedException
 	 */
-	public Long getSupplierId(String fileName) throws ValidationFailedException {
+	public Long getSupplierId(final String fileName) throws ValidationFailedException {
 
 		final String sName = getSupplierName(fileName);
 		
@@ -64,7 +71,7 @@ public final class CDRMapperHelper {
 				"Populating billing reference details for %s billing reference and for %s event date time", originNbr,
 				eventTime));
 		// get billing reference number if not found mark it error record
-		List<BillingReference> bfs = service.getBillingReference(originNbr, eventTime, eventTime);
+		List<BillingReference> bfs = service.getBillingReference(originNbr, eventTime);
 		if (bfs.size() == 0) {
 
 			throw new ValidationFailedException(
@@ -99,4 +106,60 @@ public final class CDRMapperHelper {
 		return cdr;
 
 	}
+	
+	/** Retrieves {@link NumberRangeMap} for given dialed number and event time combination
+	 * @param dialedNumber
+	 * @param eventTime
+	 * @return
+	 */
+	private NumberRangeMap getNumberRange(final String dialedNumber, final Date eventTime) {
+		
+		List<Long> l = getNumberRanges(dialedNumber);
+		
+		if (l.isEmpty()) {
+			
+			return null;
+			
+		}
+		List<NumberRangeMap> r = service.getNumberRanges(l, eventTime);
+		
+		for (Long range : l) {
+			
+			for (NumberRangeMap nrm : r) {
+				
+				if(range.equals(nrm.getNumberRange())) {
+					
+					return nrm;
+				}
+			}
+		}
+		
+		return null;
+		
+	}
+
+	/**Populates {@link ImportedEvent#setNumberRange(Long)}, {@link ImportedEvent#setNumberRangeClassification(String)}
+	 * and {@link ImportedEvent#setNumberRangeType(String)} if available for given search criteria
+	 * Note - Internet (not dial up) may not have {@link NumberRangeMap}
+	 * @param cdr semi populated {@link ImportedEvent}
+	 * @param dialedNumber 
+	 * @param eventTime
+	 * @return
+	 */
+	public ImportedEvent populateNumberRangDetails(ImportedEvent cdr, String dialedNumber, Date eventTime) {
+		
+		NumberRangeMap nrm = getNumberRange(dialedNumber, eventTime);
+		
+		if (!ObjectUtils.isEmpty(nrm)) {
+			
+			cdr.setNumberRange(nrm.getNumberRange());
+			cdr.setNumberRangeClassification(nrm.getNumberRangeClassification());
+			cdr.setNumberRangeType(nrm.getNumberRangeType());
+			
+		}
+
+		return cdr;
+	}
+	
+
 }

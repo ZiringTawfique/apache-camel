@@ -36,6 +36,7 @@ public class DataSourceConfiguration {
     @Primary
     public LocalContainerEntityManagerFactoryBean importedEventsEntityMF() {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setPersistenceUnitName("importedEventsEntityMF");
         em.setBeanName("importedEventsEntityMF");
         em.setDataSource(importedEventsDS());
         em.setPackagesToScan(new String[] { "net.gcicom.domain.imported.events" });
@@ -64,6 +65,7 @@ public class DataSourceConfiguration {
     public LocalContainerEntityManagerFactoryBean ratingEntityMF() {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(ratingDS());
+        em.setPersistenceUnitName("ratingEntityMF");
         em.setPackagesToScan(new String[] { "net.gcicom.domain.rating" });
         em.setPersistenceProvider(new HibernatePersistenceProvider());
 
@@ -89,6 +91,7 @@ public class DataSourceConfiguration {
     public LocalContainerEntityManagerFactoryBean allsparkEntityMF() {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(allsparkDS());
+        em.setPersistenceUnitName("allsparkEntityMF");
         em.setPackagesToScan(new String[] { "net.gcicom.domain.allspark" });
         em.setPersistenceProvider(new HibernatePersistenceProvider());
 

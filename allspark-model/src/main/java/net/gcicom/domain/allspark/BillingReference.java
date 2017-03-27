@@ -22,7 +22,7 @@ public class BillingReference implements Serializable {
 
 	private String accountNumber;
 	
-	private String orderNumber;
+	private Long orderNumber;
 	
 
 
@@ -92,11 +92,11 @@ public class BillingReference implements Serializable {
 	//private String supplierReference_3;
 
 	
-	public String getOrderNumber() {
+	public Long getOrderNumber() {
 		return orderNumber;
 	}
 
-	public void setOrderNumber(String orderNumber) {
+	public void setOrderNumber(Long orderNumber) {
 		this.orderNumber = orderNumber;
 	}
 	

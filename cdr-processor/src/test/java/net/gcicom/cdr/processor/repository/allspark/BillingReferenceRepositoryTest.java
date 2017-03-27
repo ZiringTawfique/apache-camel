@@ -70,7 +70,7 @@ public class BillingReferenceRepositoryTest {
 		//entityManager.persist(bf);
 	    
 	    
-	    List<BillingReference> bfs = this.repo.findBillingReferenceDetails(JUNIT, test , test);
+	    List<BillingReference> bfs = this.repo.findBillingReferenceDetails(JUNIT, test);
 	    
 	    
 	    assertEquals(JUNIT, bfs.get(0).getBillingReference());

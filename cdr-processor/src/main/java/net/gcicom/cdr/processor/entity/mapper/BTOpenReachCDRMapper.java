@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import net.gcicom.cdr.processor.entity.input.BTOpenReachCDR;
-import net.gcicom.cdr.processor.service.GCICDRService;
 import net.gcicom.cdr.processor.service.ValidationFailedException;
 import net.gcicom.domain.imported.events.ImportedEvent;
 
@@ -50,21 +49,21 @@ public class BTOpenReachCDRMapper implements CDRMapper<BTOpenReachCDR> {
 			cdr = h.populateBillingReferenceDetails(cdr, eventTime, source.getOriginatingNumber());
 
 			cdr.setAccountingPeriod(formatYYYYMM(getDateTime(source.getEventTime())));
-			// cdr.setAccountNumber(DUMMY);
 			cdr.setCountry(NA);
-			// cdr.setCustomerID(L_DUMMY);
 			cdr.setDialledCLI(source.getDialedNumber());
 			cdr.setEventDurationSecs(getDurationInSeconds(source.getDuration()));
 			cdr.setEventFileID(eventFileId);
 			cdr.setEventReference(source.getOriginatingNumber());
-			// cdr.setEventReferenceID(L_DUMMY);
 			cdr.setEventTime(eventTime);
 			cdr.setEventTypeID(L_DUMMY);
-			cdr.setNumberRange(DUMMY);
-			cdr.setNumberRangeClassification(DUMMY);
-			cdr.setNumberRangeType(DUMMY);
+			
+			
+			// populates number range details from RatingDB.NumberRangeMap table
+			cdr = h.populateNumberRangDetails(cdr, source.getDialedNumber(), eventTime);
+			
+			
 			cdr.setOriginatingCLI(source.getOriginatingNumber());
-			cdr.setPreRatedEventFlag(DUMMY);
+			cdr.setPreRatedEventFlag(0);
 			cdr.setPresentationCLI(source.getDialedNumber());
 			cdr.setSupplierAccountNumber(source.getAccountNumber());
 			cdr.setSupplierCost(source.getWholesalePrice());

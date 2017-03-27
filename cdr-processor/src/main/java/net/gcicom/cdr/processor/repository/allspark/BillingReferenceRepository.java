@@ -11,9 +11,8 @@ import net.gcicom.domain.allspark.BillingReference;
 
 public interface BillingReferenceRepository extends JpaRepository<BillingReference, Long> {
 
-	@Query("select b from BillingReference b where b.billingReference= :bf and b.billingReferenceStartDate<= :sd "
-			+ "and (b.billingReferenceEndDate>= :ed or b.billingReferenceEndDate is null)")
-	List<BillingReference> findBillingReferenceDetails(@Param(value = "bf") String billingRef,
-			@Param(value = "sd") Date startDt, @Param(value = "ed") Date endDt);
+	@Query("select b from BillingReference b where b.billingReference= :bf and b.billingReferenceStartDate<= :et "
+			+ "and (b.billingReferenceEndDate>= :et or b.billingReferenceEndDate is null)")
+	List<BillingReference> findBillingReferenceDetails(@Param(value = "bf") String billingRef, @Param(value = "et") Date eventTime);
 
 }
