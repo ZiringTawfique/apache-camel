@@ -12,7 +12,7 @@ import net.gcicom.domain.rating.TimePeriodMap;
 public interface TimePeriodMapRepository extends CrudRepository<TimePeriodMap, Long> {
 
 	@Query("select tpm from TimePeriodMap tpm where tpm.startDay <= :day "
-			+ "and tpm.endDay >= :day tpm.startTime <= :t and tpm.endTime >= :t")
+			+ "and tpm.endDay >= :day and tpm.startTime <= :t and tpm.endTime >= :t")
 	List<TimePeriodMap> findTimePeriod(@Param(value = "day") int day, @Param(value = "t") LocalTime time);
 
 

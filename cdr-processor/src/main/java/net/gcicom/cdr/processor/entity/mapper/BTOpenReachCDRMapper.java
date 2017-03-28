@@ -32,7 +32,6 @@ public class BTOpenReachCDRMapper implements CDRMapper<BTOpenReachCDR> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(BTOpenReachCDRMapper.class);
 
-	private static final String DUMMY = "DUMMY";
 	private static final Long L_DUMMY = 1L;
 
 	@Autowired
@@ -91,7 +90,7 @@ public class BTOpenReachCDRMapper implements CDRMapper<BTOpenReachCDR> {
 			cdr.setWeekDayFlag(weekDayFlag);
 			
 			List<TimePeriodMap> tpms = s.getTimePeriodMap(weekDayFlag, eventDateTime.toLocalTime());
-			cdr.setTimePeriod(tpms.get(0).getCode());
+			cdr.setTimePeriodID(tpms.get(0).getId());
 
 			cdr.setCreatedBy(CDR_PROCESSOR_USER);
 
