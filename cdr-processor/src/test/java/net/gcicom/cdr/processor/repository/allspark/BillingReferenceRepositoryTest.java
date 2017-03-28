@@ -1,12 +1,11 @@
 package net.gcicom.cdr.processor.repository.allspark;
 
+import static net.gcicom.common.util.DateTimeUtil.convertLocalDateTimeToDate;
 import static org.junit.Assert.*;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
-
-import static net.gcicom.cdr.processor.util.DateTimeUtil.convertLocalDateTimeToDate;
 
 import org.junit.After;
 import org.junit.Before;

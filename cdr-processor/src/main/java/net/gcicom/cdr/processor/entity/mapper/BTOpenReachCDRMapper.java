@@ -2,11 +2,11 @@ package net.gcicom.cdr.processor.entity.mapper;
 
 import static net.gcicom.cdr.processor.common.AppConstants.CDR_PROCESSOR_USER;
 import static net.gcicom.cdr.processor.common.AppConstants.CDRMapperConstants.NA;
-import static net.gcicom.cdr.processor.util.DateTimeUtil.convertLocalDateTimeToDate;
-import static net.gcicom.cdr.processor.util.DateTimeUtil.formatYYYYMM;
-import static net.gcicom.cdr.processor.util.DateTimeUtil.getDurationInSeconds;
-import static net.gcicom.cdr.processor.util.DateTimeUtil.getWeekDayFlag;
 import static net.gcicom.cdr.processor.util.EventRecordKeyGenerator.getEventRecordHash;
+import static net.gcicom.common.util.DateTimeUtil.convertLocalDateTimeToDate;
+import static net.gcicom.common.util.DateTimeUtil.formatYYYYMM;
+import static net.gcicom.common.util.DateTimeUtil.getDurationInSeconds;
+import static net.gcicom.common.util.DateTimeUtil.getWeekDayFlag;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import net.gcicom.cdr.processor.entity.input.BTOpenReachCDR;
+import net.gcicom.cdr.processor.service.SupplierDetailsService;
 import net.gcicom.cdr.processor.service.ValidationFailedException;
 import net.gcicom.domain.imported.events.ImportedEvent;
 
@@ -34,6 +35,9 @@ public class BTOpenReachCDRMapper implements CDRMapper<BTOpenReachCDR> {
 
 	@Autowired
 	private CDRMapperHelper h;
+	
+	@Autowired
+	private SupplierDetailsService sSupplierDetails;
 
 	public List<ImportedEvent> convertToGCICDR(final List<BTOpenReachCDR> input, final Long eventFileId, final String fileName) throws Exception {
 
@@ -67,7 +71,7 @@ public class BTOpenReachCDRMapper implements CDRMapper<BTOpenReachCDR> {
 			cdr.setPresentationCLI(source.getDialedNumber());
 			cdr.setSupplierAccountNumber(source.getAccountNumber());
 			cdr.setSupplierCost(source.getWholesalePrice());
-			cdr.setSupplierID(h.getSupplierId(fileName));
+			cdr.setSupplierID(sSupplierDetails.getSupplierId(fileName));
 			cdr.setSupplierNumberRangeMap(source.getPhoneBookCode());
 			cdr.setSupplierRatingPattern(source.getPhoneBookCode() + "_" + source.getReRateIndicator());
 			cdr.setSupplierRecordReference(source.getDunsId());

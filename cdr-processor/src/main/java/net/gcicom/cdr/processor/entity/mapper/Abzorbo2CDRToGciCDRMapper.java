@@ -2,8 +2,8 @@ package net.gcicom.cdr.processor.entity.mapper;
 
 import static net.gcicom.cdr.processor.common.AppConstants.CDR_PROCESSOR_USER;
 import static net.gcicom.cdr.processor.util.EventRecordKeyGenerator.getEventRecordHash;
-import static net.gcicom.cdr.processor.util.DateTimeUtil.getWeekDayFlag;
-import static net.gcicom.cdr.processor.util.DateTimeUtil.getDurationInSeconds;
+import static net.gcicom.common.util.DateTimeUtil.getDurationInSeconds;
+import static net.gcicom.common.util.DateTimeUtil.getWeekDayFlag;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;

@@ -30,6 +30,7 @@ public class EventFileDetail implements Serializable {
 	private Integer successRecordCount;
 	
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
 

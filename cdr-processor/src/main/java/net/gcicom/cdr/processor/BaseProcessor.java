@@ -22,10 +22,11 @@ import net.gcicom.cdr.processor.entity.mapper.CDRMapper;
 import net.gcicom.cdr.processor.service.AlreadyProcessedFileException;
 import net.gcicom.cdr.processor.service.Auditor;
 import net.gcicom.cdr.processor.service.CDRAggregator;
+import net.gcicom.cdr.processor.service.ChecksumValidator;
 import net.gcicom.cdr.processor.service.GCICDRService;
 import net.gcicom.cdr.processor.service.InvalidCDRException;
 import net.gcicom.cdr.processor.service.ValidationFailedException;
-import net.gcicom.cdr.processor.util.ArchiveFileUtil;
+import net.gcicom.common.util.ArchiveFileUtil;
 
 @Component
 public abstract class BaseProcessor extends SpringRouteBuilder {
@@ -57,6 +58,9 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 	
 	@Autowired
 	private CDRAggregator cdrAggregator;
+	
+	@Autowired
+	private ChecksumValidator chksum;
 	
 	/**Moves files to given file location
 	 * @param fileLocation
@@ -105,7 +109,7 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 			.end()
 			.log(LoggingLevel.INFO, LOG, "START : Processing ${file:name} file")
 	    	.bean(auditor, "startEvent")
-			.bean(service, "validateMd5")
+			.bean(chksum, "validateMd5")
 	    	.split(body()
 	    			.tokenize("\n"))
 	    	.to(MAP_CSV_ROW_TO_VENDOR_CDR.concat(processorName))

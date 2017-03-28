@@ -1,7 +1,6 @@
 package net.gcicom.cdr.processor.entity.mapper;
 
-import static net.gcicom.cdr.processor.common.SupplierMap.getSupplierName;
-import static net.gcicom.cdr.processor.util.NumberRangeUtils.getNumberRanges;
+import static net.gcicom.common.util.NumberRangeUtils.getNumberRanges;
 
 import java.util.Date;
 import java.util.List;
@@ -17,7 +16,6 @@ import net.gcicom.cdr.processor.service.ValidationFailedException;
 import net.gcicom.domain.allspark.BillingReference;
 import net.gcicom.domain.imported.events.ImportedEvent;
 import net.gcicom.domain.rating.NumberRangeMap;
-import net.gcicom.domain.rating.Supplier;
 
 /**
  * Container class for common reusable helper methods to support mapping of 
@@ -32,29 +30,6 @@ final class CDRMapperHelper {
 	@Autowired
 	private GCICDRService service;
 
-	/**Gets supplied id for based on input file pattern
-	 * @param fileName
-	 * @return
-	 * @throws ValidationFailedException
-	 */
-	public Long getSupplierId(final String fileName) throws ValidationFailedException {
-
-		final String sName = getSupplierName(fileName);
-		
-		LOG.debug("For file {} supplier is {}", fileName, sName);
-		
-		List<Supplier> ss = service.getSupplier(sName);
-		
-		for (Supplier s : ss) {
-			
-			if (!ObjectUtils.isEmpty(s.getSupplierID())) {
-				
-				return s.getSupplierID();
-			}
-		}
-		
-		throw new ValidationFailedException(String.format("No supplier exist for given %s file", fileName));
-	}
 	
 	/**Populates billing reference details from AllSpark.BillingReference table
 	 * for given event time and origin number as billing reference
