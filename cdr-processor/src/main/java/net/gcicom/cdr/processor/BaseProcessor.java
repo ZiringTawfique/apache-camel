@@ -49,7 +49,8 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 	private Integer aggregationTimeOut = 1000;
 	
 	
-	
+	@Autowired
+	private GCICDRService service;
 	
 	@Autowired
 	private Auditor auditor;
