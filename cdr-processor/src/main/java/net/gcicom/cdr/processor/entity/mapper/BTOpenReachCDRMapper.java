@@ -21,9 +21,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import net.gcicom.cdr.processor.entity.input.BTOpenReachCDR;
+import net.gcicom.cdr.processor.service.GCICDRService;
 import net.gcicom.cdr.processor.service.SupplierDetailsService;
 import net.gcicom.cdr.processor.service.ValidationFailedException;
 import net.gcicom.domain.imported.events.ImportedEvent;
+import net.gcicom.domain.rating.TimePeriodMap;
 
 @Component
 public class BTOpenReachCDRMapper implements CDRMapper<BTOpenReachCDR> {
@@ -37,6 +39,9 @@ public class BTOpenReachCDRMapper implements CDRMapper<BTOpenReachCDR> {
 	private CDRMapperHelper h;
 	
 	@Autowired
+	private GCICDRService s;
+	
+	@Autowired
 	private SupplierDetailsService sSupplierDetails;
 
 	public List<ImportedEvent> convertToGCICDR(final List<BTOpenReachCDR> input, final Long eventFileId, final String fileName) throws Exception {
@@ -47,18 +52,20 @@ public class BTOpenReachCDRMapper implements CDRMapper<BTOpenReachCDR> {
 
 			LOG.debug("Converting a {} to GCICDR with eventfileid {}" , source.toString(), eventFileId);
 			ImportedEvent cdr = new ImportedEvent();
-			Date eventTime = convertLocalDateTimeToDate(getDateTime(source.getEventTime()));
+			
+			LocalDateTime eventDateTime = getDateTime(source.getEventTime());
+			Date eventTime = convertLocalDateTimeToDate(eventDateTime);
 
 			// populate billing reference details
 			cdr = h.populateBillingReferenceDetails(cdr, eventTime, source.getOriginatingNumber());
+			cdr.setEventTime(eventTime);
 
-			cdr.setAccountingPeriod(formatYYYYMM(getDateTime(source.getEventTime())));
+			cdr.setAccountingPeriod(formatYYYYMM(eventDateTime));
 			cdr.setCountry(NA);
 			cdr.setDialledCLI(source.getDialedNumber());
 			cdr.setEventDurationSecs(getDurationInSeconds(source.getDuration()));
 			cdr.setEventFileID(eventFileId);
 			cdr.setEventReference(source.getOriginatingNumber());
-			cdr.setEventTime(eventTime);
 			cdr.setEventTypeID(L_DUMMY);
 			
 			
@@ -77,8 +84,15 @@ public class BTOpenReachCDRMapper implements CDRMapper<BTOpenReachCDR> {
 			cdr.setSupplierRecordReference(source.getDunsId());
 			cdr.setSupplierServiceType(source.getEventType() + "_" + source.getBearerTypeGroup());
 			cdr.setTerminatingCLI(source.getDialedNumber());
-			cdr.setTimePeriod(DUMMY);
-			cdr.setWeekDayFlag(getWeekDayFlag(getDateTime(source.getEventTime())));
+			
+			//get time period map based on event time
+			
+			int weekDayFlag = getWeekDayFlag(eventDateTime);
+			cdr.setWeekDayFlag(weekDayFlag);
+			
+			List<TimePeriodMap> tpms = s.getTimePeriodMap(weekDayFlag, eventDateTime.toLocalTime());
+			cdr.setTimePeriod(tpms.get(0).getCode());
+
 			cdr.setCreatedBy(CDR_PROCESSOR_USER);
 
 			// generate only after populating all the field in cdrs

@@ -1,5 +1,6 @@
 package net.gcicom.cdr.processor.service;
 
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
@@ -12,9 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 import net.gcicom.cdr.processor.repository.allspark.BillingReferenceRepository;
 import net.gcicom.cdr.processor.repository.imported.events.GCICDRRepository;
 import net.gcicom.cdr.processor.repository.rating.NumberRangeMapRepository;
+import net.gcicom.cdr.processor.repository.rating.TimePeriodMapRepository;
 import net.gcicom.domain.allspark.BillingReference;
 import net.gcicom.domain.imported.events.ImportedEvent;
 import net.gcicom.domain.rating.NumberRangeMap;
+import net.gcicom.domain.rating.TimePeriodMap;
 
 /**
  * Service to add all {@link GCICDR} to database. Preferably db insert should be
@@ -39,6 +42,9 @@ public class GCICDRService {
 	
 	@Autowired
 	private NumberRangeMapRepository nrRepo;
+	
+	@Autowired
+	private TimePeriodMapRepository tpmRepo;
 
 
 	/**
@@ -86,6 +92,12 @@ public class GCICDRService {
 	public List<NumberRangeMap> getNumberRanges(List<Long> dialedNumbers, Date eventTime) {
 		
 		return nrRepo.findNumberRangeMap(dialedNumbers, eventTime);
+		
+	}
+	
+	public List<TimePeriodMap> getTimePeriodMap(int day, LocalTime t) {
+		
+		return tpmRepo.findTimePeriod(day, t);
 		
 	}
 	
