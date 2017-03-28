@@ -2,8 +2,8 @@ package net.gcicom.cdr.processor.entity.mapper;
 
 import static net.gcicom.cdr.processor.common.AppConstants.CDR_PROCESSOR_USER;
 import static net.gcicom.cdr.processor.util.EventRecordKeyGenerator.getEventRecordHash;
-import static net.gcicom.cdr.processor.util.DateTimeUtil.getWeekDayFlag;
-import static net.gcicom.cdr.processor.util.DateTimeUtil.getDurationInSeconds;
+import static net.gcicom.common.util.DateTimeUtil.getDurationInSeconds;
+import static net.gcicom.common.util.DateTimeUtil.getWeekDayFlag;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -70,7 +70,7 @@ public class Abzorbo2CDRToGciCDRMapper implements CDRMapper<AbzorbO2CDR> {
 				cdr.setSupplierRecordReference(DUMMY);
 				cdr.setSupplierServiceType(source.getNetwork() + "_" + source.getCallType());
 				cdr.setTerminatingCLI(dialedNumber);
-				cdr.setTimePeriod(DUMMY);
+				cdr.setTimePeriodID(1);
 				cdr.setWeekDayFlag(getWeekDayFlag(source.getDate().atTime(LocalTime.parse(source.getTime(), DateTimeFormatter.ISO_LOCAL_TIME))));
 				cdr.setSupplierTariffPlanID(source.getTariff());
 				cdr.setCreatedBy(CDR_PROCESSOR_USER);

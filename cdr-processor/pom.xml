@@ -27,14 +27,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-batch</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-cache</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-spring-boot-starter</artifactId>
 			<version>2.18.2</version>
@@ -42,6 +34,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.hibernate</groupId>
+					<artifactId>hibernate-entitymanager</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -51,14 +49,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-compress -->
 		<dependency>
-		    <groupId>org.apache.commons</groupId>
-		    <artifactId>commons-compress</artifactId>
-		    <version>1.13</version>
+			<groupId>org.hibernate</groupId>
+    		<artifactId>hibernate-core</artifactId>
+   			 <version>5.2.9.Final</version>
 		</dependency>
-		
 
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -100,11 +95,6 @@
 	      <version>${camel.version}</version>
 	    </dependency>
 
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.3</version>
-		</dependency>
 		
 		<!-- dependency of local libraries -->
 		<dependency>
@@ -122,7 +112,11 @@
 			<artifactId>allspark-model</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-				
+		<dependency>
+			<groupId>net.gcicom</groupId>
+			<artifactId>common-module</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>			
 	</dependencies>
 
 	<build>

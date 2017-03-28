@@ -87,7 +87,8 @@ public class ImportedEvent implements Serializable {
 
 	private String terminatingCLI;
 
-	private String timePeriod;
+	
+	private Integer timePeriodID;
 
 	private Integer weekDayFlag;
 	
@@ -361,12 +362,12 @@ public class ImportedEvent implements Serializable {
 		this.terminatingCLI = terminatingCLI;
 	}
 
-	public String getTimePeriod() {
-		return this.timePeriod;
+	public Integer getTimePeriodID() {
+		return this.timePeriodID;
 	}
 
-	public void setTimePeriod(String timePeriod) {
-		this.timePeriod = timePeriod;
+	public void setTimePeriodID(Integer timePeriodID) {
+		this.timePeriodID = timePeriodID;
 	}
 
 	public Integer getWeekDayFlag() {
@@ -408,7 +409,7 @@ public class ImportedEvent implements Serializable {
 					+ " supplierNumberRange " + this.supplierNumberRange + " supplierNumberRangeMap " + this.supplierNumberRangeMap
 					+ " supplierRatingPattern " + this.supplierRatingPattern + " supplierRecordReference " + this.supplierRecordReference
 					+ " supplierServiceType " + this.supplierServiceType + " terminatingCLI " + this.terminatingCLI
-					+ " timePeriod " + this.timePeriod + " weekDayFlag " + this.weekDayFlag
+					+ " timePeriodID " + this.timePeriodID + " weekDayFlag " + this.weekDayFlag
 					+ " ]";
 	}
 

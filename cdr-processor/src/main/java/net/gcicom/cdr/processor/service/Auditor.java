@@ -5,10 +5,9 @@ import static net.gcicom.cdr.processor.service.EventTypes.FILE_PROCESSING_ERROR;
 import static net.gcicom.cdr.processor.service.EventTypes.FILE_PROCESSING_FINISHED;
 import static net.gcicom.cdr.processor.service.EventTypes.FILE_PROCESSING_START;
 import static net.gcicom.cdr.processor.service.EventTypes.INVALID_CDR;
+import static net.gcicom.common.util.DateTimeUtil.getTodaysDate;
 import static org.apache.camel.Exchange.FILE_NAME_CONSUMED;
 import static org.apache.camel.Exchange.EXCEPTION_CAUGHT;
-
-import static net.gcicom.cdr.processor.util.DateTimeUtil.getTodaysDate;
 
 import java.text.MessageFormat;
 import java.util.HashMap;

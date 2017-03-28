@@ -1,4 +1,4 @@
-package net.gcicom.cdr.processor.util;
+package net.gcicom.common.util;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -26,12 +26,13 @@ public abstract class ArchiveFileUtil {
 	public static void unGzip(String source, String fileName) {
 
 		LOG.debug("unGzip");
-
+		GZIPInputStream gzip = null;
+		FileOutputStream fos = null;
 	      try {
 		      byte[] bf = new byte[1024];
 
-	    	  GZIPInputStream gzip = new GZIPInputStream(new FileInputStream(source));
-	    	  FileOutputStream fos = new FileOutputStream(fileName);
+	    	  gzip = new GZIPInputStream(new FileInputStream(source));
+	    	  fos = new FileOutputStream(fileName);
 	    	  
 	    	  int bytes;
 
@@ -43,15 +44,18 @@ public abstract class ArchiveFileUtil {
 
 	          }
 	    	  
-	    	  gzip.close();
-
-	    	  fos.close();
+	    	  
 	    	  
 	      } catch (IOException e) {
 	    	  
 	    	  LOG.error("Error while processing error {}", e);
 	    	  
-	      }
+	      } finally {
+			
+	    	  IOUtils.closeQuietly(gzip);
+	    	  IOUtils.closeQuietly(fos);
+	    	  
+		}
 	}
 	
 	
@@ -62,9 +66,12 @@ public abstract class ArchiveFileUtil {
 	public static void unCompress(String source, String location) {
 
 		LOG.info("unCompress {}", source);
+		
+		ArchiveInputStream tis = null;
+		
 	      try {
 
-	    	  ArchiveInputStream tis = new ArchiveStreamFactory().createArchiveInputStream(new BufferedInputStream(new FileInputStream(source)));
+	    	  tis = new ArchiveStreamFactory().createArchiveInputStream(new BufferedInputStream(new FileInputStream(source)));
 	    	  
 	    	  ArchiveEntry entry;
 	    	  
@@ -80,7 +87,6 @@ public abstract class ArchiveFileUtil {
 		    	  
 	    	  }
 	          
-	          tis.close();
 
 	    	  
 	      } catch (IOException e) {
@@ -91,7 +97,10 @@ public abstract class ArchiveFileUtil {
 	    	  
 	    	  LOG.error("Error while processing error {}", e);
 
-		}
+	      } finally {
+			
+	    	  IOUtils.closeQuietly(tis);
+	      }
 	}
 
 }

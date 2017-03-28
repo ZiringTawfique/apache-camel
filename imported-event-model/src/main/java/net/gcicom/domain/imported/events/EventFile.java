@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 import javax.persistence.*;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -44,8 +46,8 @@ public class EventFile implements Serializable {
 	private Long supplierID;
 
 	//bi-directional many-to-one association to EventFileDetail
-	@OneToMany(mappedBy="eventFile")
-	private List<EventFileDetail> eventFileDetails;
+	@OneToMany(mappedBy="eventFile", cascade = CascadeType.ALL)
+	private List<EventFileDetail> eventFileDetails = new ArrayList<>();
 
 	public EventFile() {
 	}
@@ -131,6 +133,7 @@ public class EventFile implements Serializable {
 	}
 
 	public List<EventFileDetail> getEventFileDetails() {
+		
 		return this.eventFileDetails;
 	}
 

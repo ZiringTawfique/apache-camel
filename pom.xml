@@ -26,7 +26,70 @@
     <module>imported-event-model</module>
     <module>rating-model</module>
     <module>allspark-model</module>    
-    
   </modules>
+  <scm>
+  	<url>https://gcicomnet.visualstudio.com/_git/Billing</url>
+  </scm>
+  
+  <dependencies>
+	  
+	<dependency>
+	    <groupId>org.apache.commons</groupId>
+	    <artifactId>commons-compress</artifactId>
+	    <version>1.13</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>org.slf4j</groupId>
+	    <artifactId>slf4j-api</artifactId>
+	    <version>1.7.25</version>
+	</dependency>  
+	
+  	<dependency>
+  		<groupId>junit</groupId>
+  		<artifactId>junit</artifactId>
+  		<version>4.12</version>
+  		<scope>test</scope>
+  	</dependency> 
+
+  	<dependency>
+		<groupId>commons-io</groupId>
+		<artifactId>commons-io</artifactId>
+		<version>2.3</version>
+  	</dependency>
+  	
+	<dependency>
+		<groupId>org.hibernate</groupId>
+   		<artifactId>hibernate-core</artifactId>
+  			 <version>5.2.9.Final</version>
+	</dependency>  	
+	  
+  </dependencies>
+  
+   <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.4.1</version>
+        <executions>
+          <execution>
+            <id>enforce-java</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <version>1.8.0</version>
+                </requireJavaVersion>
+              </rules>    
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>
 
