@@ -82,14 +82,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		
+		</dependency>		
 	    <dependency>
 	      <groupId>org.apache.camel</groupId>
 	      <artifactId>camel-bindy</artifactId>
@@ -106,6 +99,12 @@
 		  <groupId>org.modelmapper</groupId>
 		  <artifactId>modelmapper</artifactId>
 		  <version>0.7.5</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>net.gcicom</groupId>
+			<artifactId>allspark-model</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		
 	</dependencies>

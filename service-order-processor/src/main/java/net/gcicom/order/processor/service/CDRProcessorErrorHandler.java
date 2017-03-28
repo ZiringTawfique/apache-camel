@@ -15,8 +15,8 @@ public class CDRProcessorErrorHandler {
 
 	private Logger logger = LoggerFactory.getLogger(CDRProcessorErrorHandler.class);
 	
-	@Autowired
-	Auditor auditor;
+	//@Autowired
+	//Auditor auditor;
 	
 	/**
 	 * @param e
@@ -24,7 +24,7 @@ public class CDRProcessorErrorHandler {
 	public void handleError(Exchange e) {
 		
 		logger.info("Handle Event" + e);
-		auditor.errorEvent(e);
+	//	auditor.errorEvent(e);
 		
 	}
 }

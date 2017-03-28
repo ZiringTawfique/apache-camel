@@ -13,12 +13,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
-
-import net.gcicom.order.processor.entity.output.GCIChargeImport;
-import net.gcicom.order.processor.entity.output.MD5;
-
-import net.gcicom.order.processor.repository.GCIChargeImportRepository;
-import net.gcicom.order.processor.repository.Md5Repository;
+import net.gcicom.domain.allspark.BillingReference;
+//import net.gcicom.order.processor.entity.output.GCIChargeImport;
+//import net.gcicom.order.processor.entity.output.MD5;
+import net.gcicom.order.processor.repository.BillingReferenceRepository;
+//import net.gcicom.order.processor.repository.GCIChargeImportRepository;
+//import net.gcicom.order.processor.repository.Md5Repository;
 /**
  * Service to add all {@link GCIChargeImport} to database. Preferably db insert should be batched
  * It needs more work as in business validation etc  
@@ -30,19 +30,22 @@ public class GCIChargeImportService {
 
 	Logger logger = LoggerFactory.getLogger(GCIChargeImportService.class);
 	
-	@Autowired
-	GCIChargeImportRepository gciChargeImportRepo;
+//	@Autowired
+//	GCIChargeImportRepository gciChargeImportRepo;
 	
 	@Autowired
-	Md5Repository md5Repo;
+	BillingReferenceRepository billingReferenceRepo;
 	
-	@Autowired
-	Auditor auditor;
+//	@Autowired
+	//Md5Repository md5Repo;
+	
+	//@Autowired
+//	Auditor auditor;
 	
 	/**
 	 * @param cdrs
 	 */
-	public void addChargeImport(List<GCIChargeImport> cdrs) {
+	/*public void addChargeImport(List<GCIChargeImport> cdrs) {
 		
 		for (GCIChargeImport cdr : cdrs) {
 			
@@ -57,8 +60,24 @@ public class GCIChargeImportService {
 		
 		
 	}
+	*/
+	public void addBillingReference(List<BillingReference> cdrs) {
+		
+		for (BillingReference cdr : cdrs) {
+			
+			//business validation here then just batch insert or insert in invalid cdr
+			logger.debug("Adding to db" + cdr.toString() );
+			
+			BillingReference result = billingReferenceRepo.save(cdr);
+			
+			logger.debug("Saved CDR " + result.toString() );
+
+		}
+		
+		
+	}
 	
-	public void validateMd5(final @Header("CamelFileNameConsumed") String fileName, final @Body InputStream is) throws IOException, AlreadyProcessedFileException {
+	/*public void validateMd5(final @Header("CamelFileNameConsumed") String fileName, final @Body InputStream is) throws IOException, AlreadyProcessedFileException {
 		String METHOD_NAME="validateMd5";
 		logger.info("Entering ++++++++++ " + METHOD_NAME );
 		String hex = DigestUtils.md5DigestAsHex(is);
@@ -83,4 +102,5 @@ public class GCIChargeImportService {
 		logger.info("Exit**********  " + METHOD_NAME );	
 		
 	}
+	*/
 }

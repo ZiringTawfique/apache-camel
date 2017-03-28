@@ -3,6 +3,7 @@
  */
 package net.gcicom.order.processor;
 
+import static net.gcicom.order.processor.RouteNames.MOVE_FILE_ON_ERROR;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.model.dataformat.BindyType;
 import org.apache.camel.spring.SpringRouteBuilder;
@@ -13,16 +14,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import net.gcicom.order.processor.entity.input.ChargeImportDto;
-
-import net.gcicom.order.processor.entity.output.ChargeImportDtoToGciChargeImportMapper;
+import net.gcicom.order.processor.entity.output.ChargeImportDtoToBillingReference;
+//import net.gcicom.order.processor.entity.output.ChargeImportDtoToGciChargeImportMapper;
 
 import net.gcicom.order.processor.service.AlreadyProcessedFileException;
-import net.gcicom.order.processor.service.Auditor;
-
+//import net.gcicom.order.processor.service.Auditor;
+import net.gcicom.order.processor.service.BillingReferenceAggregator;
 import net.gcicom.order.processor.service.CDRProcessorErrorHandler;
-import net.gcicom.order.processor.service.ChargeImportAggregator;
+//import net.gcicom.order.processor.service.ChargeImportAggregator;
 
 import net.gcicom.order.processor.service.GCIChargeImportService;
+
+
 
 /**
  * A Simple Camel route builder to process AbzorbO2 CDR feed
@@ -68,8 +71,12 @@ public class ServiceOrderProcessor extends SpringRouteBuilder {
 	private Integer aggregationTimeOut = 1000;
 	
 	
+	//@Autowired
+	//private ChargeImportDtoToGciChargeImportMapper mapper;
+	
+	
 	@Autowired
-	private ChargeImportDtoToGciChargeImportMapper mapper;
+	private ChargeImportDtoToBillingReference billingReferenceMapper;
 	
 	@Autowired
 	private GCIChargeImportService service;
@@ -78,52 +85,62 @@ public class ServiceOrderProcessor extends SpringRouteBuilder {
 	//@Autowired
 	//private Auditor auditor;
 	
+	//@Autowired
+	//private ChargeImportAggregator cdrAggregator;
+	
 	@Autowired
-	private ChargeImportAggregator cdrAggregator;
+	private BillingReferenceAggregator billingReferenceAggregator;
 	
 	
 	@Override
 	public void configure() throws Exception {
 		getContext().setTracing(tracing);
-		
+	
+		//Inital configuration 	
 		onException(Exception.class)
+		.logStackTrace(true)
 			.bean(CDRProcessorErrorHandler.class, "handleError")
-			.to("direct:move-error-file");
+			.to(MOVE_FILE_ON_ERROR.concat(this.getClass().getCanonicalName()));
 
+		
+		
 		//route to get file and schedule it for parallel processing
 		//delay in millisec for next polling 
 		//In production make noop false
+		//TODO Need to add cronexpression
+		//TODO Add description
         from("file:" + inFileLocation + "?initialDelay="+ initDelay 
-        		+ "&delay="+ nextRunDelay +"&include="+filePattern+"&noop="+isNoop+"&move=.success")
+        		+ "&delay="+ nextRunDelay +"&include="+filePattern+"&noop="+isNoop+"&move=.success"
+        		+ "moveFailed=.error")
         	.onException(AlreadyProcessedFileException.class)
 				.bean(CDRProcessorErrorHandler.class, "handleError")
         		.to("direct:move-error-file")
     		.end()
         	.log(LoggingLevel.INFO, logger, "START : Processing ${file:name} file")
-    	//	.bean(auditor, "startEvent")
-    		.bean(service, "validateMd5")
+    		//.bean(auditor, "startEvent")
+    		//.bean(service, "validateMd5")
         	.split(body()
         			.tokenize("\n"))
         			.parallelProcessing()
         			.streaming()
         	.to("direct:save-to-database")
-        	//.bean(auditor, "endEvent")
+        //	.bean(auditor, "endEvent")
         	.end();
         
         //get the data and save in db
         from("direct:save-to-database")
 	        .onException(IllegalArgumentException.class)
 		    	.handled(true)
-		   // 	.bean(auditor, "handleEventInvalidCdr")
+	//	    	.bean(auditor, "handleEventInvalidCdr")
 		    .end()
 			.filter(body().isNotEqualTo(constant(HEADER)))//need to filter header of cvs/
     		.unmarshal()
     			.bindy(BindyType.Csv, ChargeImportDto.class)
-    			.bean(mapper, "convertToGCIChargeImport")
-    			.aggregate(constant(true), cdrAggregator)
+    			.bean(billingReferenceMapper, "convertToBillingReference")
+    			.aggregate(constant(true), billingReferenceAggregator)
                 .completionSize(batchSize)
                 .completionTimeout(aggregationTimeOut)//just in case cvs rows are less than batch size
-    			.bean(service, "addChargeImport")
+    			.bean(service, "addBillingReference")
     			.log(LoggingLevel.DEBUG, logger, "END : Add CVS rows to table.");
  
 		from("direct:move-error-file")

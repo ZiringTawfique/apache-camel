@@ -15,16 +15,15 @@ public class BillingReference implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long billingReferenceID;
 	
 	private Long customerID;
 
 	private String accountNumber;
 	
-	private Long orderNumber;
+	private String orderNumber;
 	
-
 
 	private Long nodeID;
 
@@ -92,11 +91,11 @@ public class BillingReference implements Serializable {
 	//private String supplierReference_3;
 
 	
-	public Long getOrderNumber() {
+	public String getOrderNumber() {
 		return orderNumber;
 	}
 
-	public void setOrderNumber(Long orderNumber) {
+	public void setOrderNumber(String orderNumber) {
 		this.orderNumber = orderNumber;
 	}
 	

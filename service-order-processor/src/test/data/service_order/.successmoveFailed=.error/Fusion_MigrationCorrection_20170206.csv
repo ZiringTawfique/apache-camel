@@ -1,4 +1,4 @@
-Actioncode,ItemType,CustomerName,Account Number,NodeName,OrderNumber,ServiceCode,BillingReference,Description,EventTariffName,GCISalesManager,CustomerServiceStartDate,CustomerServiceEndDate
-INPN,BillingKey,SHG Systems,SHGSYS,Falmouth New,125468,WAN Broadband,2921329663,UKTTX-9-8590-2,(All Carriers)^Fusion_Default_20160601|,Ben Harney,05/03/2017,05/03/2018
-INCH,ChargeItem,SHG Systems,SHGSYS,Falmouth New,,,2921329663,,,,CustomerServiceStartDate,CustomerServiceEndDate
-INCH,ChargeItem,SHG Systems,SHGSYS,Falmouth New,,,2921329663,,,,05/03/2017,
+Actioncode,ItemType,CustomerName,Account Number,NodeName,OrderNumber,ServiceCode,BillingReference,Description,EventTariffName,GCISalesManager
+INPN,BillingKey,SHG Systems,SHGSYS,Falmouth New,125468,WAN Broadband,2921329663,UKTTX-9-8590-2,(All Carriers)^Fusion_Default_20160601|,Ben Harney
+INCH,ChargeItem,SHG Systems,SHGSYS,Falmouth New,,,2921329663,,,
+INCH,ChargeItem,SHG Systems,SHGSYS,Falmouth New,,,2921329663,,,

@@ -3,16 +3,11 @@ package net.gcicom.order.processor.entity.output;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -24,11 +19,11 @@ import net.gcicom.order.processor.entity.input.ChargeImportDto;
 @Component
 public class ChargeImportDtoToBillingReference {
 			
-	   SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+	
 		Logger logger = LoggerFactory.getLogger(ChargeImportDtoToBillingReference.class);
 
 	
-		public List<BillingReference> convertToBillingReference(final List<ChargeImportDto> input) throws ParseException {
+		public List<BillingReference> convertToBillingReference(final List<ChargeImportDto> input) {
 			
 			List<BillingReference> cdrs = new ArrayList<>();
 
@@ -38,17 +33,13 @@ public class ChargeImportDtoToBillingReference {
 
 				BillingReference billingReference = new BillingReference();
 				//TODO get correct ID
-				//billingReference.setBillingReferenceID(111111L);		
+				billingReference.setBillingReferenceID(111111L);		
 				billingReference.setAccountNumber(source.getAccountNumber());
 				billingReference.setOrderNumber(source.getOrderNumber());
 				billingReference.setServiceCode(source.getServiceCode());
 				billingReference.setBillingReference(source.getBillingReference());
 				billingReference.setBillingReferenceDescription(source.getBillingReferenceDesc());
 				billingReference.setGCISalesManager(source.getGciSalesManager());
-				
-				
-				billingReference.setCustomerContractStartDate(formatter.parse(source.getCustomerServiceStartDate()));
-				billingReference.setCustomerContractEndDate(formatter.parse(source.getCustomerServiceEndDate()));
 				
 				billingReference.setBillingReferenceCreateUser(source.getItemType());
 				billingReference.setCustomerCostCentre(source.getActionCode());
