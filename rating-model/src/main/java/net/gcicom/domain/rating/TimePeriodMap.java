@@ -16,7 +16,7 @@ public class TimePeriodMap implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "TimePeriodID")
-	private short id;
+	private Integer id;
 
 	@Column(name = "TimePeriodCode")
 	private String code;
@@ -36,11 +36,11 @@ public class TimePeriodMap implements Serializable {
 	@Column(name = "TimePeriodStartTime")
 	private LocalTime startTime;
 
-	public short getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(short id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

@@ -736,6 +736,10 @@ ADD COLUMN `TimePeriodStartTime` TIME NOT NULL COMMENT '\'HH:MM:SS\' format' AFT
 ADD COLUMN `TimePeriodEndTime` TIME NOT NULL COMMENT '\'HH:MM:SS\' format' AFTER `TimePeriodStartTime`,
 ADD PRIMARY KEY (`TimePeriodID`);
 
+ALTER TABLE `RatingDB`.`TimePeriodMap` 
+CHANGE COLUMN `TimePeriodID` `TimePeriodID` INT(1) NOT NULL ;
+
+
 -- -----------------------------------------------------
 -- Table `ImportedEventsDB`.`EventFile`
 -- -----------------------------------------------------
@@ -826,6 +830,9 @@ ALTER TABLE `ImportedEventsDB`.`ImportedEvents`
 CHANGE COLUMN `PreRatedEventFlag` `PreRatedEventFlag` INT NOT NULL COMMENT 'Flag to store flag as 1 if imported cdr records are already rated' ;
 ALTER TABLE `ImportedEventsDB`.`ImportedEvents` 
 ADD COLUMN `rated` INT NULL COMMENT 'Flag to mark records rated as true once rating process perform caluclation on this record' AFTER `LastModifiedDate`;
+
+ALTER TABLE `ImportedEventsDB`.`ImportedEvents` 
+CHANGE COLUMN `TimePeriod` `TimePeriodID` INT(1) NOT NULL COMMENT 'TimePeriodID refers to RatingDB.TimePeriodMap.TimePeriodID table' ;
 
 
 -- -----------------------------------------------------
@@ -973,6 +980,17 @@ INSERT INTO `ChargingDB`.`ProductChargingType` (`ProductChargingTypeID`, `Produc
 INSERT INTO `ChargingDB`.`ProductChargingType` (`ProductChargingTypeID`, `ProductChargingTypeCode`, `ProductChargingTypeDescription`, `Cost`, `Sell`) VALUES (1004, 'VariableCost-VariableSell', NULL, 2, 2);
 INSERT INTO `ChargingDB`.`ProductChargingType` (`ProductChargingTypeID`, `ProductChargingTypeCode`, `ProductChargingTypeDescription`, `Cost`, `Sell`) VALUES (1005, 'ZeroCost-FixedSell', NULL, 0, 1);
 INSERT INTO `ChargingDB`.`ProductChargingType` (`ProductChargingTypeID`, `ProductChargingTypeCode`, `ProductChargingTypeDescription`, `Cost`, `Sell`) VALUES (1006, 'ZeroCost-VariableSell', NULL, 0, 2);
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- Data for table `RatingDB`.`TimePeriodMap`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `RatingDB`;
+INSERT INTO `RatingDB`.`TimePeriodMap` (`TimePeriodID`, `TimePeriodCode`, `TimePeriodDescription`, `TimePeriodStartDay`, `TimePeriodEndDay`, `TimePeriodStartTime`, `TimePeriodEndTime`) VALUES ('1', 'PEAK', 'Peak terrif time code', '1', '5', '08:00:00', '18:59:59');
+INSERT INTO `RatingDB`.`TimePeriodMap` (`TimePeriodID`, `TimePeriodCode`, `TimePeriodDescription`, `TimePeriodStartDay`, `TimePeriodEndDay`, `TimePeriodStartTime`, `TimePeriodEndTime`) VALUES ('3', 'WEEKEND', 'Weekend Terrif Time code', '6', '7', '24:00:00', '23:59:59');
+INSERT INTO `RatingDB`.`TimePeriodMap` (`TimePeriodID`, `TimePeriodCode`, `TimePeriodDescription`, `TimePeriodStartDay`, `TimePeriodEndDay`, `TimePeriodStartTime`, `TimePeriodEndTime`) VALUES ('2', 'OFF_PEAK', 'Off Peak terrif time code', '1', '5', '19:00:00', '07:59:59');
 
 COMMIT;
 
