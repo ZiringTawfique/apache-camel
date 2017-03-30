@@ -2,11 +2,8 @@ package net.gcicom.domain.imported.events;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-
 import javax.persistence.*;
 
-import java.util.Date;
 import java.util.Objects;
 
 
@@ -30,8 +27,8 @@ public class ImportedEvent implements Serializable {
 
 	private String createdBy;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date createdDate = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC));
+	@Column(updatable = false)
+	private LocalDateTime createdDate = LocalDateTime.now();
 
 	private Long customerID;
 
@@ -45,15 +42,14 @@ public class ImportedEvent implements Serializable {
 
 	private Long eventReferenceID;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date eventTime;
+	private LocalDateTime eventTime;
 
 	private Long eventTypeID;
 
 	private String lastModifiedBy;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date lastModifiedDate;
+	@Column(insertable = false, updatable = true)
+	private LocalDateTime lastModifiedDate = LocalDateTime.now();
 
 	private Long numberRange;
 
@@ -92,6 +88,17 @@ public class ImportedEvent implements Serializable {
 
 	private Integer weekDayFlag;
 	
+	@Transient
+	private String fileChecksum;
+	
+	public String getFileChecksum() {
+		return fileChecksum;
+	}
+
+	public void setFileChecksum(String fileChecksum) {
+		this.fileChecksum = fileChecksum;
+	}
+
 	//flag to mark record if rating processing completed or not
 	private Integer rated;
 
@@ -146,11 +153,11 @@ public class ImportedEvent implements Serializable {
 		this.createdBy = createdBy;
 	}
 
-	public Date getCreatedDate() {
+	public LocalDateTime getCreatedDate() {
 		return this.createdDate;
 	}
 
-	public void setCreatedDate(Date createdDate) {
+	public void setCreatedDate(LocalDateTime createdDate) {
 		this.createdDate = createdDate;
 	}
 
@@ -202,11 +209,11 @@ public class ImportedEvent implements Serializable {
 		this.eventReferenceID = eventReferenceID;
 	}
 
-	public Date getEventTime() {
+	public LocalDateTime getEventTime() {
 		return this.eventTime;
 	}
 
-	public void setEventTime(Date eventTime) {
+	public void setEventTime(LocalDateTime eventTime) {
 		this.eventTime = eventTime;
 	}
 
@@ -226,11 +233,11 @@ public class ImportedEvent implements Serializable {
 		this.lastModifiedBy = lastModifiedBy;
 	}
 
-	public Date getLastModifiedDate() {
+	public LocalDateTime getLastModifiedDate() {
 		return this.lastModifiedDate;
 	}
 
-	public void setLastModifiedDate(Date lastModifiedDate) {
+	public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
 		this.lastModifiedDate = lastModifiedDate;
 	}
 

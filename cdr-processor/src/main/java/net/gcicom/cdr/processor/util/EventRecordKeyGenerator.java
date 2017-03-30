@@ -75,7 +75,7 @@ public abstract class EventRecordKeyGenerator {
 				cdr.getEventTypeID(),
 				cdr.getEventDurationSecs(),
 				cdr.getPreRatedEventFlag(),
-				cdr.getEventFileID(),
+				cdr.getFileChecksum(),
 				cdr.getSupplierAccountNumber());
 	}
 

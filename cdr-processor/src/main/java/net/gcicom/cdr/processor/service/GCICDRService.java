@@ -1,20 +1,20 @@
 package net.gcicom.cdr.processor.service;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 import net.gcicom.cdr.processor.repository.allspark.BillingReferenceRepository;
+import net.gcicom.cdr.processor.repository.imported.events.EventFileRepository;
 import net.gcicom.cdr.processor.repository.imported.events.GCICDRRepository;
 import net.gcicom.cdr.processor.repository.rating.NumberRangeMapRepository;
 import net.gcicom.cdr.processor.repository.rating.TimePeriodMapRepository;
 import net.gcicom.domain.allspark.BillingReference;
+import net.gcicom.domain.imported.events.EventFile;
 import net.gcicom.domain.imported.events.ImportedEvent;
 import net.gcicom.domain.rating.NumberRangeMap;
 import net.gcicom.domain.rating.TimePeriodMap;
@@ -25,7 +25,6 @@ import net.gcicom.domain.rating.TimePeriodMap;
  *
  */
 @Component("gciCDRService")
-@Transactional
 public class GCICDRService {
 
 	private static final Logger logger = LoggerFactory.getLogger(GCICDRService.class);
@@ -33,18 +32,17 @@ public class GCICDRService {
 	@Autowired
 	private GCICDRRepository gciCDR;
 
-
-
 	@Autowired
 	private BillingReferenceRepository billRefRepo;
-	
-
 	
 	@Autowired
 	private NumberRangeMapRepository nrRepo;
 	
 	@Autowired
 	private TimePeriodMapRepository tpmRepo;
+	
+	@Autowired
+	private EventFileRepository eRepo;
 
 
 	/**
@@ -75,7 +73,7 @@ public class GCICDRService {
 	 * @param endDt
 	 * @return
 	 */
-	public List<BillingReference> getBillingReference(String billRef, Date eventTime) {
+	public List<BillingReference> getBillingReference(String billRef, LocalDateTime eventTime) {
 
 		return billRefRepo
 				.findBillingReferenceDetails(
@@ -89,16 +87,30 @@ public class GCICDRService {
 	 * @param endDt
 	 * @return
 	 */
-	public List<NumberRangeMap> getNumberRanges(List<Long> dialedNumbers, Date eventTime) {
+	public List<NumberRangeMap> getNumberRanges(List<Long> dialedNumbers, LocalDateTime eventTime) {
 		
 		return nrRepo.findNumberRangeMap(dialedNumbers, eventTime);
 		
 	}
 	
+	/**
+	 * @param day
+	 * @param t
+	 * @return
+	 */
 	public List<TimePeriodMap> getTimePeriodMap(int day, LocalTime t) {
 		
 		return tpmRepo.findTimePeriod(day, t);
 		
+	}
+	
+	/**
+	 * @param eventFileId
+	 * @return {@link EventFile}
+	 */
+	public EventFile getEventFile(Long eventFileId) {
+		
+		return eRepo.findOne(eventFileId);
 	}
 	
 	

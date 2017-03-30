@@ -1,17 +1,15 @@
 package net.gcicom.cdr.processor.entity.mapper;
 
 import static net.gcicom.cdr.processor.common.AppConstants.CDR_PROCESSOR_USER;
-import static net.gcicom.cdr.processor.common.AppConstants.CDRMapperConstants.NA;
+import static net.gcicom.cdr.processor.common.AppConstants.CDRMapperConstants.UK;
 import static net.gcicom.cdr.processor.util.EventRecordKeyGenerator.getEventRecordHash;
-import static net.gcicom.common.util.DateTimeUtil.convertLocalDateTimeToDate;
 import static net.gcicom.common.util.DateTimeUtil.formatYYYYMM;
 import static net.gcicom.common.util.DateTimeUtil.getDurationInSeconds;
 import static net.gcicom.common.util.DateTimeUtil.getWeekDayFlag;
-
+import static net.gcicom.cdr.processor.common.BTOpenReachEventTypeMap.etm;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -25,14 +23,11 @@ import net.gcicom.cdr.processor.service.GCICDRService;
 import net.gcicom.cdr.processor.service.SupplierDetailsService;
 import net.gcicom.cdr.processor.service.ValidationFailedException;
 import net.gcicom.domain.imported.events.ImportedEvent;
-import net.gcicom.domain.rating.TimePeriodMap;
 
 @Component
 public class BTOpenReachCDRMapper implements CDRMapper<BTOpenReachCDR> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(BTOpenReachCDRMapper.class);
-
-	private static final Long L_DUMMY = 1L;
 
 	@Autowired
 	private CDRMapperHelper h;
@@ -52,20 +47,20 @@ public class BTOpenReachCDRMapper implements CDRMapper<BTOpenReachCDR> {
 			LOG.debug("Converting a {} to GCICDR with eventfileid {}" , source.toString(), eventFileId);
 			ImportedEvent cdr = new ImportedEvent();
 			
-			LocalDateTime eventDateTime = getDateTime(source.getEventTime());
-			Date eventTime = convertLocalDateTimeToDate(eventDateTime);
+			LocalDateTime eventTime = getDateTime(source.getEventTime());
+
+			cdr.setEventTime(eventTime);
 
 			// populate billing reference details
 			cdr = h.populateBillingReferenceDetails(cdr, eventTime, source.getOriginatingNumber());
-			cdr.setEventTime(eventTime);
 
-			cdr.setAccountingPeriod(formatYYYYMM(eventDateTime));
-			cdr.setCountry(NA);
+			cdr.setAccountingPeriod(formatYYYYMM(eventTime));
+			cdr.setCountry(UK);
 			cdr.setDialledCLI(source.getDialedNumber());
 			cdr.setEventDurationSecs(getDurationInSeconds(source.getDuration()));
 			cdr.setEventFileID(eventFileId);
 			cdr.setEventReference(source.getOriginatingNumber());
-			cdr.setEventTypeID(L_DUMMY);
+			cdr.setEventTypeID(etm.get(source.getEventType()));
 			
 			
 			// populates number range details from RatingDB.NumberRangeMap table
@@ -86,14 +81,14 @@ public class BTOpenReachCDRMapper implements CDRMapper<BTOpenReachCDR> {
 			
 			//get time period map based on event time
 			
-			int weekDayFlag = getWeekDayFlag(eventDateTime);
+			int weekDayFlag = getWeekDayFlag(eventTime);
 			cdr.setWeekDayFlag(weekDayFlag);
 			
-			List<TimePeriodMap> tpms = s.getTimePeriodMap(weekDayFlag, eventDateTime.toLocalTime());
-			cdr.setTimePeriodID(tpms.get(0).getId());
+			cdr.setTimePeriodID(h.getTimePeriodMapId(weekDayFlag, eventTime.toLocalTime()));
 
 			cdr.setCreatedBy(CDR_PROCESSOR_USER);
 
+			cdr.setFileChecksum(s.getEventFile(eventFileId).getEventFileChecksum());
 			// generate only after populating all the field in cdrs
 			cdr.setEventRecordKey(getEventRecordHash(cdr));
 

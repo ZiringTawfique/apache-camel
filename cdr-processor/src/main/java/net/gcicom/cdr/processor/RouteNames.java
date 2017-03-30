@@ -1,5 +1,7 @@
 package net.gcicom.cdr.processor;
 
+import net.gcicom.cdr.processor.supplier.BaseProcessor;
+
 /**
  * Defines route's prefixes used in conjunction with {@link BaseProcessor} instance names as suffix to make all route names as unique
  *

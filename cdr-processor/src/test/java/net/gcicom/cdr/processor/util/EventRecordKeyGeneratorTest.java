@@ -2,7 +2,6 @@ package net.gcicom.cdr.processor.util;
 
 import static org.junit.Assert.*;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import org.junit.After;
@@ -73,7 +72,7 @@ public class EventRecordKeyGeneratorTest {
 		cdr.setDialledCLI(DUMMY);
 		cdr.setEventDurationSecs(2);
 		cdr.setEventFileID(L_DUMMY);
-		cdr.setEventTime(Timestamp.valueOf(LocalDateTime.now()));
+		cdr.setEventTime(LocalDateTime.now());
 		cdr.setEventTypeID(L_DUMMY);
 		cdr.setOriginatingCLI(DUMMY);
 		cdr.setPreRatedEventFlag(0);

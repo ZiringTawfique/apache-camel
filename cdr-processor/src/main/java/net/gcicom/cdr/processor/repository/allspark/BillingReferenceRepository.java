@@ -1,6 +1,6 @@
 package net.gcicom.cdr.processor.repository.allspark;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +13,6 @@ public interface BillingReferenceRepository extends JpaRepository<BillingReferen
 
 	@Query("select b from BillingReference b where b.billingReference= :bf and b.billingReferenceStartDate<= :et "
 			+ "and (b.billingReferenceEndDate>= :et or b.billingReferenceEndDate is null)")
-	List<BillingReference> findBillingReferenceDetails(@Param(value = "bf") String billingRef, @Param(value = "et") Date eventTime);
+	List<BillingReference> findBillingReferenceDetails(@Param(value = "bf") String billingRef, @Param(value = "et") LocalDateTime eventTime);
 
 }

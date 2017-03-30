@@ -1,6 +1,6 @@
 package net.gcicom.cdr.processor.repository.rating;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
@@ -14,7 +14,7 @@ public interface NumberRangeMapRepository extends CrudRepository<NumberRangeMap,
 	@Query("select nrm from NumberRangeMap nrm where nrm.numberRange IN :dns and nrm.numberRangeStartDate<= :et "
 			+ "and (nrm.numberRangeEndDate>= :et or nrm.numberRangeEndDate is null)")
 	List<NumberRangeMap> findNumberRangeMap(@Param(value = "dns") List<Long> dialedNumbers,
-			@Param(value = "et") Date eventTime);
+			@Param(value = "et") LocalDateTime eventTime);
 
 
 }

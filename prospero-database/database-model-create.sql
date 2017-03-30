@@ -329,6 +329,18 @@ ENGINE = InnoDB;
 
 CREATE INDEX `fk_BillingReference_Customer1_idx` ON `AllSpark`.`BillingReference` (`CustomerID` ASC);
 
+ALTER TABLE `AllSpark`.`BillingReference` 
+CHANGE COLUMN `CustomerContractStartDate` `CustomerContractStartDate` DATETIME NOT NULL ;
+ALTER TABLE `AllSpark`.`BillingReference` 
+CHANGE COLUMN `CustomerContractEndDate` `CustomerContractEndDate` DATETIME NOT NULL ;
+ALTER TABLE `AllSpark`.`BillingReference` 
+CHANGE COLUMN `BillingReferenceStartDate` `BillingReferenceStartDate` DATETIME NOT NULL ;
+ALTER TABLE `AllSpark`.`BillingReference` 
+CHANGE COLUMN `BillingReferenceEndDate` `BillingReferenceEndDate` DATETIME NOT NULL ;
+ALTER TABLE `AllSpark`.`BillingReference` 
+CHANGE COLUMN `SupplierContractStartDate` `SupplierContractStartDate` DATETIME NOT NULL ;
+ALTER TABLE `AllSpark`.`BillingReference` 
+CHANGE COLUMN `SupplierContractEndDate` `SupplierContractEndDate` DATETIME NOT NULL ;
 
 -- -----------------------------------------------------
 -- Table `AllSpark`.`CustomerProductCharge`
@@ -994,3 +1006,15 @@ INSERT INTO `RatingDB`.`TimePeriodMap` (`TimePeriodID`, `TimePeriodCode`, `TimeP
 
 COMMIT;
 
+-- -----------------------------------------------------
+-- Data for table `AllSpark`.`BillingReference`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `AllSpark`;
+INSERT INTO `AllSpark`.`BillingReference` (CustomerID,AccountNumber,OrderNumber,NodeID,AssetID,ServiceCode,BillingReference,BillingReferenceDescription,BillingReferenceStartDate,BillingReferenceEndDate,SupplierContractStartDate,SupplierContractEndDate,CustomerContractStartDate,CustomerContractEndDate) VALUES(234455,'0000056A',0,223486,'1681074','MOB','07467953332','GCI O2 3GB','2016-10-01 00:00:00.000','2017-02-10 00:00:00.000','2016-10-01 00:00:00.000','2017-09-30 00:00:00.000','2016-10-01 00:00:00.000','2017-09-30 00:00:00.000');
+INSERT INTO `AllSpark`.`BillingReference` (CustomerID,AccountNumber,OrderNumber,NodeID,AssetID,ServiceCode,BillingReference,BillingReferenceDescription,BillingReferenceStartDate,BillingReferenceEndDate,SupplierContractStartDate,SupplierContractEndDate,CustomerContractStartDate,CustomerContractEndDate) VALUES(234455,'0000056A',0,223486,'1681075','MOB','07467953333','GCI O2 3GB','2016-10-01 00:00:00.000','2017-02-28 00:00:00.000','2016-10-01 00:00:00.000','2017-09-30 00:00:00.000','2016-10-01 00:00:00.000','2017-09-30 00:00:00.000');
+INSERT INTO `AllSpark`.`BillingReference` (CustomerID,AccountNumber,OrderNumber,NodeID,AssetID,ServiceCode,BillingReference,BillingReferenceDescription,BillingReferenceStartDate,BillingReferenceEndDate,SupplierContractStartDate,SupplierContractEndDate,CustomerContractStartDate,CustomerContractEndDate) VALUES(234455,'0000056A',0,223486,'1681076','MOB','07467953334','GCI O2 3GB','2016-10-01 00:00:00.000','2017-02-28 00:00:00.000','2016-10-01 00:00:00.000','2017-09-30 00:00:00.000','2016-10-01 00:00:00.000','2017-09-30 00:00:00.000');
+INSERT INTO `AllSpark`.`BillingReference` (CustomerID,AccountNumber,OrderNumber,NodeID,AssetID,ServiceCode,BillingReference,BillingReferenceDescription,BillingReferenceStartDate,BillingReferenceEndDate,SupplierContractStartDate,SupplierContractEndDate,CustomerContractStartDate,CustomerContractEndDate) VALUES(234455,'0000056A',0,223486,'1681077','MOB','07467953335','GCI O2 3GB','2016-10-01 00:00:00.000','2017-02-28 00:00:00.000','2016-10-01 00:00:00.000','2017-09-30 00:00:00.000','2016-10-01 00:00:00.000','2017-09-30 00:00:00.000');
+INSERT INTO `AllSpark`.`BillingReference` (CustomerID,AccountNumber,OrderNumber,NodeID,AssetID,ServiceCode,BillingReference,BillingReferenceDescription,BillingReferenceStartDate,BillingReferenceEndDate,SupplierContractStartDate,SupplierContractEndDate,CustomerContractStartDate,CustomerContractEndDate) VALUES(234455,'0000056A',0,223486,'1681078','MOB','07467953336','GCI O2 3GB','2016-10-01 00:00:00.000','2017-02-28 00:00:00.000','2016-10-01 00:00:00.000','2017-09-30 00:00:00.000','2016-10-01 00:00:00.000','2017-09-30 00:00:00.000');
+INSERT INTO `AllSpark`.`BillingReference` (CustomerID,AccountNumber,OrderNumber,NodeID,AssetID,ServiceCode,BillingReference,BillingReferenceDescription,BillingReferenceStartDate,BillingReferenceEndDate,SupplierContractStartDate,SupplierContractEndDate,CustomerContractStartDate,CustomerContractEndDate) VALUES(234455,'0000056A',0,223486,'1681080','MOB','07467953338','GCI O2 3GB','2016-10-01 00:00:00.000','2017-02-28 00:00:00.000','2016-10-01 00:00:00.000','2017-09-30 00:00:00.000','2016-10-01 00:00:00.000','2017-09-30 00:00:00.000');
+COMMIT;

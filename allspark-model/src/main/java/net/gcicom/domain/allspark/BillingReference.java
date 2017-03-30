@@ -1,6 +1,8 @@
 package net.gcicom.domain.allspark;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -23,24 +25,19 @@ public class BillingReference implements Serializable {
 
 	private String billingReference;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date billingReferenceCreateDate;
+	private LocalDateTime billingReferenceCreateDate;
 
 	private String billingReferenceCreateUser;
 
 	private String billingReferenceDescription;
 
-	@Temporal(TemporalType.DATE)
-	private Date billingReferenceEndDate;
+	private LocalDateTime billingReferenceEndDate;
 
-	@Temporal(TemporalType.DATE)
-	private Date billingReferenceStartDate;
+	private LocalDateTime billingReferenceStartDate;
 
-	@Temporal(TemporalType.DATE)
-	private Date customerContractEndDate;
+	private LocalDateTime customerContractEndDate;
 
-	@Temporal(TemporalType.DATE)
-	private Date customerContractStartDate;
+	private LocalDateTime customerContractStartDate;
 
 	private String customerCostCentre;
 
@@ -68,11 +65,9 @@ public class BillingReference implements Serializable {
 
 	private String serviceCode;
 
-	@Temporal(TemporalType.DATE)
-	private Date supplierContractEndDate;
+	private LocalDateTime supplierContractEndDate;
 
-	@Temporal(TemporalType.DATE)
-	private Date supplierContractStartDate;
+	private LocalDateTime supplierContractStartDate;
 
 	private String supplierOrderNumber;
 
@@ -113,11 +108,11 @@ public class BillingReference implements Serializable {
 		this.billingReference = billingReference;
 	}
 
-	public Date getBillingReferenceCreateDate() {
+	public LocalDateTime getBillingReferenceCreateDate() {
 		return this.billingReferenceCreateDate;
 	}
 
-	public void setBillingReferenceCreateDate(Date billingReferenceCreateDate) {
+	public void setBillingReferenceCreateDate(LocalDateTime billingReferenceCreateDate) {
 		this.billingReferenceCreateDate = billingReferenceCreateDate;
 	}
 
@@ -137,35 +132,35 @@ public class BillingReference implements Serializable {
 		this.billingReferenceDescription = billingReferenceDescription;
 	}
 
-	public Date getBillingReferenceEndDate() {
+	public LocalDateTime getBillingReferenceEndDate() {
 		return this.billingReferenceEndDate;
 	}
 
-	public void setBillingReferenceEndDate(Date billingReferenceEndDate) {
+	public void setBillingReferenceEndDate(LocalDateTime billingReferenceEndDate) {
 		this.billingReferenceEndDate = billingReferenceEndDate;
 	}
 
-	public Date getBillingReferenceStartDate() {
+	public LocalDateTime getBillingReferenceStartDate() {
 		return this.billingReferenceStartDate;
 	}
 
-	public void setBillingReferenceStartDate(Date billingReferenceStartDate) {
+	public void setBillingReferenceStartDate(LocalDateTime billingReferenceStartDate) {
 		this.billingReferenceStartDate = billingReferenceStartDate;
 	}
 
-	public Date getCustomerContractEndDate() {
+	public LocalDateTime getCustomerContractEndDate() {
 		return this.customerContractEndDate;
 	}
 
-	public void setCustomerContractEndDate(Date customerContractEndDate) {
+	public void setCustomerContractEndDate(LocalDateTime customerContractEndDate) {
 		this.customerContractEndDate = customerContractEndDate;
 	}
 
-	public Date getCustomerContractStartDate() {
+	public LocalDateTime getCustomerContractStartDate() {
 		return this.customerContractStartDate;
 	}
 
-	public void setCustomerContractStartDate(Date customerContractStartDate) {
+	public void setCustomerContractStartDate(LocalDateTime customerContractStartDate) {
 		this.customerContractStartDate = customerContractStartDate;
 	}
 
@@ -273,19 +268,19 @@ public class BillingReference implements Serializable {
 		this.serviceCode = serviceCode;
 	}
 
-	public Date getSupplierContractEndDate() {
+	public LocalDateTime getSupplierContractEndDate() {
 		return this.supplierContractEndDate;
 	}
 
-	public void setSupplierContractEndDate(Date supplierContractEndDate) {
+	public void setSupplierContractEndDate(LocalDateTime supplierContractEndDate) {
 		this.supplierContractEndDate = supplierContractEndDate;
 	}
 
-	public Date getSupplierContractStartDate() {
+	public LocalDateTime getSupplierContractStartDate() {
 		return this.supplierContractStartDate;
 	}
 
-	public void setSupplierContractStartDate(Date supplierContractStartDate) {
+	public void setSupplierContractStartDate(LocalDateTime supplierContractStartDate) {
 		this.supplierContractStartDate = supplierContractStartDate;
 	}
 

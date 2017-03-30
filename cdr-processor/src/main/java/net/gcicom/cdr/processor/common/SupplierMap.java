@@ -19,6 +19,7 @@ public class SupplierMap {
 	
 	public static final Logger LOG = LoggerFactory.getLogger(SupplierMap.class);
 	
+	/*These supplier names are sourced from RatingDB.Supplier table*/
 	public static final String CONF_INTERCALL = "CONF_INTERCALL";
 	
 	public static final String MOB_ABZORB =  "MOB_ABZORB";
@@ -79,6 +80,11 @@ public class SupplierMap {
 	@Value("${gci.abzorb2cdr.file.name.pattern}")
 	private String abzorbo2FP;
 	
+	@Value("${gci.nts.vodathus.file.name.pattern}")
+	private String ntsVodathusFP;
+	
+	@Value("${gci.pstn.vodathus.file.name.pattern}")
+	private String pstnVodathusFP;
 	private static Map<String, String> s = new HashMap<>();
 
 	
@@ -88,7 +94,9 @@ public class SupplierMap {
 		//put all supplier names and file pattern here. This mapping wiil be used to retrieve supplier name from file name
 		s.put(btoFP, PSTN_BTO);
 		s.put(abzorbo2FP, MOB_ABZORB_O2);
-
+		s.put(ntsVodathusFP, NTS_VODATHUS);
+		s.put(pstnVodathusFP, PSTN_VODATHUS);
+		
 		LOG.info("Supplier Maps has been initialized with {} supplier elements", s.size());
 	}
 	

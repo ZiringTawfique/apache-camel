@@ -9,5 +9,6 @@ public final class AppConstants {
 	public class CDRMapperConstants {
 		
 		public static final String NA = "NA";
+		public static final String UK = "UK";
 	}
 }
