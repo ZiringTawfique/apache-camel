@@ -16,7 +16,7 @@ import net.gcicom.cdr.processor.RouteNames;
 import net.gcicom.cdr.processor.entity.input.AbzorbO2CDR;
 import net.gcicom.cdr.processor.entity.input.BTOpenReachCDR;
 import net.gcicom.cdr.processor.entity.mapper.Abzorbo2CDRToGciCDRMapper;
-import net.gcicom.cdr.processor.service.Auditor;
+import net.gcicom.cdr.processor.service.CDRErrorHandler;
 
 /**
  * A Simple Camel route builder to process AbzorbO2 CDR feed
@@ -33,10 +33,6 @@ public class AbzorbO2CDRProcessor extends BaseProcessor {
 	@Value("${gci.abzorb2cdr.file.in.location}")
 	private String inFileLocation;
 	
-	@Value("${gci.abzorb2cdr.file.out.location}")
-	private String outFileLocation;
-	
-
 	@Value("${gci.abzorb2cdr.timer}")
 	private String cron;
 	
@@ -44,8 +40,11 @@ public class AbzorbO2CDRProcessor extends BaseProcessor {
 	@Value("${gci.abzorb2cdr.file.name.pattern}")
 	private String filePattern;
 	
+	@Value("${gci.abzorb2cdr.autostart}")
+	private boolean autostart;
+	
 	@Autowired
-	private Auditor auditor;
+	private CDRErrorHandler handler;
 
 	@Autowired
 	private Abzorbo2CDRToGciCDRMapper mapper;
@@ -53,10 +52,11 @@ public class AbzorbO2CDRProcessor extends BaseProcessor {
 	@Override
 	public void configure() throws Exception {
 		
+		setAutostart(autostart);
 		super.configure();
 
 		//1
-        moveFileOnError(outFileLocation);
+        moveFileOnError(inFileLocation);
         
 		//2
 		pollFiles(inFileLocation, filePattern, cron);
@@ -87,7 +87,7 @@ public class AbzorbO2CDRProcessor extends BaseProcessor {
 				"This route convert each csv rows to a pojo and passes it to ".concat(RouteNames.ADD_CDR.concat(processorName)), null)
         .onException(IllegalArgumentException.class)
 	        .handled(true)
-	        .bean(auditor, "handleEventInvalidCdr")
+	        .bean(handler, "handleEventInvalidCdr")
 	        .useOriginalMessage()
 	    .end()
 		.choice()

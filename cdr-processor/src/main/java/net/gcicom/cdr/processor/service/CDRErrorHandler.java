@@ -27,9 +27,9 @@ import net.gcicom.domain.imported.events.AuditEvent;
  *
  */
 @Component
-public final class Auditor {
+public final class CDRErrorHandler {
 
-	private static final Logger LOG = LoggerFactory.getLogger(Auditor.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CDRErrorHandler.class);
 
 
 	@Autowired

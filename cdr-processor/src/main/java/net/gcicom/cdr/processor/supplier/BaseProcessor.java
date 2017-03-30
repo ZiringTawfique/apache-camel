@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 
 import net.gcicom.cdr.processor.entity.mapper.CDRMapper;
 import net.gcicom.cdr.processor.service.AlreadyProcessedFileException;
-import net.gcicom.cdr.processor.service.Auditor;
+import net.gcicom.cdr.processor.service.CDRErrorHandler;
 import net.gcicom.cdr.processor.service.CDRAggregator;
 import net.gcicom.cdr.processor.service.ChecksumValidator;
 import net.gcicom.cdr.processor.service.GCICDRService;
@@ -53,7 +53,7 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 	private GCICDRService service;
 	
 	@Autowired
-	private Auditor auditor;
+	private CDRErrorHandler handler;
 
 	
 	@Autowired
@@ -62,6 +62,12 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 	@Autowired
 	private ChecksumValidator chksum;
 	
+	private boolean autostart = true;
+	
+	public void setAutostart(boolean autostart) {
+		this.autostart = autostart;
+	}
+
 	/**Moves files to given file location
 	 * @param fileLocation
 	 */
@@ -101,20 +107,21 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
         		+ "&move=.success"
                 + "&moveFailed=.error"
         		+ "&scheduler=spring&scheduler.cron=" + cronExpression)
-	    	.description("Polling files ".concat(processorName), String.format("This route poll files based on given cron expression %s "
+		.autoStartup(autostart)
+		.description("Polling files ".concat(processorName), String.format("This route poll files based on given cron expression %s "
 	    			+ "from %s for matching %s file name pattern", cronExpression, inFileLocation, filePattern), null)
-	    	.onException(AlreadyProcessedFileException.class)
-				.bean(auditor, "errorEvent")
-	    		.to(MOVE_FILE_ON_ERROR.concat(processorName))
-			.end()
-			.log(LoggingLevel.INFO, LOG, "START : Processing ${file:name} file")
-	    	.bean(auditor, "startEvent")
-			.bean(chksum, "validateMd5")
-	    	.split(body()
-	    			.tokenize("\n"))
-	    	.to(MAP_CSV_ROW_TO_VENDOR_CDR.concat(processorName))
-	    	.bean(auditor, "endEvent")
-	    	.end();
+    	.onException(AlreadyProcessedFileException.class)
+			.bean(handler, "errorEvent")
+    		.to(MOVE_FILE_ON_ERROR.concat(processorName))
+		.end()
+		.log(LoggingLevel.INFO, LOG, "START : Processing ${file:name} file")
+    	.bean(handler, "startEvent")
+		.bean(chksum, "validateMd5")
+    	.split(body()
+    			.tokenize("\n"))
+    	.to(MAP_CSV_ROW_TO_VENDOR_CDR.concat(processorName))
+    	.bean(handler, "endEvent")
+    	.end();
         
 	}
 	
@@ -131,7 +138,7 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 			.description(ADD_CDR + processorName, String.format("This route adds cdr records to database"), null)
 			.onException(InvalidCDRException.class, ValidationFailedException.class, IllegalArgumentException.class)
 				.handled(true)
-				.bean(auditor, "handleEventInvalidCdr")
+				.bean(handler, "handleEventInvalidCdr")
 				.useOriginalMessage()
 				.logHandled(true)
 				.logStackTrace(true)
@@ -152,7 +159,7 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 		
 		onException(Exception.class)
 			.logStackTrace(true)
-		    .bean(auditor, "errorEvent")
+		    .bean(handler, "errorEvent")
 			.to(MOVE_FILE_ON_ERROR.concat(this.getClass().getCanonicalName()));
 		
 	}
@@ -167,6 +174,7 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
         		+ "&move=.processed"
                 + "&moveFailed=.processed"
         		+ "&scheduler=spring&scheduler.cron=0+0/45+8-9+*+*+*")
+		.autoStartup(autostart)
 		.log("Processing compressed files")
 		.process(new Processor() {
 			
