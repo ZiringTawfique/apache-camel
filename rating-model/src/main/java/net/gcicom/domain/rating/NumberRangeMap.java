@@ -1,6 +1,8 @@
 package net.gcicom.domain.rating;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -25,13 +27,11 @@ public class NumberRangeMap implements Serializable {
 
 	private String numberRangeClassification;
 
-	@Temporal(TemporalType.DATE)
-	private Date numberRangeEndDate;
+	private LocalDateTime numberRangeEndDate;
 
 	private short numberRangeSource;
 
-	@Temporal(TemporalType.DATE)
-	private Date numberRangeStartDate;
+	private LocalDateTime numberRangeStartDate;
 
 	private String numberRangeType;
 
@@ -70,11 +70,11 @@ public class NumberRangeMap implements Serializable {
 		this.numberRangeClassification = numberRangeClassification;
 	}
 
-	public Date getNumberRangeEndDate() {
+	public LocalDateTime getNumberRangeEndDate() {
 		return this.numberRangeEndDate;
 	}
 
-	public void setNumberRangeEndDate(Date numberRangeEndDate) {
+	public void setNumberRangeEndDate(LocalDateTime numberRangeEndDate) {
 		this.numberRangeEndDate = numberRangeEndDate;
 	}
 
@@ -86,11 +86,11 @@ public class NumberRangeMap implements Serializable {
 		this.numberRangeSource = numberRangeSource;
 	}
 
-	public Date getNumberRangeStartDate() {
+	public LocalDateTime getNumberRangeStartDate() {
 		return this.numberRangeStartDate;
 	}
 
-	public void setNumberRangeStartDate(Date numberRangeStartDate) {
+	public void setNumberRangeStartDate(LocalDateTime numberRangeStartDate) {
 		this.numberRangeStartDate = numberRangeStartDate;
 	}
 

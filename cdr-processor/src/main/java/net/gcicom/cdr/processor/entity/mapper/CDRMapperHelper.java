@@ -2,20 +2,25 @@ package net.gcicom.cdr.processor.entity.mapper;
 
 import static net.gcicom.common.util.NumberRangeUtils.getNumberRanges;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+
+import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import net.gcicom.cdr.processor.service.GCICDRService;
 import net.gcicom.cdr.processor.service.ValidationFailedException;
 import net.gcicom.domain.allspark.BillingReference;
 import net.gcicom.domain.imported.events.ImportedEvent;
 import net.gcicom.domain.rating.NumberRangeMap;
+import net.gcicom.domain.rating.TimePeriodMap;
 
 /**
  * Container class for common reusable helper methods to support mapping of 
@@ -28,7 +33,7 @@ final class CDRMapperHelper {
 	private static final Logger LOG = LoggerFactory.getLogger(CDRMapperHelper.class);
 	
 	@Autowired
-	private GCICDRService service;
+	private GCICDRService s;
 
 	
 	/**Populates billing reference details from AllSpark.BillingReference table
@@ -39,14 +44,14 @@ final class CDRMapperHelper {
 	 * @return
 	 * @throws ValidationFailedException
 	 */
-	public ImportedEvent populateBillingReferenceDetails(ImportedEvent cdr, Date eventTime, String originNbr)
+	public ImportedEvent populateBillingReferenceDetails(@NotNull ImportedEvent cdr, @NotNull LocalDateTime eventTime, @NotNull String originNbr)
 			throws ValidationFailedException {
 
 		LOG.debug(String.format(
 				"Populating billing reference details for %s billing reference and for %s event date time", originNbr,
 				eventTime));
 		// get billing reference number if not found mark it error record
-		List<BillingReference> bfs = service.getBillingReference(originNbr, eventTime);
+		List<BillingReference> bfs = s.getBillingReference(originNbr, eventTime);
 		if (bfs.size() == 0) {
 
 			throw new ValidationFailedException(
@@ -87,7 +92,7 @@ final class CDRMapperHelper {
 	 * @param eventTime
 	 * @return
 	 */
-	private NumberRangeMap getNumberRange(final String dialedNumber, final Date eventTime) {
+	private NumberRangeMap getNumberRange(@NotNull final String dialedNumber, @NotNull final LocalDateTime eventTime) {
 		
 		List<Long> l = getNumberRanges(dialedNumber);
 		
@@ -96,7 +101,7 @@ final class CDRMapperHelper {
 			return null;
 			
 		}
-		List<NumberRangeMap> r = service.getNumberRanges(l, eventTime);
+		List<NumberRangeMap> r = s.getNumberRanges(l, eventTime);
 		
 		for (Long range : l) {
 			
@@ -120,21 +125,48 @@ final class CDRMapperHelper {
 	 * @param dialedNumber 
 	 * @param eventTime
 	 * @return
+	 * @throws ValidationFailedException 
 	 */
-	public ImportedEvent populateNumberRangDetails(ImportedEvent cdr, String dialedNumber, Date eventTime) {
+	public ImportedEvent populateNumberRangDetails(@NotNull ImportedEvent cdr, @NotNull String dialedNumber, @NotNull LocalDateTime eventTime) throws ValidationFailedException {
 		
 		NumberRangeMap nrm = getNumberRange(dialedNumber, eventTime);
 		
-		if (!ObjectUtils.isEmpty(nrm)) {
+		if (!ObjectUtils.isEmpty(nrm) && !ObjectUtils.isEmpty(nrm.getNumberRange()) 
+				&& !StringUtils.isEmpty(nrm.getNumberRangeClassification())
+				&& !StringUtils.isEmpty(nrm.getNumberRangeType())) {
 			
 			cdr.setNumberRange(nrm.getNumberRange());
 			cdr.setNumberRangeClassification(nrm.getNumberRangeClassification());
 			cdr.setNumberRangeType(nrm.getNumberRangeType());
+			return cdr;
+
+		} else {
 			
+			throw new ValidationFailedException(String.format("Mandatory number range map details are missing for %s and %s ", dialedNumber, eventTime));
 		}
 
-		return cdr;
 	}
+	
+	/**
+	 * @param weekDayFlag
+	 * @param time
+	 * @return
+	 * @throws ValidationFailedException 
+	 */
+	public Integer getTimePeriodMapId(@NotNull Integer weekDayFlag, @NotNull LocalTime time) throws ValidationFailedException {
+		
+		List<TimePeriodMap> tpms = s.getTimePeriodMap(weekDayFlag, time);
+		if (!tpms.isEmpty() && !ObjectUtils.isEmpty(tpms.get(0).getId())) {
+			
+			return tpms.get(0).getId();
+
+		} else {
+			
+			throw new ValidationFailedException(String.format("Mandatory time period map details not available for give event time %s and weekday %s", time, weekDayFlag));
+		}
+	}
+	
+
 	
 
 }
