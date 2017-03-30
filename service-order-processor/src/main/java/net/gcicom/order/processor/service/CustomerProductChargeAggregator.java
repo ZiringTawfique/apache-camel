@@ -20,22 +20,24 @@ import net.gcicom.domain.allspark.CustomerProductCharge;
  *
  */
 @Component
-public class BillingReferenceAggregator implements CompletionAwareAggregationStrategy  {
+public class CustomerProductChargeAggregator implements CompletionAwareAggregationStrategy  {
 
-	private Logger logger = LoggerFactory.getLogger(BillingReferenceAggregator.class); 
+	private Logger logger = LoggerFactory.getLogger(CustomerProductChargeAggregator.class); 
+	
+	
 	
 	
 	@Override
 	public Exchange aggregate(Exchange oldExchange, Exchange newExchange) {
 
-		BillingReference cdr = newExchange.getIn().getBody(BillingReference.class);
+		CustomerProductCharge cdr = newExchange.getIn().getBody(CustomerProductCharge.class);
 		logger.debug("Aggregating " + cdr);
 
-		ArrayList<BillingReference> cdrs = null;
+		ArrayList<CustomerProductCharge> cdrs = null;
 	
 		if (oldExchange == null) {
 			
-			cdrs = new ArrayList<BillingReference>();
+			cdrs = new ArrayList<CustomerProductCharge>();
 			cdrs.add(cdr);
 			newExchange.getIn().setBody(cdrs);
 			return newExchange;
@@ -47,9 +49,6 @@ public class BillingReferenceAggregator implements CompletionAwareAggregationStr
 			return oldExchange;
 		}
 	}
-	
-	
-
 	
 	@Override
 	public void onCompletion(Exchange exchange) {

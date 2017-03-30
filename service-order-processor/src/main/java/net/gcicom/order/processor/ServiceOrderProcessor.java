@@ -4,7 +4,10 @@
 package net.gcicom.order.processor;
 
 import static net.gcicom.order.processor.RouteNames.MOVE_FILE_ON_ERROR;
+
+import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
+import org.apache.camel.Predicate;
 import org.apache.camel.model.dataformat.BindyType;
 import org.apache.camel.spring.SpringRouteBuilder;
 import org.slf4j.Logger;
@@ -22,7 +25,7 @@ import net.gcicom.order.processor.service.AlreadyProcessedFileException;
 import net.gcicom.order.processor.service.BillingReferenceAggregator;
 import net.gcicom.order.processor.service.CDRProcessorErrorHandler;
 //import net.gcicom.order.processor.service.ChargeImportAggregator;
-
+import net.gcicom.order.processor.service.CustomerProductChargeAggregator;
 import net.gcicom.order.processor.service.GCIChargeImportService;
 
 
@@ -37,7 +40,12 @@ public class ServiceOrderProcessor extends SpringRouteBuilder {
 	
 	Logger logger = LoggerFactory.getLogger(ServiceOrderProcessor.class);
 	
-	String HEADER = "Actioncode, ItemType, Account Number";
+	String HEADER = "Actioncode, ItemType, CustomerName, Account Number, NodeName, OrderNumber, ServiceCode, BillingReference,"
+			         + " Description, EventTariffName, GCISalesManager, CustomerServiceStartDate, CustomerServiceEndDate,SupplierContractStartDate,"
+			         + "SupplierContractStartDate,SupplierContractEndDate,CustomerContractStartDate,CustomerContractEndDate,CustomerSiteName,"
+			         + "CustomerCustomReference,CustomerCostCentre,	CustomerPONumber,InstallationPostCode,SupplierOrderNumber,SupplierServiceReference";
+
+
 	
 	@Value("${gci.service.order.file.in.location}")
 	private String inFileLocation;
@@ -91,6 +99,9 @@ public class ServiceOrderProcessor extends SpringRouteBuilder {
 	@Autowired
 	private BillingReferenceAggregator billingReferenceAggregator;
 	
+	@Autowired
+	private CustomerProductChargeAggregator customerProductChargeAggregator;
+	
 	
 	@Override
 	public void configure() throws Exception {
@@ -121,8 +132,8 @@ public class ServiceOrderProcessor extends SpringRouteBuilder {
     		//.bean(service, "validateMd5")
         	.split(body()
         			.tokenize("\n"))
-        			.parallelProcessing()
-        			.streaming()
+           //   	.parallelProcessing()
+        	//		.streaming()
         	.to("direct:save-to-database")
         //	.bean(auditor, "endEvent")
         	.end();
@@ -133,13 +144,24 @@ public class ServiceOrderProcessor extends SpringRouteBuilder {
 		    	.handled(true)
 	//	    	.bean(auditor, "handleEventInvalidCdr")
 		    .end()
-			.filter(body().isNotEqualTo(constant(HEADER)))//need to filter header of cvs/
+			//.filter(body().isNotEqualTo(constant(HEADER)))//need to filter header of cvs/
+		    
+		    .choice()
+			.when(new Predicate() {
+				
+				@Override
+				public boolean matches(Exchange exchange) {
+					
+					return exchange.getIn().getBody(String.class).startsWith(HEADER) ? false : true;
+
+				}
+			})//need to filter header of csv/
     		.unmarshal()
     			.bindy(BindyType.Csv, ChargeImportDto.class)
     			.bean(billingReferenceMapper, "convertToBillingReference")
-    			.aggregate(constant(true), billingReferenceAggregator)
-                .completionSize(batchSize)
-                .completionTimeout(aggregationTimeOut)//just in case cvs rows are less than batch size
+    	    // .aggregate(constant(true), customerProductChargeAggregator)
+              //  .completionSize(batchSize)
+           //     .completionTimeout(aggregationTimeOut)//just in case cvs rows are less than batch size
     			.bean(service, "addBillingReference")
     			.log(LoggingLevel.DEBUG, logger, "END : Add CVS rows to table.");
  

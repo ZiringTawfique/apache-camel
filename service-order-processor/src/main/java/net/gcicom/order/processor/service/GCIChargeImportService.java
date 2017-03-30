@@ -14,9 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import net.gcicom.domain.allspark.BillingReference;
+import net.gcicom.domain.allspark.CustomerProductCharge;
 //import net.gcicom.order.processor.entity.output.GCIChargeImport;
 //import net.gcicom.order.processor.entity.output.MD5;
 import net.gcicom.order.processor.repository.BillingReferenceRepository;
+import net.gcicom.order.processor.repository.CustomerProductChargeRepository;
 //import net.gcicom.order.processor.repository.GCIChargeImportRepository;
 //import net.gcicom.order.processor.repository.Md5Repository;
 /**
@@ -36,10 +38,14 @@ public class GCIChargeImportService {
 	@Autowired
 	BillingReferenceRepository billingReferenceRepo;
 	
-//	@Autowired
-	//Md5Repository md5Repo;
 	
-	//@Autowired
+	@Autowired
+	CustomerProductChargeRepository customerProductChargeRepo;
+	
+//	@Autowired
+//  Md5Repository md5Repo;
+	
+//@Autowired
 //	Auditor auditor;
 	
 	/**
@@ -73,8 +79,6 @@ public class GCIChargeImportService {
 			logger.debug("Saved CDR " + result.toString() );
 
 		}
-		
-		
 	}
 	
 	/*public void validateMd5(final @Header("CamelFileNameConsumed") String fileName, final @Body InputStream is) throws IOException, AlreadyProcessedFileException {
