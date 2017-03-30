@@ -1,10 +1,8 @@
 package net.gcicom.cdr.processor.repository.allspark;
 
-import static net.gcicom.common.util.DateTimeUtil.convertLocalDateTimeToDate;
 import static org.junit.Assert.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import org.junit.After;
@@ -16,7 +14,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import net.gcicom.cdr.processor.config.AllSparkDataSourceConfiguration;
 import net.gcicom.cdr.processor.test.helper.TestDatabaseConfiguration;
 import net.gcicom.domain.allspark.BillingReference;
 
@@ -31,9 +28,6 @@ public class BillingReferenceRepositoryTest {
 	
 	@Autowired
 	private BillingReferenceRepository repo;
-	
-	@Autowired
-	private AllSparkDataSourceConfiguration config;
 
 	@Before
 	public void setUp() throws Exception {
@@ -55,10 +49,10 @@ public class BillingReferenceRepositoryTest {
 	    
 		BillingReference bf = new BillingReference();
 		bf.setBillingReference(JUNIT);
-		Date sdt = convertLocalDateTimeToDate(LocalDateTime.of(2008, 4, 3, 12, 23));
+		LocalDateTime sdt = LocalDateTime.of(2008, 4, 3, 12, 23);
 		bf.setBillingReferenceStartDate(sdt);
 		
-		Date edt = convertLocalDateTimeToDate(LocalDateTime.of(2017, 4, 3, 12, 23));
+		LocalDateTime edt = LocalDateTime.of(2017, 4, 3, 12, 23);
 		bf.setBillingReferenceEndDate(edt);
 		
 		LocalDateTime test = LocalDateTime.of(2016, 4, 3, 12, 23);
