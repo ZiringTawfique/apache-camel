@@ -118,7 +118,13 @@ public class BillingReference implements Serializable {
 		this.supplierOrderNumber = supplierOrderNumber;
 	}
 
+	public String getSupplierServiceReference() {
+		return supplierServiceReference;
+	}
 
+	public void setSupplierServiceReference(String supplierServiceReference) {
+		this.supplierServiceReference = supplierServiceReference;
+	}
 
 	public BillingReference() {
 	}
@@ -322,14 +328,6 @@ public class BillingReference implements Serializable {
 
 	public void setCustomerProductCharge(List<CustomerProductCharge> customerProductCharge) {
 		this.customerProductCharge = customerProductCharge;
-	}
-	
-	public String getSupplierServiceReference() {
-		return supplierServiceReference;
-	}
-
-	public void setSupplierServiceReference(String supplierServiceReference) {
-		this.supplierServiceReference = supplierServiceReference;
 	}
 
 
