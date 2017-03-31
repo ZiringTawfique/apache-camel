@@ -57,8 +57,9 @@
 
 		<dependency>
 			<groupId>com.h2database</groupId>
-				<artifactId>h2</artifactId>
-    		</dependency>
+			<artifactId>h2</artifactId>
+		  	<scope>test</scope>
+    	</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -76,13 +77,6 @@
 			<scope>test</scope>
 		</dependency>
 		
-		<dependency>
-		    <groupId>ch.vorburger.mariaDB4j</groupId>
-		    <artifactId>mariaDB4j</artifactId>
-		    <version>2.2.2</version>
-		</dependency>
-	
-		
 	    <dependency>
 	      <groupId>org.apache.camel</groupId>
 	      <artifactId>camel-bindy</artifactId>
@@ -93,6 +87,7 @@
 	      <groupId>org.apache.camel</groupId>
 	      <artifactId>camel-test</artifactId>
 	      <version>${camel.version}</version>
+		  <scope>test</scope>
 	    </dependency>
 
 		
@@ -125,8 +120,34 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-		</plugins>
-	</build>
 
-
+      	<plugin>
+			<groupId>org.glassfish.embedded</groupId>
+    		<artifactId>maven-embedded-glassfish-plugin</artifactId>
+    		<version>4.1.1</version>
+			<configuration>
+				<goalPrefix>embedded-glassfish</goalPrefix>
+				<port>8080</port>
+				<user>admin</user>
+            	<adminPassword>admin</adminPassword>
+            	<app>target/${project.artifactId}-${project.version}.${project.packaging}.original</app>
+            	<configFile>src/test/resources/domain.xml</configFile>
+            	<systemProperties>logging.config=src/test/resources/logback.xml</systemProperties>
+            	<autoDelete>true</autoDelete>
+            	<containerType>web</containerType>
+            	<name>CDRProcessor</name>
+            	<serverID>${project.artifactId}-${project.version}.server</serverID>
+            	<rootdirectory>target</rootdirectory>
+			</configuration>
+			<executions>
+				<execution>
+					<phase>install</phase>
+					<goals>
+						 <goal>run</goal>
+					 </goals>
+				</execution>
+			</executions>
+		</plugin>
+    </plugins> 
+  </build>
 </project>

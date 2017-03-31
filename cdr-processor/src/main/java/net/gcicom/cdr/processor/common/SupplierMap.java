@@ -13,6 +13,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import net.gcicom.cdr.processor.entity.mapper.InvalidFileException;
+
 @Component
 @PropertySource("classpath:application.properties")
 public class SupplierMap {
@@ -85,48 +87,49 @@ public class SupplierMap {
 	
 	@Value("${gci.pstn.vodathus.file.name.pattern}")
 	private String pstnVodathusFP;
+	
 	private static Map<String, String> s = new HashMap<>();
 
-	
-	@PostConstruct
-	private void populateSuppliers() {
+	@PostConstruct 
+	public void init() {
 		
-		//put all supplier names and file pattern here. This mapping wiil be used to retrieve supplier name from file name
+		//put all supplier names and file pattern here. This mapping will be used to retrieve supplier name from file name
 		s.put(btoFP, PSTN_BTO);
 		s.put(abzorbo2FP, MOB_ABZORB_O2);
 		s.put(ntsVodathusFP, NTS_VODATHUS);
 		s.put(pstnVodathusFP, PSTN_VODATHUS);
 		
 		LOG.info("Supplier Maps has been initialized with {} supplier elements", s.size());
+
 	}
+		
 	
-	/** Garbabge in garbage out. Let user deal with garbage nulls
+	/** Garbage in garbage out. Let user deal with garbage nulls
 	 * @param fileName
 	 * @return
 	 */
 	public static String getSupplierName(String fileName) {
 		
-		if (StringUtils.isEmpty(fileName)) {
-			
-			return null;
+		if (!StringUtils.isEmpty(fileName) && !s.isEmpty()) {
+
+			for (String p : s.keySet()) {
+				
+				LOG.debug("File pattern to compare with {} ", p);
+				
+				if(StringUtils.isEmpty(p)) {
+					
+					throw new AssertionError("Supplier map has not been properly initialized");
+					
+				}
+				
+				if (Pattern.matches(p, fileName)) {
+					
+					return s.get(p);
+					
+				}
+			}
 		}
 		
-		for (String p : s.keySet()) {
-			
-			LOG.info("File pattern to compare {} ", p);
-			
-			if(StringUtils.isEmpty(p)) {
-				
-				throw new AssertionError("Supplier map has not been properly initialized");
-				
-			}
-			
-			if (Pattern.matches(p, fileName)) {
-				
-				return s.get(p);
-				
-			}
-		}
-		return null;
+		throw new InvalidFileException(String.format("Filename %s supplied did not match expected format ", fileName));
 	}
 }

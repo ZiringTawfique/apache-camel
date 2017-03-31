@@ -53,8 +53,10 @@ public class VodafoneThusIDAMapper implements CDRMapper<VodafoneThusIDA> {
 
 			LOG.debug("Converting VodafoneThusIDA to GCICDR" + s.toString());
 			ImportedEvent cdr = new ImportedEvent();
+			
+			String aNumber = source.getaNumber().startsWith("0") ? source.getaNumber() : "0"+source.getaNumber();
 
-			cdr.setOriginatingCLI(source.getaNumber());
+			cdr.setOriginatingCLI(aNumber);
 
 			LocalDateTime et = source.getCctDateTime();
 			cdr.setEventTime(et);
@@ -65,7 +67,7 @@ public class VodafoneThusIDAMapper implements CDRMapper<VodafoneThusIDA> {
 			cdr.setDialledCLI(dialedNumber);
 
 			// populate billing reference details
-			cdr = h.populateBillingReferenceDetails(cdr, et, source.getaNumber());
+			cdr = h.populateBillingReferenceDetails(cdr, et, aNumber);
 
 			cdr.setAccountingPeriod(formatYYYYMM(et));
 			cdr.setCountry(UK);

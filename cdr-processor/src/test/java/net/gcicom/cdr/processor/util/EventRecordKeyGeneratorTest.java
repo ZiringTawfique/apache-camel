@@ -80,7 +80,7 @@ public class EventRecordKeyGeneratorTest {
 		cdr.setSupplierAccountNumber(DUMMY);
 		cdr.setSupplierID(L_DUMMY);
 		cdr.setTerminatingCLI(DUMMY);
-
+		cdr.setFileChecksum("aaa");
 		String digest = EventRecordKeyGenerator.getEventRecordHash(cdr);
 		
 		assertNotNull(digest);
