@@ -41,7 +41,22 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.hibernate</groupId>
+					<artifactId>hibernate-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.hibernate</groupId>
+					<artifactId>hibernate-entitymanager</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
+		<dependency>
+		  <groupId>org.hibernate</groupId>
+   		    <artifactId>hibernate-core</artifactId>
+  			 <version>5.2.9.Final</version>
+	    </dependency>  
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-integration</artifactId>
@@ -105,6 +120,12 @@
 			<groupId>net.gcicom</groupId>
 			<artifactId>allspark-model</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.hibernate</groupId>
+					<artifactId>hibernate-core</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		
 	</dependencies>

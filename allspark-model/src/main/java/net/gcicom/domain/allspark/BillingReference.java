@@ -1,10 +1,13 @@
 package net.gcicom.domain.allspark;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.*;
-import java.util.Date;
+
 
 
 /**
@@ -13,41 +16,69 @@ import java.util.Date;
  */
 @Entity
 @NamedQuery(name="BillingReference.findAll", query="SELECT b FROM BillingReference b")
+@Table(name = "BillingReference")
 public class BillingReference implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long billingReferenceID;
+	
+	//bi-directional many-to-one association to EventFileDetail
+	@OneToMany(mappedBy="billingReference", cascade = CascadeType.ALL)
+	private List<CustomerProductCharge> customerProductCharge = new ArrayList<>();
+		
+	
+	private Long customerID;
 
 	private String accountNumber;
+	
+	private String orderNumber;
+	
+
+	private Long nodeID;
 
 	private Long assetID;
+	
+	private String serviceCode;	
 
 	private String billingReference;
-
-	private LocalDateTime billingReferenceCreateDate;
-
+	
+	private String billingReferenceDescription;
+	
+	
 	private String billingReferenceCreateUser;
 
-	private String billingReferenceDescription;
-
-	private LocalDateTime billingReferenceEndDate;
-
+	private LocalDateTime billingReferenceCreateDate;
+	
 	private LocalDateTime billingReferenceStartDate;
 
+	
+	private LocalDateTime billingReferenceEndDate;
+
+	
+	private LocalDateTime supplierContractEndDate;
+
+	
+	private LocalDateTime supplierContractStartDate;
+
+	
 	private LocalDateTime customerContractEndDate;
 
-	private LocalDateTime customerContractStartDate;
+	private LocalDateTime  customerContractStartDate;
+	
 
 	private String customerCostCentre;
 
+	private String installationPostCode;
+	
 	private String customerCustomReference;
-
-	private Long customerID;
 
 	private String customerPONumber;
 
 	private String customerSiteName;
+	
+	private String GCISalesManager;
 
 	private String GCICustomField_1;
 
@@ -55,23 +86,39 @@ public class BillingReference implements Serializable {
 
 	private String GCICustomField_3;
 
-	private String GCISalesManager;
-
-	private String installationPostCode;
-
-	private Long nodeID;
-
-	private String orderNumber;
-
-	private String serviceCode;
-
-	private LocalDateTime supplierContractEndDate;
-
-	private LocalDateTime supplierContractStartDate;
+	
 
 	private String supplierOrderNumber;
-
 	private String supplierServiceReference;
+
+
+
+	
+	public String getOrderNumber() {
+		return orderNumber;
+	}
+
+	public void setOrderNumber(String orderNumber) {
+		this.orderNumber = orderNumber;
+	}
+	
+	public String getServiceCode() {
+		return serviceCode;
+	}
+
+	public void setServiceCode(String serviceCode) {
+		this.serviceCode = serviceCode;
+	}
+
+	public String getSupplierOrderNumber() {
+		return supplierOrderNumber;
+	}
+
+	public void setSupplierOrderNumber(String supplierOrderNumber) {
+		this.supplierOrderNumber = supplierOrderNumber;
+	}
+
+
 
 	public BillingReference() {
 	}
@@ -252,21 +299,6 @@ public class BillingReference implements Serializable {
 		this.nodeID = nodeID;
 	}
 
-	public String getOrderNumber() {
-		return this.orderNumber;
-	}
-
-	public void setOrderNumber(String orderNumber) {
-		this.orderNumber = orderNumber;
-	}
-
-	public String getServiceCode() {
-		return this.serviceCode;
-	}
-
-	public void setServiceCode(String serviceCode) {
-		this.serviceCode = serviceCode;
-	}
 
 	public LocalDateTime getSupplierContractEndDate() {
 		return this.supplierContractEndDate;
@@ -284,20 +316,22 @@ public class BillingReference implements Serializable {
 		this.supplierContractStartDate = supplierContractStartDate;
 	}
 
-	public String getSupplierOrderNumber() {
-		return this.supplierOrderNumber;
+	public List<CustomerProductCharge> getCustomerProductCharge() {
+		return customerProductCharge;
 	}
 
-	public void setSupplierOrderNumber(String supplierOrderNumber) {
-		this.supplierOrderNumber = supplierOrderNumber;
+	public void setCustomerProductCharge(List<CustomerProductCharge> customerProductCharge) {
+		this.customerProductCharge = customerProductCharge;
 	}
-
+	
 	public String getSupplierServiceReference() {
-		return this.supplierServiceReference;
+		return supplierServiceReference;
 	}
 
 	public void setSupplierServiceReference(String supplierServiceReference) {
 		this.supplierServiceReference = supplierServiceReference;
 	}
+
+
 
 }
