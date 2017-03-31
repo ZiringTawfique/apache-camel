@@ -1,23 +1,21 @@
 package net.gcicom.cdr.processor.common;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@AutoConfigurationPackage
-@ComponentScan(basePackages = {"net.gcicom.cdr.processor.common"})
+@RunWith(value = SpringRunner.class)
+@SpringBootApplication
 public class SupplierMapTest {
-
-
+	
 	@Before
 	public void setUp() throws Exception {
+		
 		
 	}
 
