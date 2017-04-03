@@ -11,9 +11,11 @@ import org.apache.camel.spring.SpringRouteBuilder;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
+@ContextConfiguration
 public class CdrProcessorApplicationTests extends SpringRouteBuilder {
 
 	@Test

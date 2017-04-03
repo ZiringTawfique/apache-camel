@@ -1,33 +1,24 @@
 package net.gcicom.cdr.processor.repository.allspark;
 
-import static org.junit.Assert.*;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import net.gcicom.domain.allspark.BillingReference;
+import net.gcicom.cdr.processor.config.WebConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ComponentScan(basePackages = {"net.gcicom.cdr.processor", 
 		"net.gcicom.common",
 		"net.gcicom.domain"})
+@ContextConfiguration(classes = WebConfig.class)
 public class BillingReferenceRepositoryTest {
 
-	private static final String JUNIT = "junit";
-	
+
 	//@Autowired
 	//private BillingReferenceRepository repo;
 
