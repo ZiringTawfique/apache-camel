@@ -6,11 +6,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import net.gcicom.cdr.processor.ImportEventsLoaderInitializer;
+import net.gcicom.cdr.processor.config.WebConfig;
+
 @RunWith(value = SpringRunner.class)
-@SpringBootApplication
+@ContextConfiguration(classes = WebConfig.class)
 public class SupplierMapTest {
 	
 	@Before
