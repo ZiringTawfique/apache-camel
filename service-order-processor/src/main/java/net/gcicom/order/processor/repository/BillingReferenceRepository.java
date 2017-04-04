@@ -14,5 +14,10 @@ public interface BillingReferenceRepository extends JpaRepository<BillingReferen
 	@Query("select b from BillingReference b where b.billingReference= :bf and b.billingReferenceStartDate<= :et "
 			+ "and (b.billingReferenceEndDate>= :et or b.billingReferenceEndDate is null)")
 	List<BillingReference> findBillingReferenceDetails(@Param(value = "bf") String billingRef, @Param(value = "et") Date eventTime);
+	
+	
+	
+	BillingReference findByBillingReference(String billingRef);
+
 
 }

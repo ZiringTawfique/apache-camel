@@ -33,7 +33,6 @@ public class ChargeImportDto {
 	@DataField(pos = 6, required = false)
 	String orderNumber;
 	
-	
 
 	@DataField(pos = 7, required = false)
 	String serviceCode;
