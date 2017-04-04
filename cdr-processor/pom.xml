@@ -172,8 +172,8 @@
     		<artifactId>maven-compiler-plugin</artifactId>
     		<version>3.6.1</version>
     		<configuration>
-    			<source>1.8</source>
-    			<target>1.8</target>
+    			<source>${java.version}</source>
+    			<target>${java.version}</target>
     		</configuration>
 		</plugin>
 		
@@ -213,6 +213,22 @@
 				</execution>
 			</executions>
 		</plugin>
+		<plugin>
+            <groupId>org.wildfly.plugins</groupId>
+            <artifactId>wildfly-maven-plugin</artifactId>
+            <version>1.2.0.Alpha4</version>
+            <configuration>
+            	<filename>${project.artifactId}-${project.version}.${project.packaging}</filename>
+            </configuration>
+            <executions>
+				<execution>
+					<phase>install</phase>
+					<goals>
+						 <goal>deploy</goal>
+					 </goals>
+				</execution>
+			</executions>
+        </plugin>
     </plugins> 
   </build>
 </project>
