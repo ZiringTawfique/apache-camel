@@ -14,7 +14,6 @@ import static net.gcicom.cdr.processor.config.AppProperties.ALL_SPARK_DB_USER_KE
 import java.util.Properties;
 import javax.sql.DataSource;
 
-import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +22,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 @Configuration
 @PropertySource({"classpath:application.properties"})
@@ -41,7 +41,7 @@ public class DataSourceConfiguration {
         em.setDataSource(importedEventsDS());
         em.setPackagesToScan(new String[] { "net.gcicom.domain.imported.events" });
         
-        em.setPersistenceProvider(new HibernatePersistenceProvider());
+        em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         Properties p = hibernateSpecificProperties();
         p.setProperty("hibernate.ejb.entitymanager_factory_name", "importedEventsEntityMF");
         em.setJpaProperties(p);
@@ -67,7 +67,7 @@ public class DataSourceConfiguration {
         em.setDataSource(ratingDS());
         em.setPersistenceUnitName("ratingEntityMF");
         em.setPackagesToScan(new String[] { "net.gcicom.domain.rating" });
-        em.setPersistenceProvider(new HibernatePersistenceProvider());
+        em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 
         Properties p = hibernateSpecificProperties();
         p.setProperty("hibernate.ejb.entitymanager_factory_name", "ratingEntityMF");
@@ -93,8 +93,8 @@ public class DataSourceConfiguration {
         em.setDataSource(allsparkDS());
         em.setPersistenceUnitName("allsparkEntityMF");
         em.setPackagesToScan(new String[] { "net.gcicom.domain.allspark" });
-        em.setPersistenceProvider(new HibernatePersistenceProvider());
-
+        //em.setPersistenceProvider(new HibernatePersistenceProvider());
+        em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         Properties p = hibernateSpecificProperties();
         p.setProperty("hibernate.ejb.entitymanager_factory_name", "allsparkEntityMF");
         em.setJpaProperties(p);

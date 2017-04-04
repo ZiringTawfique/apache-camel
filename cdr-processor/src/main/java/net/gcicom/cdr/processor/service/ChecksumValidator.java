@@ -59,7 +59,7 @@ public class ChecksumValidator {
 			ef.setDateProcessed(getTodaysDate());
 			ef.setCreatedDate(getTodaysDate());
 			ef.setSupplierID(s.getSupplierId(fileName));
-			//need the count in cvs file.
+			//need the count in csv file.
 			
 			
 			
