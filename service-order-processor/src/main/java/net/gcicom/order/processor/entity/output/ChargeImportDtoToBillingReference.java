@@ -2,6 +2,10 @@ package net.gcicom.order.processor.entity.output;
 
 
 
+import static net.gcicom.order.processor.common.AppConstants.TOTAL_RECORD_COUNT;
+import static net.gcicom.order.processor.common.AppConstants.TOTAL_RECORD_PROCESSED_COUNT;
+
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -9,19 +13,25 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import net.gcicom.domain.allspark.BillingReference;
 import net.gcicom.domain.allspark.CustomerProductCharge;
 import net.gcicom.order.processor.entity.input.ChargeImportDto;
+import net.gcicom.order.processor.repository.BillingReferenceRepository;
+import net.gcicom.order.processor.service.RecordAlreadyExistsException;
 
 
 @Component
 public class ChargeImportDtoToBillingReference extends BaseEntity {
 			
-	
+	@Autowired
+	BillingReferenceRepository billingReferenceRepo;
 		/**
 	 * 
 	 */
@@ -33,14 +43,20 @@ public class ChargeImportDtoToBillingReference extends BaseEntity {
 	
 	
 			
-			public List<BillingReference> convertToBillingReference(final List<ChargeImportDto> input) throws ParseException {
+			public List<BillingReference> convertToBillingReference(final List<ChargeImportDto> input, Exchange ex) throws ParseException, RecordAlreadyExistsException {
 				
 				List<BillingReference> cdrs = new ArrayList<>();
-
+                  int loopCount=0; 
 				for (ChargeImportDto source : input) {
+					loopCount++;
+					ex.getIn().setHeader(TOTAL_RECORD_PROCESSED_COUNT, loopCount++);
+					
 					
 					logger.debug("Converting ChargeImportDto to Billing reference" + source.toString());
 
+					BillingReference result = billingReferenceRepo.findByBillingReference(source.getBillingReference());
+					if(result == null){
+					
 					BillingReference billingReference = new BillingReference();
 					//TODO get correct ID
 					billingReference.setBillingReferenceID(111111L);		
@@ -112,7 +128,12 @@ public class ChargeImportDtoToBillingReference extends BaseEntity {
 					//	billingReference.setSupplierReference_1(source.getSupplier());
 					logger.debug("Converted cdr " + customerproductCharge.toString());
 					cdrs.add(billingReference);
+					}
+					else 
+						throw new RecordAlreadyExistsException("Record Already exists with this BIlling Reference");
 				}
+				
+				
 			return cdrs;
 			
 			}

@@ -3,8 +3,10 @@ package net.gcicom.order.processor.service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Scanner;
 
 import org.apache.camel.Body;
+import org.apache.camel.Exchange;
 import org.apache.camel.Header;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +21,8 @@ import net.gcicom.domain.allspark.CustomerProductCharge;
 //import net.gcicom.order.processor.entity.output.MD5;
 import net.gcicom.order.processor.repository.BillingReferenceRepository;
 import net.gcicom.order.processor.repository.CustomerProductChargeRepository;
+import static org.apache.camel.Exchange.FILE_NAME_CONSUMED;
+import static net.gcicom.order.processor.common.AppConstants.TOTAL_RECORD_COUNT;
 //import net.gcicom.order.processor.repository.GCIChargeImportRepository;
 //import net.gcicom.order.processor.repository.Md5Repository;
 /**
@@ -107,4 +111,44 @@ public class GCIChargeImportService {
 		
 	}
 	*/
+	
+	public void setRecordCount(final Exchange ex)
+			throws IOException, AlreadyProcessedFileException {
+
+		String eventFileChecksum = DigestUtils.md5DigestAsHex(ex.getIn().getBody(InputStream.class));
+		String fileName = ex.getIn().getHeader(FILE_NAME_CONSUMED, String.class);
+		
+			
+		ex.getIn().setHeader(TOTAL_RECORD_COUNT, getNoOfRecordsInFile(ex.getIn().getBody(InputStream.class)));
+		
+
+		} 
+	
+	
+	
+	/**Count no of lines in CSV file
+	 * @param is
+	 * @return
+	 * @throws IOException
+	 */
+	private Integer getNoOfRecordsInFile(InputStream is) throws IOException {
+		
+		int noOfLines = 0;
+		
+		Scanner s = new Scanner(is);
+		try {
+			s.useDelimiter(System.lineSeparator());
+			while(s.hasNext()) {
+				
+				s.next();
+				++noOfLines;
+			}
+			
+		} finally {
+			s.close();
+		}
+		logger.info("SETTING THE TOTAL COUNT  -----------------------" + noOfLines);		
+		return noOfLines;
+
+	}
 }
