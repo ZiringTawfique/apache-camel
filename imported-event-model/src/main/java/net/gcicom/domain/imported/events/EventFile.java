@@ -43,7 +43,7 @@ public class EventFile implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastModifiedDate;
 
-	private Long supplierID;
+	private Integer supplierID;
 
 	//bi-directional many-to-one association to EventFileDetail
 	@OneToMany(mappedBy="eventFile", cascade = CascadeType.ALL)
@@ -124,11 +124,11 @@ public class EventFile implements Serializable {
 		this.lastModifiedDate = lastModifiedDate;
 	}
 
-	public Long getSupplierID() {
+	public Integer getSupplierID() {
 		return this.supplierID;
 	}
 
-	public void setSupplierID(Long supplierID) {
+	public void setSupplierID(Integer supplierID) {
 		this.supplierID = supplierID;
 	}
 

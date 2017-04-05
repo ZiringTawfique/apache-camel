@@ -19,8 +19,6 @@
 	
 	      <!-- keep 30 days' worth of history capped at 3GB total size -->
 	      <maxHistory>30</maxHistory>
-	      <totalSizeCap>3GB</totalSizeCap>
-	
 	    </rollingPolicy>
 	
 	    <encoder>
@@ -29,14 +27,14 @@
     </appender> 
 
 
-	<root level="warn">
+	<root level="debug">
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE" />
 	</root>
 	
 	<logger name="org.springframework" level="info" />
 	<logger name="org.springframework.orm.jpa" level="info"/>
-	<logger name="org.apache.camel" level="info" />
-	<logger name="net.gcicom" level="info" />
-	<logger name="ROOT" level="debug" />
+	<logger name="org.apache.camel" level="debug" />
+	<logger name="org.apache.camel.impl.converter" leverl="debug"/>
+	<logger name="net.gcicom" level="debug" />
 </configuration>

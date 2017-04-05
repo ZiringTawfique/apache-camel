@@ -6,7 +6,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @EnableJpaAuditing
-@EnableJpaRepositories(basePackages = {"net.gcicom.cdr.processor.repository.imported.events"}, entityManagerFactoryRef = "importedEventsEntityMF")
+@EnableJpaRepositories(basePackages = {
+		"net.gcicom.cdr.processor.repository.imported.events" }, entityManagerFactoryRef = "importedEventsEntityMF", transactionManagerRef = "defaultTm")
 public class ImportedEventsDataSourceConfiguration {
-	
+
 }

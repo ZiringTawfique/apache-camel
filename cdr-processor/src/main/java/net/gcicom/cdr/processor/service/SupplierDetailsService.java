@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
-import net.gcicom.cdr.processor.repository.rating.SupplierRepository;
-import net.gcicom.domain.rating.Supplier;
+import net.gcicom.cdr.processor.repository.reference.SupplierRepository;
+import net.gcicom.domain.reference.Supplier;
 
 @Component
 public class SupplierDetailsService {
@@ -25,13 +25,13 @@ public class SupplierDetailsService {
 	 * @return
 	 * @throws ValidationFailedException
 	 */
-	public Long getSupplierId(final String fileName) throws ValidationFailedException {
+	public Integer getSupplierId(final String fileName) throws ValidationFailedException {
 
 		final String sName = getSupplierName(fileName);
 		
 		//LOG.debug("For file {} supplier is {}", fileName, sName);
 		
-		List<Supplier> ss = sRepo.findBySupplierName(sName);
+		List<Supplier> ss = sRepo.findBySupplierNameAndHasEventFlag(sName, 1);
 		
 		for (Supplier s : ss) {
 			

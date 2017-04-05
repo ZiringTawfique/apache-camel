@@ -10,9 +10,13 @@ import static net.gcicom.cdr.processor.config.AppProperties.RATING_DB_USER_KEY;
 import static net.gcicom.cdr.processor.config.AppProperties.ALL_SPARK_DB_PASSWORD_KEY;
 import static net.gcicom.cdr.processor.config.AppProperties.ALL_SPARK_DB_URL_KEY;
 import static net.gcicom.cdr.processor.config.AppProperties.ALL_SPARK_DB_USER_KEY;
+import static net.gcicom.cdr.processor.config.AppProperties.REFERENCE_DB_PASSWORD_KEY;
+import static net.gcicom.cdr.processor.config.AppProperties.REFERENCE_DB_URL_KEY;
+import static net.gcicom.cdr.processor.config.AppProperties.REFERENCE_DB_USER_KEY;
 
 import java.util.Properties;
 import javax.sql.DataSource;
+import javax.transaction.TransactionManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,8 +25,11 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.jta.JtaTransactionManager;
 
 @Configuration
 @PropertySource({"classpath:application.properties"})
@@ -94,9 +101,12 @@ public class DataSourceConfiguration {
         em.setPersistenceUnitName("allsparkEntityMF");
         em.setPackagesToScan(new String[] { "net.gcicom.domain.allspark" });
         //em.setPersistenceProvider(new HibernatePersistenceProvider());
-        em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        HibernateJpaVendorAdapter a = new HibernateJpaVendorAdapter();
+        
+        em.setJpaVendorAdapter(a);
         Properties p = hibernateSpecificProperties();
         p.setProperty("hibernate.ejb.entitymanager_factory_name", "allsparkEntityMF");
+        
         em.setJpaProperties(p);
         return em;
     }
@@ -113,6 +123,34 @@ public class DataSourceConfiguration {
         return dataSource;
     }
     
+    @Bean(name = "referenceEntityMF")
+    public LocalContainerEntityManagerFactoryBean referenceEntityMF() {
+        final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(referenceDS());
+        em.setPersistenceUnitName("referenceEntityMF");
+        em.setPackagesToScan(new String[] { "net.gcicom.domain.reference" });
+        //em.setPersistenceProvider(new HibernatePersistenceProvider());
+        HibernateJpaVendorAdapter a = new HibernateJpaVendorAdapter();
+        
+        em.setJpaVendorAdapter(a);
+        Properties p = hibernateSpecificProperties();
+        p.setProperty("hibernate.ejb.entitymanager_factory_name", "referenceEntityMF");
+        
+        em.setJpaProperties(p);
+        return em;
+    }
+
+    @Bean(name = "referenceDS")
+    public DataSource referenceDS() {
+    	
+        final DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(env.getProperty(DRIVER_CLASS_NAME));
+        dataSource.setUrl(env.getProperty(REFERENCE_DB_URL_KEY));
+        dataSource.setUsername(env.getProperty(REFERENCE_DB_USER_KEY));
+        dataSource.setPassword(env.getProperty(REFERENCE_DB_PASSWORD_KEY));
+
+        return dataSource;
+    }
     @Bean
     public Properties hibernateSpecificProperties(){
     	
@@ -125,6 +163,13 @@ public class DataSourceConfiguration {
         
     	return p;
     	
+    }
+    
+    @Bean(name = "defaultTm")
+    public PlatformTransactionManager transactionManager() {
+    	
+    	JpaTransactionManager txManager = new JpaTransactionManager();
+    	return txManager;
     }
 
 }
