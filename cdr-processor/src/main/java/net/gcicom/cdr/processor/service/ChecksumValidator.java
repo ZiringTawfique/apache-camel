@@ -45,9 +45,9 @@ public class ChecksumValidator {
 	public void validateMd5(final Exchange ex)
 			throws IOException, AlreadyProcessedFileException, ValidationFailedException {
 
-		String eventFileChecksum = DigestUtils.md5DigestAsHex(ex.getIn().getBody(InputStream.class));
+		String eventFileChecksum = getChecksum(ex);
 		String fileName = ex.getIn().getHeader(FILE_NAME_CONSUMED, String.class);
-		LOG.info("eventFileChecksum -----------------------" + eventFileChecksum + "and file " + fileName);
+		LOG.debug("eventFileChecksum :" + eventFileChecksum + "and file " + fileName);
 
 		List<EventFile> md5s = eventRepo.findByEventFileChecksum(eventFileChecksum);
 		if (md5s.size() == 0) {
@@ -84,6 +84,24 @@ public class ChecksumValidator {
 	
 	
 	
+	private String getChecksum(final Exchange ex) throws IOException {
+		
+		InputStream is = null;
+		
+		try {
+			
+			is = ex.getIn().getBody(InputStream.class);
+			
+			return DigestUtils.md5DigestAsHex(is);
+			
+		} finally {
+			
+			is.close();
+		}
+	}
+
+
+
 	/**Count no of lines in CSV file
 	 * @param is
 	 * @return
@@ -92,32 +110,7 @@ public class ChecksumValidator {
 	private Integer getNoOfRecordsInFile(InputStream is) throws IOException {
 		
 		int noOfLines = 0;
-		
-		/*byte[] b = new byte[1024];
-		
-		int read = 0;
-		
-		boolean isEmpty = true;
-		try {
-			
-			while((read = is.read(b)) != -1) {
-				
-				isEmpty = false;
-				
-				for (int i = 0; i < read; i++) {
-					
-					if (b[i] == '\n') {
-						
-						++noOfLines;
-						
-					}
-				}
-			}
-		} finally {
-			
-			is.close();
-		}*/
-		
+
 		Scanner s = new Scanner(is);
 		try {
 
@@ -137,6 +130,5 @@ public class ChecksumValidator {
 		
 		return noOfLines;
 				
-		//return noOfLines = !isEmpty && noOfLines == 0 ? 1 : noOfLines;
 	}
 }

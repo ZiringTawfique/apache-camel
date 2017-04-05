@@ -6,14 +6,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import net.gcicom.cdr.processor.ImportEventsLoaderInitializer;
-import net.gcicom.cdr.processor.config.WebConfig;
 
-@RunWith(value = SpringRunner.class)
-@ContextConfiguration(classes = WebConfig.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@AutoConfigurationPackage
+@ComponentScan(basePackages = {"net.gcicom.cdr.processor.common"})
 public class SupplierMapTest {
 	
 	@Before
@@ -31,7 +31,7 @@ public class SupplierMapTest {
 		
 		String s = SupplierMap.getSupplierName("CDRM_EDGE_BTO_CDR_20170218051504_1.dat");
 		
-		assertEquals(SupplierMap.PSTN_BTO, s);
+		assertEquals(SupplierMap.PSTN_BTOPENREACH, s);
 	}
 
 }

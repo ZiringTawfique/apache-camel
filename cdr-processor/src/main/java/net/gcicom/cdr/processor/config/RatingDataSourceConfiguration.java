@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @EnableJpaRepositories(basePackages = {"net.gcicom.cdr.processor.repository.rating"}, 
-	entityManagerFactoryRef="ratingEntityMF")
+	entityManagerFactoryRef="ratingEntityMF", transactionManagerRef = "defaultTm")
 public class RatingDataSourceConfiguration {
 
 	

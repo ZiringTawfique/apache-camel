@@ -21,58 +21,16 @@ public class SupplierMap {
 	
 	public static final Logger LOG = LoggerFactory.getLogger(SupplierMap.class);
 	
-	/*These supplier names are sourced from RatingDB.Supplier table*/
-	public static final String CONF_INTERCALL = "CONF_INTERCALL";
+	/*These supplier names are sourced from RefrenceDB.Supplier table*/
 	
-	public static final String MOB_ABZORB =  "MOB_ABZORB";
-	public static final String MOB_ABZORB_O2 = "MOB_ABZORB_O2";
-	public static final String MOB_FO2 = "MOB_FO2";
-	public static final String MOB_TMOBILE = "MOB_TMOBILE";
-	public static final String MOB_VODABUSMOB = "MOB_VODABUSMOB";
-	public static final String NTS_6DG = "NTS_6DG";
-	public static final String NTS_BTAGILEMEDIA = "NTS_BTAGILEMEDIA";
-	public static final String NTS_DAISYCW = "NTS_DAISYCW";
-	public static final String NTS_GAMMA = "NTS_GAMMA";
-	public static final String NTS_OBIT = "NTS_OBIT";
-	public static final String NTS_OPAL = "NTS_OPAL";
-	public static final String NTS_REDSTONE = "NTS_REDSTONE";
-	public static final String NTS_TOTEM = "NTS_TOTEM";
-	public static final String NTS_VERIZON = "NTS_VERIZON";
-	public static final String NTS_VODA = "NTS_VODA";
-	public static final String NTS_VODACW = "NTS_VODACW";
-	public static final String NTS_VODAEnergis = "NTS_VODAEnergis";
-	public static final String NTS_VODATHUS = "NTS_VODATHUS";
-	public static final String NTS_WAVECREST = "NTS_WAVECREST";
-	public static final String NTS_YOURCOMMS = "NTS_YOURCOMMS";
-	public static final String PSTN_6DG = "PSTN_6DG";
-	public static final String PSTN_BTO = "PSTN_BTO";
-	public static final String PSTN_BTW = "PSTN_BTW";
-	public static final String PSTN_EIRCOM = "PSTN_EIRCOM";
-	public static final String PSTN_GAMMA = "PSTN_GAMMA";
-	public static final String PSTN_GLOBALCROSS = "PSTN_GLOBALCROSS";
-	public static final String PSTN_KCOM = "PSTN_KCOM";
-	public static final String PSTN_OBIT = "PSTN_OBIT";
-	public static final String PSTN_OPAL = "PSTN_OPAL";
-	public static final String PSTN_SKYBLUE = "PSTN_SKYBLUE";
-	public static final String PSTN_VIATEL = "PSTN_VIATEL";
-	public static final String PSTN_VIRGIN = "PSTN_VIRGIN";
-	public static final String PSTN_VODACW = "PSTN_VODACW";
-	public static final String PSTN_VODATHUS = "PSTN_VODATHUS";
-	public static final String SIP_BPN = "SIP_BPN";
-	public static final String SIP_BTIPVS = "SIP_BTIPVS";
-	public static final String SIP_BTIPVS_INBOUND = "SIP_BTIPVS_INBOUND";
-	public static final String SIP_GAMMA = "SIP_GAMMA";
-	public static final String SIP_GAMMA_COM = "SIP_GAMMA_COM";
-	public static final String SIP_GAMMA_HZN = "SIP_GAMMA_HZN";
-	public static final String SIP_GCI = "SIP_GCI";
-	public static final String SIP_HIPCOM = "SIP_HIPCOM";
-	public static final String SIP_HIPCOM_INBOUND = "SIP_HIPCOM_INBOUND";
-	public static final String SIP_INTECH = "SIP_INTECH";
-	public static final String SIP_NTS_GCI = "SIP_NTS_GCI";
-	public static final String SIP_TVF = "SIP_TVF";
-	public static final String SIP_VIPEX = "SIP_VIPEX";
-	public static final String SIP_VIPEX_Inbound = "SIP_VIPEX_Inbound";
-	public static final String SIP_VODASTORM = "SIP_VODASTORM";
+	public static final String MOB_ABZORB_O2 = "MOB_ABZORB_02";
+	
+	public static final String PSTN_VODAFONETHUS_DIR = "PSTN_VODAFONETHUS_DIR";
+
+	public static final String PSTN_BTOPENREACH = "PSTN_BTOPENREACH";
+	
+	public static final String PSTN_VODAFONETHUS_IDA = "PSTN_VODAFONETHUS_IDA";
+	
 	
 	
 	
@@ -94,10 +52,10 @@ public class SupplierMap {
 	public void init() {
 		
 		//put all supplier names and file pattern here. This mapping will be used to retrieve supplier name from file name
-		s.put(btoFP, PSTN_BTO);
+		s.put(btoFP, PSTN_BTOPENREACH);
 		s.put(abzorbo2FP, MOB_ABZORB_O2);
-		s.put(ntsVodathusFP, NTS_VODATHUS);
-		s.put(pstnVodathusFP, PSTN_VODATHUS);
+		s.put(ntsVodathusFP,  PSTN_VODAFONETHUS_IDA);
+		s.put(pstnVodathusFP, PSTN_VODAFONETHUS_DIR);
 		
 		LOG.info("Supplier Maps has been initialized with {} supplier elements", s.size());
 

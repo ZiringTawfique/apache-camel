@@ -21,4 +21,10 @@ public final class AppProperties {
 	public static final String ALL_SPARK_DB_USER_KEY = "gci.datasource.allspark.username";
 	
 	public static final String ALL_SPARK_DB_PASSWORD_KEY = "gci.datasource.allspark.password";
+	
+	public static final String REFERENCE_DB_URL_KEY = "gci.datasource.ref.url";
+	
+	public static final String REFERENCE_DB_USER_KEY = "gci.datasource.ref.username";
+	
+	public static final String REFERENCE_DB_PASSWORD_KEY = "gci.datasource.ref.password";
 }

@@ -67,7 +67,7 @@ public class ImportedEvent implements Serializable {
 
 	private String supplierCost;
 
-	private Long supplierID;
+	private Integer supplierID;
 
 	private String supplierNumberRange;
 
@@ -305,11 +305,11 @@ public class ImportedEvent implements Serializable {
 		this.supplierCost = supplierCost;
 	}
 
-	public Long getSupplierID() {
+	public Integer getSupplierID() {
 		return this.supplierID;
 	}
 
-	public void setSupplierID(Long supplierID) {
+	public void setSupplierID(Integer supplierID) {
 		this.supplierID = supplierID;
 	}
 
