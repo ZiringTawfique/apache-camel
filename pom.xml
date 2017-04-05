@@ -24,7 +24,8 @@
     <module>common-module</module>
     <module>imported-event-model</module>
     <module>rating-model</module>
-    <module>allspark-model</module>    
+    <module>allspark-model</module>   
+	<module>reference-model</module>   	
   </modules>
   <scm>
   	<url>https://gcicomnet.visualstudio.com/_git/Billing</url>
