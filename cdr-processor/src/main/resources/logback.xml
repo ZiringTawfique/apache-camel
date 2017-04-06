@@ -12,7 +12,7 @@
 	</appender>
 	
 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-	    <file>logFile.log</file>
+	    <file>${jboss.server.log.dir}/logFile.log</file>
 	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 	      <!-- daily rollover -->
 	      <fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
@@ -27,14 +27,13 @@
     </appender> 
 
 
-	<root level="debug">
-		<appender-ref ref="STDOUT" />
+	<root level="info">
 		<appender-ref ref="FILE" />
 	</root>
 	
 	<logger name="org.springframework" level="info" />
 	<logger name="org.springframework.orm.jpa" level="info"/>
-	<logger name="org.apache.camel" level="debug" />
-	<logger name="org.apache.camel.impl.converter" leverl="debug"/>
+	<logger name="org.apache.camel" level="info" />
+	<logger name="org.apache.camel.impl.converter" leverl="info"/>
 	<logger name="net.gcicom" level="debug" />
 </configuration>

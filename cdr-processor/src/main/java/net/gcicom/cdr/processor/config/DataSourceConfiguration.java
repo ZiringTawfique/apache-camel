@@ -29,7 +29,6 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.jta.JtaTransactionManager;
 
 @Configuration
 @PropertySource({"classpath:application.properties"})
@@ -169,6 +168,7 @@ public class DataSourceConfiguration {
     public PlatformTransactionManager transactionManager() {
     	
     	JpaTransactionManager txManager = new JpaTransactionManager();
+    	txManager.setEntityManagerFactory(importedEventsEntityMF().getObject());
     	return txManager;
     }
 
