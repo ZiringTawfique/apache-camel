@@ -136,7 +136,7 @@
 	            </configuration>
 	            <executions>
 					<execution>
-						<phase>install</phase>
+						<phase>wildfly-install</phase>
 						<goals>
 							 <goal>deploy</goal>
 						 </goals>
