@@ -8,7 +8,7 @@ This module is meant to import CDR files supplied by various suppliers.
 # Run
 
 
-	mvn clean spring-boot:run
+	mvn clean wildfly:run
 
 # Package
 
@@ -20,17 +20,17 @@ This module is meant to import CDR files supplied by various suppliers.
 
 ### Prerequisites
 
-Access to CDRFormatSpecification spreadsheet,  [Specification]((file://ws-sma-bd01/AllSpark/CDR%20Spec/ "Allspark supplier specs") 
+Access to CDRFormatSpecification spreadsheet,  Supplier Specification at file://ws-sma-bd01/AllSpark/CDR%20Spec/ 
 
 
 ### Add Environment Properties
 
 Add below supplier specific properties in application.properties to support schedule timer run.
 
-	gci.{user_definedSupplierIdentityFier}.file.in.location=
-	gci.{user_definedSupplierIdentityFier}.file.name.pattern=
-	gci.{user_definedSupplierIdentityFier}.timer=
-	gci.{user_definedSupplierIdentityFier}.autostart=true 
+	gci.{user_definedSupplierIdentifier}.file.in.location=
+	gci.{user_definedSupplierIdentifier}.file.name.pattern=
+	gci.{user_definedSupplierIdentifier}.timer=
+	gci.{user_definedSupplierIdentifier}.autostart=true 
 
 autostart must be true unless you don't want to run it. For example on a developer machine, you may want to avoid running lots of polling jobs automatically
 
@@ -42,7 +42,7 @@ for timer, application uses [Quartz](http://www.quartz-scheduler.org/documentati
 
 ### Add an Entry to Supplier Map
 
-Go to net.gcicom.cdr.processor.common.SupplierMap.java and add an entry to SupplierMap with in the populateSuppliers() methods. This entry basically maps file pattern to a supplier name by which you can lookup a supplier id from RatingDB.SupplierMap table.
+Go to net.gcicom.cdr.processor.common.SupplierMap.java and add an entry to SupplierMap with in the init() method. This entry basically maps file pattern to a supplier name by which you can lookup a supplier id from ReferenceDB.SupplierMap table.
 
 Example - 
 
@@ -54,7 +54,7 @@ Above entry maps ntsVodathusFP file pattern to NTS_VODATHUS supplier
 
 Add a POJO to map supplier specific feed. It is an instance of @CsvRecord. To successfully maps these field to each field of feed, one should refer [specifications](file://ws-sma-bd01/AllSpark/CDR%20Spec)  of that supplier. @CsvRecord implementation pretty much process any text file including all popular formats like csv, tsv etc
 
-Example VodafoneThusIDA.java POJO is mapping VodafoneThusIDA supplier as per its  [specification](file://ws-sma-bd01/AllSpark/CDR%20Spec/Vodaphone/THUS/Vodafone%20Thus/New_Outbound_CDR_Format.pdf "VodafoneThusIDA Specification") 
+Example VodafoneThusIDA.java POJO is mapping VodafoneThusIDA supplier as per its  specification at (file://ws-sma-bd01/AllSpark/CDR%20Spec/Vodaphone/THUS/Vodafone%20Thus/New_Outbound_CDR_Format.pdf "VodafoneThusIDA Specification") 
 
 
 ### Add a CDRMapper
@@ -71,7 +71,7 @@ an utility method called getSupplierName which manipulate file name to return a 
 Adding a processor effectively means assembling everything mentioned above. It is an instance of BaseProcessor.java and contains two method.
 
 configure() essentially is boiler plate method, however one needs to implement mapCSVRowToVendorCdr(). It has been left to implement by programmer because 
-mapping process and resulting data handling different to different supplier.  
+mapping process and resulting data handling varies from supplier to supplier.  
 
 
 

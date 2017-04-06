@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @EnableJpaRepositories(basePackages = {"net.gcicom.cdr.processor.repository.reference"}, 
-	entityManagerFactoryRef="referenceEntityMF", transactionManagerRef = "defaultTm")
+	entityManagerFactoryRef="referenceEntityMF")
 public class ReferenceDataSourceConfiguration {
 
 	

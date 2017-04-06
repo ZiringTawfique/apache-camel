@@ -55,10 +55,7 @@ public class GCICDRService {
 
 		for (ImportedEvent cdr : cdrs) {
 
-			// business validation here then just batch insert or insert in
-			// invalid cdr
-			logger.debug("Adding to ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssdb" + cdr);
-
+			
 			logger.debug("Adding to db" + cdr.toString());
 
 			ImportedEvent result = gciCDR.save(cdr);

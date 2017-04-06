@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @EnableJpaRepositories(basePackages = {
-		"net.gcicom.cdr.processor.repository.allspark" }, entityManagerFactoryRef = "allsparkEntityMF", transactionManagerRef = "defaultTm")
+		"net.gcicom.cdr.processor.repository.allspark" }, entityManagerFactoryRef = "allsparkEntityMF")
 public class AllSparkDataSourceConfiguration {
 
 }
