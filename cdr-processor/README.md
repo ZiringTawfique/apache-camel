@@ -7,8 +7,16 @@ This module is meant to import CDR files supplied by various suppliers.
 
 # Run
 
+## Developer m/c run
 
 	mvn clean wildfly:run
+	mvn -Dspring.profiles.active=local -DskipTests=true spring-boot:run
+	
+## Dev Server
+
+Application server should be started with -Dspring.profiles.active=development jvm arguments, this is assuming development server is using an installation of an application server. 
+	
+	**Above active profile will pickup application.properties and application-{env}.properties where env is development or local**  
 
 # Package
 

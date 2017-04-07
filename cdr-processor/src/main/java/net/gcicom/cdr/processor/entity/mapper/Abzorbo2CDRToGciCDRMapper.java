@@ -117,7 +117,8 @@ public class Abzorbo2CDRToGciCDRMapper implements CDRMapper<AbzorbO2CDR> {
 			
 			return fileName.substring(fileName.lastIndexOf("_") - 4, fileName.lastIndexOf("_"));
 		}
-		return "3758";
+		
+		throw new InvalidFileException("Unknown file provided");
 	}
 
 	/**If CallType = M

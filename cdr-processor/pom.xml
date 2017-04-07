@@ -5,7 +5,7 @@
 
 	<artifactId>cdr-processor</artifactId>
 	<packaging>war</packaging>
-	
+
 	<name>cdr-processor</name>
 	<description>A CDR processor module to process various cdr files from file server</description>
 
@@ -20,13 +20,13 @@
 	</properties>
 
 	<dependencies>
-	
+
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-spring-boot-starter</artifactId>
 			<version>${camel.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -36,53 +36,67 @@
 					<groupId>org.hibernate</groupId>
 					<artifactId>hibernate-entitymanager</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>org.apache.tomcat</groupId>
+					<artifactId>tomcat-jdbc</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.tomcat</groupId>
+					<artifactId>tomcat-juli</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
-	
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 			<version>${spring.boot.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.tomcat.embed</groupId>
+					<artifactId>tomcat-embed-el</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 			<version>${spring.boot.version}</version>
 			<exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-tomcat</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-undertow</artifactId>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-undertow</artifactId>
 			<version>${spring.boot.version}</version>
-        </dependency>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<version>${spring.boot.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
-	    <dependency>
-	      <groupId>org.apache.camel</groupId>
-	      <artifactId>camel-bindy</artifactId>
-	      <version>${camel.version}</version>
-	    </dependency>
-	    
-		<dependency>
-	      <groupId>org.apache.camel</groupId>
-	      <artifactId>camel-test</artifactId>
-	      <version>${camel.version}</version>
-		  <scope>test</scope>
-	    </dependency>
 
-		
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-bindy</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-test</artifactId>
+			<version>${camel.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+
 		<!-- dependency of local libraries -->
 		<dependency>
 			<groupId>net.gcicom</groupId>
@@ -93,7 +107,7 @@
 			<groupId>net.gcicom</groupId>
 			<artifactId>rating-model</artifactId>
 			<version>${project.version}</version>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>net.gcicom</groupId>
 			<artifactId>allspark-model</artifactId>
@@ -108,46 +122,56 @@
 			<groupId>net.gcicom</groupId>
 			<artifactId>reference-model</artifactId>
 			<version>${project.version}</version>
-		</dependency>			
+		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
+			<!-- Please read these before doing any advance configuration using this 
+				plugin http://www.mastertheboss.com/jboss-frameworks/maven-tutorials/jboss-maven/configuring-maven-wildfly-plugin 
+				https://docs.jboss.org/wildfly/plugins/maven/latest/index.html https://docs.jboss.org/wildfly/plugins/maven/latest/examples/complex-example.html -->
 			<plugin>
-	            <groupId>org.wildfly.plugins</groupId>
-	            <artifactId>wildfly-maven-plugin</artifactId>
-	            <version>1.2.0.Alpha4</version>
-	            <configuration>
-	            	<filename>${project.artifactId}-${project.version}.${project.packaging}</filename>
-	            	<add-user>
-	                        <users>
-	                            <user>
-	                                <username>admin</username>
-	                                <password>admin</password>
-	                            </user>
-	                        </users>
-	                </add-user>
-	                <systemProperties>spring.profiles.active=local</systemProperties>
-	                <systemProperties>skipTests=true</systemProperties>
-	                <java-opts>
-	                    <java-opt>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</java-opt>
-	                    <java-opt></java-opt>
-	                </java-opts>
-	            </configuration>
-	            <executions>
+				<groupId>org.wildfly.plugins</groupId>
+				<artifactId>wildfly-maven-plugin</artifactId>
+				<version>1.2.0.Alpha4</version>
+				<configuration>
+					<filename>${project.artifactId}-${project.version}.${project.packaging}</filename>
+					<add-user>
+						<users>
+							<user>
+								<username>admin</username>
+								<password>admin</password>
+							</user>
+						</users>
+					</add-user>
+					<systemProperties>spring.profiles.active=local</systemProperties>
+					<systemProperties>skipTests=true</systemProperties>
+					<java-opts>
+						<java-opt>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</java-opt>
+						<java-opt></java-opt>
+					</java-opts>
+				</configuration>
+				<executions>
 					<execution>
-						<phase>wildfly-install</phase>
+						<phase>deploy</phase>
 						<goals>
-							 <goal>deploy</goal>
-						 </goals>
+							<goal>run</goal>
+							<goal>deploy</goal>
+						</goals>
 					</execution>
 				</executions>
-	        </plugin>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>1.5.2.RELEASE</version>
 			</plugin>
-    </plugins> 
-  </build>
+		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+	</build>
 </project>
