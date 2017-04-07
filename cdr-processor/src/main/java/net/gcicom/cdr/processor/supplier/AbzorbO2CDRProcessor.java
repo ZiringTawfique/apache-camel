@@ -53,9 +53,14 @@ public class AbzorbO2CDRProcessor extends BaseProcessor {
 	public void configure() throws Exception {
 		
 		setAutostart(autostart);
+		setInFileLocation(inFileLocation);
+		setFilePattern(filePattern);
+		setCron(cron);
+		setMapper(mapper);
 		super.configure();
+		
 
-		//1
+		/*//1
         moveFileOnError(inFileLocation);
         
 		//2
@@ -65,7 +70,7 @@ public class AbzorbO2CDRProcessor extends BaseProcessor {
         mapCSVRowToVendorCdr();
         
         //4
-        addCdr(mapper);
+        addCdr(mapper);*/
 		
 	}
 	

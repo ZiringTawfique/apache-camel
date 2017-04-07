@@ -3,30 +3,26 @@ package net.gcicom.cdr.processor.supplier;
 import static net.gcicom.cdr.processor.RouteNames.ADD_CDR;
 import static net.gcicom.cdr.processor.RouteNames.MAP_CSV_ROW_TO_VENDOR_CDR;
 import static net.gcicom.cdr.processor.RouteNames.MOVE_FILE_ON_ERROR;
-import static org.apache.camel.Exchange.FILE_PATH;
-import static org.apache.camel.Exchange.FILE_NAME_CONSUMED;
 import static net.gcicom.cdr.processor.common.AppConstants.CDR_EVENT_FILE_ID;
+import static org.apache.camel.Exchange.FILE_NAME_CONSUMED;
 
-
-import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
-import org.apache.camel.Processor;
 import org.apache.camel.spring.SpringRouteBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import net.gcicom.cdr.processor.entity.mapper.CDRMapper;
 import net.gcicom.cdr.processor.service.AlreadyProcessedFileException;
-import net.gcicom.cdr.processor.service.CDRErrorHandler;
 import net.gcicom.cdr.processor.service.CDRAggregator;
+import net.gcicom.cdr.processor.service.CDRErrorHandler;
 import net.gcicom.cdr.processor.service.ChecksumValidator;
 import net.gcicom.cdr.processor.service.GCICDRService;
 import net.gcicom.cdr.processor.service.InvalidCDRException;
 import net.gcicom.cdr.processor.service.ValidationFailedException;
-import net.gcicom.common.util.ArchiveFileUtil;
 
 @Component
 public abstract class BaseProcessor extends SpringRouteBuilder {
@@ -64,6 +60,34 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 	
 	private boolean autostart = true;
 	
+	private String fileLocation, filePattern, cron;
+	
+	private void checkRequired() {
+		
+		if(StringUtils.isEmpty(fileLocation) || StringUtils.isEmpty(filePattern) || StringUtils.isEmpty(cron) || mapper == null) {
+			
+			throw new IllegalArgumentException(String.format("Could not initialize %s processor", this.getClass().getCanonicalName()));
+		}
+	}
+
+	public void setMapper(CDRMapper<?> t) {
+		this.mapper = t;
+	}
+
+	public void setInFileLocation(String fileLocation) {
+		this.fileLocation = fileLocation;
+	}
+
+	public void setFilePattern(String filePattern) {
+		this.filePattern = filePattern;
+	}
+
+	public void setCron(String cron) {
+		this.cron = cron;
+	}
+
+	private CDRMapper<?> mapper;
+	
 	public void setAutostart(boolean autostart) {
 		this.autostart = autostart;
 	}
@@ -71,7 +95,7 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 	/**Moves files to given file location
 	 * @param fileLocation
 	 */
-	public void moveFileOnError(final String fileLocation) {
+	private void moveFileOnError() {
 		
 		String processorName = this.getClass().getCanonicalName();
 		
@@ -91,25 +115,24 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 	 * @param filePattern
 	 * @param cronExpression
 	 */
-	public void pollFiles(final String inFileLocation, final String filePattern, final String cronExpression) {
+	private void pollFiles() {
 		
 		String processorName = this.getClass().getCanonicalName();
 
-		inflate(inFileLocation);//uncompress file and stop there
-		
+
 		//route to get file and schedule it for parallel processing
 		//delay in millisec for next polling 
 		//In production make noop false
-        from("file:" + inFileLocation + "?initialDelay=" + initDelay 
+        from("file:" + fileLocation + "?initialDelay=" + initDelay 
         		+ "&include=" + filePattern
         		+ "&exclude=.*\\.(zip$)|.*\\.(tar$)|.*\\.(gz$)"
         		+ "&noop=" + isNoop 
         		+ "&move=.success"
                 + "&moveFailed=.error"
-        		+ "&scheduler=spring&scheduler.cron=" + cronExpression)
+        		+ "&scheduler=spring&scheduler.cron=" + cron)
 		.autoStartup(autostart)
 		.description("Polling files ".concat(processorName), String.format("This route poll files based on given cron expression %s "
-	    			+ "from %s for matching %s file name pattern", cronExpression, inFileLocation, filePattern), null)
+	    			+ "from %s for matching %s file name pattern", cron, fileLocation, filePattern), null)
     	.onException(AlreadyProcessedFileException.class)
 			.bean(handler, "errorEvent")
     		.to(MOVE_FILE_ON_ERROR.concat(processorName))
@@ -130,7 +153,7 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 	 * @param mapper
 	 */
 	@SuppressWarnings("unchecked")
-	public void addCdr(@SuppressWarnings("rawtypes") final CDRMapper mapper) {
+	private void addCdr() {
 		
 		String processorName = this.getClass().getCanonicalName();
 
@@ -162,46 +185,21 @@ public abstract class BaseProcessor extends SpringRouteBuilder {
 		    .bean(handler, "errorEvent")
 			.to(MOVE_FILE_ON_ERROR.concat(this.getClass().getCanonicalName()));
 		
-	}
-	
-	/**
-	 * @param location
-	 */
-	private void inflate(String location) {
+		checkRequired();
 		
-		from("file:" + location + "/.compressed/?include=.*\\.(zip$)|.*\\.(tar$)|.*\\.(gz$)" 
-        		+ "&noop=false" 
-        		+ "&move=.processed"
-                + "&moveFailed=.processed"
-        		+ "&scheduler=spring&scheduler.cron=0+0/45+8-9+*+*+*")
-		.autoStartup(autostart)
-		.log("Processing compressed files")
-		.process(new Processor() {
-			
-			@Override
-			public void process(Exchange exchange) throws Exception {
-				
-				String abosulteFilePath = exchange.getIn().getHeader(FILE_PATH, String.class);
-				String ifName = exchange.getIn().getHeader(FILE_NAME_CONSUMED, String.class);
-				
-				LOG.info("uncompressing {}", abosulteFilePath);
+		/*actual business calls*/
+		//1
+        moveFileOnError();
+        
+		//2
+		pollFiles();
 
-				if (ifName.endsWith(".gz")) {
-					String ofName = ifName.substring(0, ifName.lastIndexOf('.'));
-					
-					ArchiveFileUtil.unGzip(abosulteFilePath, location+ofName);
-
-				} else {
-					//any other archive. Only tar, zip, jar are supported
-					ArchiveFileUtil.unCompress(abosulteFilePath, location);
-
-				}
-				
-				
-				
-			}
-		})
-		.end();
+        //3
+        mapCSVRowToVendorCdr();
+        
+        //4
+        addCdr();
+		
 	}
 	
 	/**This method implementation must ensure proper chaining of routes after mapping to CSV row to vendor

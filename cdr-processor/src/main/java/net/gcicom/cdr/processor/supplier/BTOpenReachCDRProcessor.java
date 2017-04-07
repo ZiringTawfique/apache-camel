@@ -55,16 +55,19 @@ public class BTOpenReachCDRProcessor extends BaseProcessor {
 	public void configure() throws Exception {
 		
 		setAutostart(autostart);
-
+		setInFileLocation(inFileLocation);
+		setFilePattern(filePattern);
+		setCron(cron);
+		setMapper(mapper);
 		super.configure();
 
-		pollFiles(inFileLocation, filePattern, cron);
+		/*pollFiles(inFileLocation, filePattern, cron);
 		
         moveFileOnError(inFileLocation);
 
         mapCSVRowToVendorCdr();
         
-        addCdr(mapper);
+        addCdr(mapper);*/
 	}
 	
 	/**Maps a csv file row to a {@link BTOpenReachCDR} and send it to 
