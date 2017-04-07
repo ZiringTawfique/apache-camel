@@ -16,8 +16,6 @@ import static net.gcicom.cdr.processor.config.AppProperties.REFERENCE_DB_USER_KE
 
 import java.util.Properties;
 import javax.sql.DataSource;
-import javax.transaction.TransactionManager;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -157,9 +155,8 @@ public class DataSourceConfiguration {
     	p.setProperty("hibernate.hbm2ddl.auto", env.getProperty("spring.jpa.hibernate.ddl-auto"));
         p.setProperty("hibernate.dialect", env.getProperty("spring.jpa.hibernate.dialect"));
         p.setProperty("hibernate.show-sql", env.getProperty("spring.jpa.show-sql"));
-        p.setProperty("hibernate.cache.use_second_level_cache", env.getProperty("spring.jpa.hibernate.cache.use_second_level_cache"));
-        p.setProperty("hibernate.cache.use_query_cache", env.getProperty("spring.jpa.hibernate.cache.use_query_cache"));
-        
+        p.setProperty("hibernate.cache.use_second_level_cache", env.getProperty("hibernate.cache.use_second_level_cache"));
+        p.setProperty("hibernate.cache.use_query_cache", env.getProperty("hibernate.cache.use_query_cache"));
     	return p;
     	
     }
