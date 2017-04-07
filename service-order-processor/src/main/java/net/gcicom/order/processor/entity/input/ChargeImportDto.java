@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
+import org.apache.poi.ss.usermodel.Cell;
 
 /**
  * @author Sathish Natarajan
@@ -28,7 +29,7 @@ public class ChargeImportDto {
 	String accountNumber;
 	
 	@DataField(pos = 5, required = false)
-	String nodeName;
+	double nodeName;
 		
 	@DataField(pos = 6, required = false)
 	String orderNumber;
@@ -205,11 +206,11 @@ public class ChargeImportDto {
 	
 	
 	
-	public String getNodeName() {
+	public double getNodeName() {
 		return nodeName;
 	}
 
-	public void setNodeName(String nodeName) {
+	public void setNodeName(double nodeName) {
 		this.nodeName = nodeName;
 	}
 
@@ -448,7 +449,7 @@ public class ChargeImportDto {
 		ChargeID = chargeID;
 	}
 
-
+	
 
 
 	String supplier = "GCI";

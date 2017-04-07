@@ -41,8 +41,7 @@ public class ChargeImportDtoToBillingReference extends BaseEntity {
 		//SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
 	
-	
-			
+				
 			public List<BillingReference> convertToBillingReference(final List<ChargeImportDto> input, Exchange ex) throws ParseException, RecordAlreadyExistsException {
 				
 				List<BillingReference> cdrs = new ArrayList<>();
@@ -89,6 +88,11 @@ public class ChargeImportDtoToBillingReference extends BaseEntity {
 				 	billingReference.setSupplierOrderNumber(source.getSupplierOrderNumber());
 				 	billingReference.setSupplierServiceReference(source.getSupplierServiceReference());
 				 	billingReference.setCustomerID(2222L);
+				 	
+				 	//Default data
+				 	billingReference.setAccountNumber("2222");
+				 	billingReference.setBillingReference("22222");
+				 	billingReference.setBillingReferenceDescription("22222");
 				 
 				 	List<CustomerProductCharge> CustomerProductChargeList= new ArrayList<>();
 				 	
@@ -97,12 +101,12 @@ public class ChargeImportDtoToBillingReference extends BaseEntity {
 				 	customerproductCharge.setBillingReference(billingReference);
 				 	//TODO
 				  //customerproductCharge.setCustomerProductChargeID(Long.valueOf(source.getProductCode()));
-				 	customerproductCharge.setChargeInstanceDescription(source.getDescription());
 				 	
-				 	customerproductCharge.setCustomerCustomReference(source.getCustomerReference());
-				
+				 	//Default data
+				 	//customerproductCharge.setChargeInstanceDescription(source.getDescription());				 	
+				 //	customerproductCharge.setCustomerCustomReference(source.getCustomerReference());			
 
-				 	customerproductCharge.setOrderNumber(source.getOrderNumber());
+				 //	customerproductCharge.setOrderNumber(source.getOrderNumber());
 				 //TODO	
 				   //customerproductCharge.setChargeQuantity(Long.parseLong(source.getQuantity()));
 				 	//TODO

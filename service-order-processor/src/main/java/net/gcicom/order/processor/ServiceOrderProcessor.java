@@ -26,6 +26,7 @@ import net.gcicom.order.processor.service.BillingReferenceAggregator;
 import net.gcicom.order.processor.service.CDRProcessorErrorHandler;
 //import net.gcicom.order.processor.service.ChargeImportAggregator;
 import net.gcicom.order.processor.service.CustomerProductChargeAggregator;
+import net.gcicom.order.processor.service.ExcelConverterBean;
 import net.gcicom.order.processor.service.GCIChargeImportService;
 import net.gcicom.order.processor.service.RecordAlreadyExistsException;
 
@@ -90,6 +91,9 @@ public class ServiceOrderProcessor extends SpringRouteBuilder {
 	@Autowired
 	private GCIChargeImportService service;
 	
+	@Autowired
+	private ExcelConverterBean excelConverterBean;
+	
 	
 	//@Autowired
 	//private Auditor auditor;
@@ -133,13 +137,13 @@ public class ServiceOrderProcessor extends SpringRouteBuilder {
     		//.bean(service, "validateMd5")
         	
         	.bean(service,"setRecordCount")
-        	.split(body()
-        			.tokenize("\n"))
+        	.bean(excelConverterBean,"processExcelData")
+        	.split(body())
         	
            //   	.parallelProcessing()
         	//		.streaming()
         	.to("direct:save-to-database")
-        //	.bean(auditor, "endEvent")
+           //	.bean(auditor, "endEvent")
         	//.bean(billingReferenceAggregator, "")
         	.end();
         
@@ -161,8 +165,8 @@ public class ServiceOrderProcessor extends SpringRouteBuilder {
 					return exchange.getIn().getBody(String.class).startsWith(HEADER) ? false : true;
 				}
 			})//need to filter header of csv/
-    		.unmarshal()
-    			.bindy(BindyType.Csv, ChargeImportDto.class)    		
+    		//.unmarshal()
+    			//.bindy(BindyType.Csv, ChargeImportDto.class)    		
     		
     			.bean(billingReferenceMapper, "convertToBillingReference")
     		//	.bean(mapper, "convertToGCICDR(*, ${header."+ CDR_EVENT_FILE_ID +"}, ${header."+ FILE_NAME_CONSUMED +"})" )
