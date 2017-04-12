@@ -1,10 +1,11 @@
 package net.gcicom.domain.imported.events;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import javax.persistence.*;
-
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Objects;
+import java.math.BigInteger;
 
 
 /**
@@ -13,45 +14,46 @@ import java.util.Objects;
  */
 @Entity
 @Table(name="ImportedEvents")
+@NamedQuery(name="ImportedEvent.findAll", query="SELECT i FROM ImportedEvent i")
 public class ImportedEvent implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	private String eventRecordKey;
-
-	private String accountingPeriod;
+	@EmbeddedId
+	private ImportedEventPK id;
 
 	private String accountNumber;
 
 	private String country;
 
-	private String createdBy;
-
-	@Column(updatable = false)
-	private LocalDateTime createdDate = LocalDateTime.now();
-
-	private Long customerID;
+	private BigDecimal customerID;
 
 	private String dialledCLI;
 
-	private Integer eventDurationSecs;
+	private String eventBandCode;
 
-	private Long eventFileID;
+	private BigDecimal eventDuration;
+
+	private BigDecimal eventFileID;
+
+	private String eventRecordKey;
 
 	private String eventReference;
 
 	private Long eventReferenceID;
 
-	private LocalDateTime eventTime;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date eventTime;
 
-	private Long eventTypeID;
+	private Short eventTypeID;
 
-	private String lastModifiedBy;
+	private String extension;
 
-	@Column(insertable = false, updatable = true)
-	private LocalDateTime lastModifiedDate = LocalDateTime.now();
+	private BigDecimal importBatchNumber;
 
-	private Long numberRange;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date importedEventCreateDate;
+
+	private BigDecimal numberRange;
 
 	private String numberRangeClassification;
 
@@ -59,19 +61,25 @@ public class ImportedEvent implements Serializable {
 
 	private String originatingCLI;
 
-	private Integer preRatedEventFlag;
+	private BigDecimal preRatedEventFlag;
 
 	private String presentationCLI;
 
+	private BigDecimal ratedFlag;
+
+	private BigDecimal ratingPlanID;
+
+	private BigDecimal ratingRunNumber;
+
 	private String supplierAccountNumber;
 
-	private String supplierCost;
+	private BigDecimal supplierCost;
+
+	private String supplierEventBand;
 
 	private Integer supplierID;
 
 	private String supplierNumberRange;
-
-	private String supplierNumberRangeMap;
 
 	private String supplierRatingPattern;
 
@@ -79,54 +87,23 @@ public class ImportedEvent implements Serializable {
 
 	private String supplierServiceType;
 
-	private Long supplierTariffPlanID;
+	private String supplierTariffPlanID;
 
 	private String terminatingCLI;
 
-	
-	private Integer timePeriodID;
+	private BigDecimal timePeriodID;
 
-	private Integer weekDayFlag;
-	
-	@Transient
-	private String fileChecksum;
-	
-	public String getFileChecksum() {
-		return fileChecksum;
-	}
-
-	public void setFileChecksum(String fileChecksum) {
-		this.fileChecksum = fileChecksum;
-	}
-
-	//flag to mark record if rating processing completed or not
-	private Integer rated;
+	private BigDecimal weekDayFlag;
 
 	public ImportedEvent() {
 	}
-	
-	public Integer getRated() {
-		return rated;
+
+	public ImportedEventPK getId() {
+		return this.id;
 	}
 
-	public void setRated(Integer rated) {
-		this.rated = rated;
-	}
-
-	public String getEventRecordKey() {
-		return this.eventRecordKey;
-	}
-
-	public void setEventRecordKey(String eventRecordKey) {
-		this.eventRecordKey = eventRecordKey;
-	}
-
-	public String getAccountingPeriod() {
-		return this.accountingPeriod;
-	}
-
-	public void setAccountingPeriod(String accountingPeriod) {
-		this.accountingPeriod = accountingPeriod;
+	public void setId(ImportedEventPK id) {
+		this.id = id;
 	}
 
 	public String getAccountNumber() {
@@ -145,27 +122,11 @@ public class ImportedEvent implements Serializable {
 		this.country = country;
 	}
 
-	public String getCreatedBy() {
-		return this.createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public LocalDateTime getCreatedDate() {
-		return this.createdDate;
-	}
-
-	public void setCreatedDate(LocalDateTime createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public Long getCustomerID() {
+	public BigDecimal getCustomerID() {
 		return this.customerID;
 	}
 
-	public void setCustomerID(Long customerID) {
+	public void setCustomerID(BigDecimal customerID) {
 		this.customerID = customerID;
 	}
 
@@ -177,20 +138,36 @@ public class ImportedEvent implements Serializable {
 		this.dialledCLI = dialledCLI;
 	}
 
-	public Integer getEventDurationSecs() {
-		return this.eventDurationSecs;
+	public String getEventBandCode() {
+		return this.eventBandCode;
 	}
 
-	public void setEventDurationSecs(Integer eventDurationSecs) {
-		this.eventDurationSecs = eventDurationSecs;
+	public void setEventBandCode(String eventBandCode) {
+		this.eventBandCode = eventBandCode;
 	}
 
-	public Long getEventFileID() {
+	public BigDecimal getEventDuration() {
+		return this.eventDuration;
+	}
+
+	public void setEventDuration(BigDecimal eventDuration) {
+		this.eventDuration = eventDuration;
+	}
+
+	public BigDecimal getEventFileID() {
 		return this.eventFileID;
 	}
 
-	public void setEventFileID(Long eventFileID) {
+	public void setEventFileID(BigDecimal eventFileID) {
 		this.eventFileID = eventFileID;
+	}
+
+	public String getEventRecordKey() {
+		return this.eventRecordKey;
+	}
+
+	public void setEventRecordKey(String eventRecordKey) {
+		this.eventRecordKey = eventRecordKey;
 	}
 
 	public String getEventReference() {
@@ -209,43 +186,51 @@ public class ImportedEvent implements Serializable {
 		this.eventReferenceID = eventReferenceID;
 	}
 
-	public LocalDateTime getEventTime() {
+	public Date getEventTime() {
 		return this.eventTime;
 	}
 
-	public void setEventTime(LocalDateTime eventTime) {
+	public void setEventTime(Date eventTime) {
 		this.eventTime = eventTime;
 	}
 
-	public Long getEventTypeID() {
+	public Short getEventTypeID() {
 		return this.eventTypeID;
 	}
 
-	public void setEventTypeID(Long eventTypeID) {
+	public void setEventTypeID(Short eventTypeID) {
 		this.eventTypeID = eventTypeID;
 	}
 
-	public String getLastModifiedBy() {
-		return this.lastModifiedBy;
+	public String getExtension() {
+		return this.extension;
 	}
 
-	public void setLastModifiedBy(String lastModifiedBy) {
-		this.lastModifiedBy = lastModifiedBy;
+	public void setExtension(String extension) {
+		this.extension = extension;
 	}
 
-	public LocalDateTime getLastModifiedDate() {
-		return this.lastModifiedDate;
+	public BigDecimal getImportBatchNumber() {
+		return this.importBatchNumber;
 	}
 
-	public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
+	public void setImportBatchNumber(BigDecimal importBatchNumber) {
+		this.importBatchNumber = importBatchNumber;
 	}
 
-	public Long getNumberRange() {
+	public Date getImportedEventCreateDate() {
+		return this.importedEventCreateDate;
+	}
+
+	public void setImportedEventCreateDate(Date importedEventCreateDate) {
+		this.importedEventCreateDate = importedEventCreateDate;
+	}
+
+	public BigDecimal getNumberRange() {
 		return this.numberRange;
 	}
 
-	public void setNumberRange(Long numberRange) {
+	public void setNumberRange(BigDecimal numberRange) {
 		this.numberRange = numberRange;
 	}
 
@@ -273,11 +258,11 @@ public class ImportedEvent implements Serializable {
 		this.originatingCLI = originatingCLI;
 	}
 
-	public Integer getPreRatedEventFlag() {
+	public BigDecimal getPreRatedEventFlag() {
 		return this.preRatedEventFlag;
 	}
 
-	public void setPreRatedEventFlag(Integer preRatedEventFlag) {
+	public void setPreRatedEventFlag(BigDecimal preRatedEventFlag) {
 		this.preRatedEventFlag = preRatedEventFlag;
 	}
 
@@ -289,6 +274,30 @@ public class ImportedEvent implements Serializable {
 		this.presentationCLI = presentationCLI;
 	}
 
+	public BigDecimal getRatedFlag() {
+		return this.ratedFlag;
+	}
+
+	public void setRatedFlag(BigDecimal ratedFlag) {
+		this.ratedFlag = ratedFlag;
+	}
+
+	public BigDecimal getRatingPlanID() {
+		return this.ratingPlanID;
+	}
+
+	public void setRatingPlanID(BigDecimal ratingPlanID) {
+		this.ratingPlanID = ratingPlanID;
+	}
+
+	public BigDecimal getRatingRunNumber() {
+		return this.ratingRunNumber;
+	}
+
+	public void setRatingRunNumber(BigDecimal ratingRunNumber) {
+		this.ratingRunNumber = ratingRunNumber;
+	}
+
 	public String getSupplierAccountNumber() {
 		return this.supplierAccountNumber;
 	}
@@ -297,19 +306,27 @@ public class ImportedEvent implements Serializable {
 		this.supplierAccountNumber = supplierAccountNumber;
 	}
 
-	public String getSupplierCost() {
+	public BigDecimal getSupplierCost() {
 		return this.supplierCost;
 	}
 
-	public void setSupplierCost(String supplierCost) {
+	public void setSupplierCost(BigDecimal supplierCost) {
 		this.supplierCost = supplierCost;
 	}
 
-	public Integer getSupplierID() {
+	public String getSupplierEventBand() {
+		return this.supplierEventBand;
+	}
+
+	public void setSupplierEventBand(String supplierEventBand) {
+		this.supplierEventBand = supplierEventBand;
+	}
+
+	public int getSupplierID() {
 		return this.supplierID;
 	}
 
-	public void setSupplierID(Integer supplierID) {
+	public void setSupplierID(int supplierID) {
 		this.supplierID = supplierID;
 	}
 
@@ -319,14 +336,6 @@ public class ImportedEvent implements Serializable {
 
 	public void setSupplierNumberRange(String supplierNumberRange) {
 		this.supplierNumberRange = supplierNumberRange;
-	}
-
-	public String getSupplierNumberRangeMap() {
-		return this.supplierNumberRangeMap;
-	}
-
-	public void setSupplierNumberRangeMap(String supplierNumberRangeMap) {
-		this.supplierNumberRangeMap = supplierNumberRangeMap;
 	}
 
 	public String getSupplierRatingPattern() {
@@ -353,11 +362,11 @@ public class ImportedEvent implements Serializable {
 		this.supplierServiceType = supplierServiceType;
 	}
 
-	public Long getSupplierTariffPlanID() {
+	public String getSupplierTariffPlanID() {
 		return this.supplierTariffPlanID;
 	}
 
-	public void setSupplierTariffPlanID(Long supplierTariffPlanID) {
+	public void setSupplierTariffPlanID(String supplierTariffPlanID) {
 		this.supplierTariffPlanID = supplierTariffPlanID;
 	}
 
@@ -369,24 +378,32 @@ public class ImportedEvent implements Serializable {
 		this.terminatingCLI = terminatingCLI;
 	}
 
-	public Integer getTimePeriodID() {
+	public BigDecimal getTimePeriodID() {
 		return this.timePeriodID;
 	}
 
-	public void setTimePeriodID(Integer timePeriodID) {
+	public void setTimePeriodID(BigDecimal timePeriodID) {
 		this.timePeriodID = timePeriodID;
 	}
 
-	public Integer getWeekDayFlag() {
+	public BigDecimal getWeekDayFlag() {
 		return this.weekDayFlag;
 	}
 
-	public void setWeekDayFlag(Integer weekDayFlag) {
+	public void setWeekDayFlag(BigDecimal weekDayFlag) {
 		this.weekDayFlag = weekDayFlag;
 	}
+	@Transient
+	private String fileChecksum;
 	
-	
-    @Override
+	public String getFileChecksum() {
+		return fileChecksum;
+	}
+
+	public void setFileChecksum(String fileChecksum) {
+		this.fileChecksum = fileChecksum;
+	}
+	@Override
     public boolean equals(Object o) {
     	
         if (this == o) return true;
@@ -406,17 +423,18 @@ public class ImportedEvent implements Serializable {
 	public String toString() {
 
 		return "[ImportedEvent :eventRecordKey- " + this.eventRecordKey + " supplierId - " + this.supplierID + " supplierCost " 
-					+ this.supplierCost + " accountingPeriod " + this.accountingPeriod 
+					+ this.supplierCost + " accountingPeriod " + this.id.getAccountingPeriod() 
 					+ " accountNumber " + this.accountNumber + " country " + this.country 
-					+ " dialledCLI " + this.dialledCLI + " eventDurationSecs " + this.eventDurationSecs 
+					+ " dialledCLI " + this.dialledCLI + " eventDurationSecs " + this.eventDuration 
 					+ " eventReference " + this.eventReference + " numberRange " + this.numberRange 
 					+ " numberRangeClassification " + this.numberRangeClassification + " numberRangeType " + this.numberRangeType 
 					+ " originatingCLI " + this.originatingCLI + " preRatedEventFlag " + this.preRatedEventFlag
 					+ " presentationCLI " + this.presentationCLI + " supplierAccountNumber " + this.supplierAccountNumber
-					+ " supplierNumberRange " + this.supplierNumberRange + " supplierNumberRangeMap " + this.supplierNumberRangeMap
+					+ " supplierNumberRange " + this.supplierNumberRange + " supplierNumberRangeMap " + this.supplierNumberRange
 					+ " supplierRatingPattern " + this.supplierRatingPattern + " supplierRecordReference " + this.supplierRecordReference
 					+ " supplierServiceType " + this.supplierServiceType + " terminatingCLI " + this.terminatingCLI
 					+ " timePeriodID " + this.timePeriodID + " weekDayFlag " + this.weekDayFlag
+					+"eventBandCode"+this.eventBandCode
 					+ " ]";
 	}
 
