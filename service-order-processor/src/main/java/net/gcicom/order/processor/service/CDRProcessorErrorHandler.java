@@ -1,5 +1,5 @@
 package net.gcicom.order.processor.service;
-
+import static net.gcicom.order.processor.config.AppProperties.ERROR_FILE_LOCATION;
 import org.apache.camel.Exchange;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -25,11 +25,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
+import org.springframework.core.env.Environment;
 
 import static org.apache.camel.Exchange.FILE_NAME_CONSUMED;
 /**
@@ -43,13 +46,18 @@ public class CDRProcessorErrorHandler {
 	@Value("${gci.service.order.file.error.location}")
 	private static String errorFileLocation;
 	
+	@Autowired
+	Environment env;
 	
 	@Value("${gci.service.order.file.out.location}")
-	private  String processedFileLocation;
+	private static String processedFileLocation;
 	
 	//Delimiter used in CSV file
 		private static final String COMMA_DELIMITER = ",";
 		private static final String NEW_LINE_SEPARATOR = "\n";
+		
+		static Map<String, Object[]> excelHeader = new HashMap<String, Object[]>();
+		
 		
 		//CSV file header
 		private static final String FILE_HEADER = "Actioncode,ItemType,CustomerName,Account Number,NodeName,OrderNumber,ServiceCode,BillingReference,Description,EventTariffName,GCISalesManager,CustomerServiceStartDate,CustomerServiceEndDate,SupplierContractStartDate,SupplierContractEndDate,CustomerContractStartDate,CustomerContractEndDate,CustomerSiteName,CustomerCustomReference,CustomerCostCentre,CustomerPONumber,InstallationPostCode,SupplierOrderNumber,SupplierServiceReference,ProductCode,Description,CustomerReference,OrderNumber,Quantity,ChargeFrequency,UnitCostToGCI,UnitChargeToCustomer,TaxTypeFlag,ChargeStartDate,ChargeCeaseDate,ChargeBilledUntilDate,SupplierContractStartDate,SupplierContractEndDate,CustomerContractStartDate,CustomerContractEndDate,ChargeID";
@@ -97,10 +105,19 @@ public void invalidRecord(Exchange e) {
 		int i=0;
 		 Integer count = exchange.getProperty("CamelLoopIndex", Integer.class);
 		 Exception cause = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Exception.class);
+					
 		 chargeImportDtoWithException = (ChargeImportDto)exchange.getIn().getBody();
 		 chargeImportDtoWithException.setExceptionMessage(cause.getMessage());
 		 chargeImportDtoList.add(chargeImportDtoWithException);
+		 
+		 excelHeader.put("1",new Object[] {"Actioncode","ItemType","CustomerName","Account Number","NodeName","OrderNumber","ServiceCode","BillingReference","Description","EventTariffName",
+		          "GCISalesManager","CustomerServiceStartDate","CustomerServiceEndDate","SupplierContractStartDate","SupplierContractEndDate","CustomerContractStartDate", 
+		          "CustomerContractEndDate","CustomerSiteName","CustomerCustomReference","CustomerCostCentre","CustomerPONumber","InstallationPostCode","SupplierOrderNumber",
+		          "SupplierServiceReference","ProductCode","Description","CustomerReference","OrderNumber","Quantity","ChargeFrequency","UnitCostToGCI","UnitChargeToCustomer",
+		          "TaxTypeFlag","ChargeStartDate","ChargeCeaseDate","ChargeBilledUntilDate","SupplierContractStartDate","SupplierContractEndDate","CustomerContractStartDate",
+		          "CustomerContractEndDate","ChargeID"});
 		 // data.put(i++,  exchange.getIn().getBody().toString());
+
 
 	/*	Throwable reason = exchange.getProperty(EXCEPTION_CAUGHT, Throwable.class);
 		if (reason != null) {
@@ -127,9 +144,9 @@ public void invalidRecord(Exchange e) {
 		 
 		 try {
 		
-
+			String  errorFileLocation= env.getProperty(ERROR_FILE_LOCATION);
 			 
-			writeExcelFile(chargeImportDtoList);
+			writeExcelFile(chargeImportDtoList,errorFileLocation);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -181,19 +198,21 @@ public void invalidRecord(Exchange e) {
 	
 
      		
-        	 public static void  writeExcelFile(List<ChargeImportDto> chargeImportDtoList) throws IOException {
+        	 public static void  writeExcelFile(List<ChargeImportDto> chargeImportDtoList,String errorFileLocation) throws IOException {
         		 
         		 XSSFWorkbook  workbook = new XSSFWorkbook();
         		 XSSFSheet  sheet = workbook.createSheet("Billing reference failed validation");
-        		 
+        		
+        		
         		    int rowCount = 0;
         		    String excelFilePath = errorFileLocation+"ErrorListOFBillingReference.xlsx";
         		    Row row = sheet.createRow(++rowCount);
-        		    row = sheet.createRow(++rowCount);
-
+        		  //  row = sheet.createRow(++rowCount);
+        		    writeHeader(row,sheet);
+        		    
         		    for (ChargeImportDto chargeImportDto : chargeImportDtoList) {
+        		         writeBook(chargeImportDto, row);
         		         row = sheet.createRow(++rowCount);
-        		        writeBook(chargeImportDto, row);
         		    }
         		 
         		    try (FileOutputStream outputStream = new FileOutputStream(excelFilePath)) {
@@ -294,6 +313,30 @@ public void invalidRecord(Exchange e) {
 		
 		
         	 
+			   private static  void writeHeader( Row row, XSSFSheet sheet) {
+	        		 Set<String> keyset = excelHeader.keySet();
+	        			int rownum = 0;
+	        			for (String key : keyset) {
+	        				 row = sheet.createRow(rownum++);
+	        				Object [] objArr = excelHeader.get(key);
+	        				int cellnum = 0;
+	        				for (Object obj : objArr) {
+	        					Cell cell = row.createCell(cellnum++);
+	        					if(obj instanceof Date) 
+	        						cell.setCellValue((Date)obj);
+	        					else if(obj instanceof Boolean)
+	        						cell.setCellValue((Boolean)obj);
+	        					else if(obj instanceof String)
+	        						cell.setCellValue((String)obj);
+	        					else if(obj instanceof Double)
+	        						cell.setCellValue((Double)obj);
+	        				}
+	        			}
+	   
+	     		}
+        	
+		
+		
            }
 	
 	
