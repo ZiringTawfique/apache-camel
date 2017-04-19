@@ -63,7 +63,7 @@ public class ExcelConverterBean {
     	    	      }*/
     	    	
     	        Row nextRow = iterator.next();
-    	        if (nextRow.getRowNum() == 0) {
+    	        if (nextRow.getRowNum() == 0 || nextRow.getRowNum()==1) {
                     continue;// skip first row, as it contains column names
                 }
     	        Iterator<Cell> cellIterator = nextRow.cellIterator();

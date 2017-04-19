@@ -222,68 +222,74 @@ public void invalidRecord(Exchange e) {
         	 
         	 
         	 private static void writeBook(ChargeImportDto aBook, Row row) {
-        		    Cell cell = row.createCell(1);
+        		
+     		    
+     		       Cell  cell = row.createCell(0);
         		    if(aBook.getActionCode() != null)
         		    cell.setCellValue(aBook.getActionCode());
         		 
-        		    cell = row.createCell(2);
+        		    cell = row.createCell(1);
         		    if(aBook.getItemType() != null)
         		    cell.setCellValue(aBook.getItemType());
         		 
-        		    cell = row.createCell(3);
+        		    cell = row.createCell(2);
         		    if(aBook.getCustomerName() != null)
         		    cell.setCellValue(aBook.getCustomerName());
         		    
-        		    cell = row.createCell(4);
+        		    cell = row.createCell(3);
         		    if(aBook.getAccountNumber() != null)
         		    cell.setCellValue(aBook.getAccountNumber());
 
-        		    cell = row.createCell(5);
+        		    cell = row.createCell(4);
         		    if(aBook.getNodeName() != null)
         		    cell.setCellValue(aBook.getNodeName());
         		    
-        		    cell = row.createCell(6);
+        		    cell = row.createCell(5);
         		    if(aBook.getOrderNumber() != null)
         		    cell.setCellValue(aBook.getOrderNumber());
         		    
-        		    cell = row.createCell(7);
+        		    cell = row.createCell(6);
         		    if(aBook.getServiceCode() != null)
         		    cell.setCellValue(aBook.getServiceCode());
         		    
-        		    cell = row.createCell(8);
+        		    cell = row.createCell(7);
         		    if(aBook.getBillingReference() != null)
         		    cell.setCellValue(aBook.getBillingReference());
         		    
-        		    cell = row.createCell(9);
+        		    cell = row.createCell(8);
         		    if(aBook.getBillingReferenceDesc() != null)
         		    cell.setCellValue(aBook.getBillingReferenceDesc());
         		    
-        		    cell = row.createCell(10);
+        		    cell = row.createCell(9);
         		    if(aBook.getEventTariffName() != null)
         		    cell.setCellValue(aBook.getEventTariffName());
         		    
         		    
-        		    cell = row.createCell(11);
+        		    cell = row.createCell(10);
         		    if(aBook.getGciSalesManager() != null)
         		    cell.setCellValue(aBook.getGciSalesManager());
         		    
-        		     cell = row.createCell(12);
+        		     cell = row.createCell(11);
         		     if(aBook.getCustomerServiceStartDate() != null)
         		    cell.setCellValue(aBook.getCustomerServiceStartDate().toString());
         		        
         		     
         		     
-        		    cell = row.createCell(13);
+        		    cell = row.createCell(12);
         		    if(aBook.getCustomerServiceEndDate() != null)
         		    cell.setCellValue(aBook.getCustomerServiceEndDate().toString());
         		    
-        		    cell = row.createCell(14);
+        		    cell = row.createCell(13);
         		    if(aBook.getSupplierContractStartDate() != null)
         		    cell.setCellValue(aBook.getSupplierContractStartDate());
 
-        		    cell = row.createCell(15);
+        		    cell = row.createCell(14);
         		    if(aBook.getSupplierContractEndDate() != null)
         		    cell.setCellValue(aBook.getSupplierContractEndDate());
+        		    
+        		    cell = row.createCell(15);
+        		    if(aBook.getCustomerContractStartDate() != null)
+        		    cell.setCellValue(aBook.getCustomerContractStartDate());
         		    
         		    cell = row.createCell(16);
         		    if(aBook.getCustomerContractStartDate() != null)
@@ -298,10 +304,6 @@ public void invalidRecord(Exchange e) {
         		    cell.setCellValue(aBook.getCustomerContractStartDate());
         		    
         		    cell = row.createCell(19);
-        		    if(aBook.getCustomerContractStartDate() != null)
-        		    cell.setCellValue(aBook.getCustomerContractStartDate());
-        		    
-        		    cell = row.createCell(20);
         		    if(aBook.getCustomerContractStartDate() != null)
         		    cell.setCellValue(aBook.getCustomerContractStartDate());
         		    

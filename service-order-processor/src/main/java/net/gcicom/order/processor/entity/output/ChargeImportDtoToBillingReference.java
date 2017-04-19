@@ -66,6 +66,9 @@ public class ChargeImportDtoToBillingReference extends BaseEntity {
 					if(source.getItemType() == null)
 						throw new RecordAlreadyExistsException("Fail - No Itemtype" );
 					
+					if(source.getBillingReferenceDesc() == null)
+						throw new RecordAlreadyExistsException("Fail - No Billing Reference Description" );
+					
 									
 					billingReference.setBillingReferenceID(111111L);					
 					billingReference.setOrderNumber(String.valueOf(source.getOrderNumber()));
@@ -74,7 +77,7 @@ public class ChargeImportDtoToBillingReference extends BaseEntity {
 					billingReference.setGCISalesManager(source.getGciSalesManager());
 					
 					billingReference.setBillingReferenceCreateUser(source.getItemType());
-					billingReference.setCustomerCostCentre(source.getActionCode());
+					billingReference.setCustomerCostCentre(source.getActionCode()); 
 					LocalDateTime time = LocalDateTime.from(LocalDate.parse("22/04/2017", formatter).atStartOfDay());
 					billingReference.setBillingReferenceStartDate(source.getCustomerServiceStartDate());
 					billingReference.setBillingReferenceEndDate(time);
