@@ -1,19 +1,33 @@
 package net.gcicom.order.processor.service;
 
 import org.apache.camel.Exchange;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import net.gcicom.order.processor.entity.input.ChargeImportDto;
 
 import static net.gcicom.order.processor.common.AppConstants.TOTAL_RECORD_COUNT;
 import static net.gcicom.order.processor.service.ValidationTypes.RECORD_PROCESSING_ERROR;
 
+import java.awt.print.Book;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -26,15 +40,24 @@ import static org.apache.camel.Exchange.FILE_NAME_CONSUMED;
 public class CDRProcessorErrorHandler {
 
 	
+	@Value("${gci.service.order.file.error.location}")
+	private static String errorFileLocation;
+	
+	
+	@Value("${gci.service.order.file.out.location}")
+	private  String processedFileLocation;
+	
 	//Delimiter used in CSV file
 		private static final String COMMA_DELIMITER = ",";
 		private static final String NEW_LINE_SEPARATOR = "\n";
 		
 		//CSV file header
-		private static final String FILE_HEADER = "id,firstName,lastName,gender,age";
+		private static final String FILE_HEADER = "Actioncode,ItemType,CustomerName,Account Number,NodeName,OrderNumber,ServiceCode,BillingReference,Description,EventTariffName,GCISalesManager,CustomerServiceStartDate,CustomerServiceEndDate,SupplierContractStartDate,SupplierContractEndDate,CustomerContractStartDate,CustomerContractEndDate,CustomerSiteName,CustomerCustomReference,CustomerCostCentre,CustomerPONumber,InstallationPostCode,SupplierOrderNumber,SupplierServiceReference,ProductCode,Description,CustomerReference,OrderNumber,Quantity,ChargeFrequency,UnitCostToGCI,UnitChargeToCustomer,TaxTypeFlag,ChargeStartDate,ChargeCeaseDate,ChargeBilledUntilDate,SupplierContractStartDate,SupplierContractEndDate,CustomerContractStartDate,CustomerContractEndDate,ChargeID";
 		
 	private Logger logger = LoggerFactory.getLogger(CDRProcessorErrorHandler.class);
 	Map<Integer, String> data = new HashMap<>();
+	List<ChargeImportDto> chargeImportDtoList= new ArrayList();
+	ChargeImportDto chargeImportDtoWithException;
 	//@Autowired
 	//Auditor auditor;
 	
@@ -59,15 +82,25 @@ public class CDRProcessorErrorHandler {
 		
 	}
 	
+public void invalidRecord(Exchange e) {
+		
+		logger.info("Handle Event" + e);
+		handleEvent(e,RECORD_PROCESSING_ERROR);
+		
+	}
+	
 	/**
 	 * @param exchange
 	 * @param eventType
 	 */
-	private void handleEvent(final Exchange exchange, final String eventType) {
+	private void handleEvent( Exchange exchange, final String eventType) {
 		int i=0;
 		 Integer count = exchange.getProperty("CamelLoopIndex", Integer.class);
-		
-		  data.put(i++,  exchange.getIn().getBody().toString());
+		 Exception cause = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Exception.class);
+		 chargeImportDtoWithException = (ChargeImportDto)exchange.getIn().getBody();
+		 chargeImportDtoWithException.setExceptionMessage(cause.getMessage());
+		 chargeImportDtoList.add(chargeImportDtoWithException);
+		 // data.put(i++,  exchange.getIn().getBody().toString());
 
 	/*	Throwable reason = exchange.getProperty(EXCEPTION_CAUGHT, Throwable.class);
 		if (reason != null) {
@@ -84,25 +117,31 @@ public class CDRProcessorErrorHandler {
 		} 
 	}
 	*/
-		//  int totalCount = (int)exchange.getIn().getHeader("TOTAL_RECORD_COUNT");
+		/* int totalCount = (int)exchange.getIn().getHeader("TOTAL_RECORD_COUNT");
 		  
-		//  int totalProcessedCount = (int)exchange.getIn().getHeader("TOTAL_RECORD_PROCESSED_COUNT");
+	  int totalProcessedCount = (int)exchange.getIn().getHeader("TOTAL_RECORD_PROCESSED_COUNT");
 		
-	//	if(totalCount== totalCount){
+		if(totalCount== totalCount){
 			writeCsvFile(data);
-		//}
-	
+		}*/
+		 
+		 try {
+		
+
+			 
+			writeExcelFile(chargeImportDtoList);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//  writeCsvFile(data);
 		logger.error("Handled event has following error \n", data.size());
 	}
 	
 	
-
 	public static void writeCsvFile(Map data) {
-		
 	
-		
-		FileWriter fileWriter = null;
-				
+		FileWriter fileWriter = null;				
 		try {
 			fileWriter = new FileWriter("NEW_ERRORED_FILE");
 
@@ -141,6 +180,121 @@ public class CDRProcessorErrorHandler {
 	}
 	
 
+     		
+        	 public static void  writeExcelFile(List<ChargeImportDto> chargeImportDtoList) throws IOException {
+        		 
+        		 XSSFWorkbook  workbook = new XSSFWorkbook();
+        		 XSSFSheet  sheet = workbook.createSheet("Billing reference failed validation");
+        		 
+        		    int rowCount = 0;
+        		    String excelFilePath = errorFileLocation+"ErrorListOFBillingReference.xlsx";
+        		    Row row = sheet.createRow(++rowCount);
+        		    row = sheet.createRow(++rowCount);
+
+        		    for (ChargeImportDto chargeImportDto : chargeImportDtoList) {
+        		         row = sheet.createRow(++rowCount);
+        		        writeBook(chargeImportDto, row);
+        		    }
+        		 
+        		    try (FileOutputStream outputStream = new FileOutputStream(excelFilePath)) {
+        		        workbook.write(outputStream);
+        		    }
+        		}
+        	 
+        	 
+        	 private static void writeBook(ChargeImportDto aBook, Row row) {
+        		    Cell cell = row.createCell(1);
+        		    if(aBook.getActionCode() != null)
+        		    cell.setCellValue(aBook.getActionCode());
+        		 
+        		    cell = row.createCell(2);
+        		    if(aBook.getItemType() != null)
+        		    cell.setCellValue(aBook.getItemType());
+        		 
+        		    cell = row.createCell(3);
+        		    if(aBook.getCustomerName() != null)
+        		    cell.setCellValue(aBook.getCustomerName());
+        		    
+        		    cell = row.createCell(4);
+        		    if(aBook.getAccountNumber() != null)
+        		    cell.setCellValue(aBook.getAccountNumber());
+
+        		    cell = row.createCell(5);
+        		    if(aBook.getNodeName() != null)
+        		    cell.setCellValue(aBook.getNodeName());
+        		    
+        		    cell = row.createCell(6);
+        		    if(aBook.getOrderNumber() != null)
+        		    cell.setCellValue(aBook.getOrderNumber());
+        		    
+        		    cell = row.createCell(7);
+        		    if(aBook.getServiceCode() != null)
+        		    cell.setCellValue(aBook.getServiceCode());
+        		    
+        		    cell = row.createCell(8);
+        		    if(aBook.getBillingReference() != null)
+        		    cell.setCellValue(aBook.getBillingReference());
+        		    
+        		    cell = row.createCell(9);
+        		    if(aBook.getBillingReferenceDesc() != null)
+        		    cell.setCellValue(aBook.getBillingReferenceDesc());
+        		    
+        		    cell = row.createCell(10);
+        		    if(aBook.getEventTariffName() != null)
+        		    cell.setCellValue(aBook.getEventTariffName());
+        		    
+        		    
+        		    cell = row.createCell(11);
+        		    if(aBook.getGciSalesManager() != null)
+        		    cell.setCellValue(aBook.getGciSalesManager());
+        		    
+        		     cell = row.createCell(12);
+        		     if(aBook.getCustomerServiceStartDate() != null)
+        		    cell.setCellValue(aBook.getCustomerServiceStartDate().toString());
+        		        
+        		     
+        		     
+        		    cell = row.createCell(13);
+        		    if(aBook.getCustomerServiceEndDate() != null)
+        		    cell.setCellValue(aBook.getCustomerServiceEndDate().toString());
+        		    
+        		    cell = row.createCell(14);
+        		    if(aBook.getSupplierContractStartDate() != null)
+        		    cell.setCellValue(aBook.getSupplierContractStartDate());
+
+        		    cell = row.createCell(15);
+        		    if(aBook.getSupplierContractEndDate() != null)
+        		    cell.setCellValue(aBook.getSupplierContractEndDate());
+        		    
+        		    cell = row.createCell(16);
+        		    if(aBook.getCustomerContractStartDate() != null)
+        		    cell.setCellValue(aBook.getCustomerContractStartDate());
+        		    
+        		    cell = row.createCell(17);
+        		    if(aBook.getCustomerContractStartDate() != null)
+        		    cell.setCellValue(aBook.getCustomerContractStartDate());
+        		    
+        		    cell = row.createCell(18);
+        		    if(aBook.getCustomerContractStartDate() != null)
+        		    cell.setCellValue(aBook.getCustomerContractStartDate());
+        		    
+        		    cell = row.createCell(19);
+        		    if(aBook.getCustomerContractStartDate() != null)
+        		    cell.setCellValue(aBook.getCustomerContractStartDate());
+        		    
+        		    cell = row.createCell(20);
+        		    if(aBook.getCustomerContractStartDate() != null)
+        		    cell.setCellValue(aBook.getCustomerContractStartDate());
+        		    
+        		    
+        		    cell = row.createCell(13);
+       		       if(aBook.getExceptionMessage() != null)
+       		       cell.setCellValue(aBook.getExceptionMessage().toString());
+        		}
+		
+		
+        	 
+           }
 	
 	
-}
+
