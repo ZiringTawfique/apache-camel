@@ -126,8 +126,8 @@ public class ServiceOrderProcessor extends SpringRouteBuilder {
 		//TODO Need to add cronexpression
 		//TODO Add description
         from("file:" + inFileLocation + "?initialDelay="+ initDelay 
-        		+ "&delay="+ nextRunDelay +"&include="+filePattern+"&noop="+isNoop+"&move=.success"
-        		+ "moveFailed=.error")
+        		+ "&delay="+ nextRunDelay +"&include="+filePattern+"&noop="+isNoop+"&move=.success")
+        	//	+ "moveFailed=.error")
         	.onException(AlreadyProcessedFileException.class)
 				.bean(CDRProcessorErrorHandler.class, "handleError")								 
         		.to("direct:move-error-file")
@@ -173,7 +173,7 @@ public class ServiceOrderProcessor extends SpringRouteBuilder {
     	    // .aggregate(constant(true), customerProductChargeAggregator)
              //.completionSize(batchSize)
            //  .completionTimeout(aggregationTimeOut)//just in case cvs rows are less than batch size
-    			.bean(service, "addBillingReference")
+    	   //  .bean(service, "addBillingReference")
     			.log(LoggingLevel.DEBUG, logger, "END : Add CVS rows to table.");
  
 		from("direct:move-error-file")

@@ -17,7 +17,10 @@ public interface BillingReferenceRepository extends JpaRepository<BillingReferen
 	
 	
 	
-	BillingReference findByBillingReference(String billingRef);
+	//BillingReference findByBillingReference(String billingRef);
+	
+	
+	List<BillingReference> findByBillingReference(String billingRef);
 
 
 }

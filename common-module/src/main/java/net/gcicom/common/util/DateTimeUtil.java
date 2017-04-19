@@ -1,7 +1,11 @@
 package net.gcicom.common.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -78,4 +82,26 @@ public abstract class DateTimeUtil {
 		return dt.format(df);
 		
 	}
+	
+	public static LocalDateTime convertStringToLocalDateTime(String dateInString,SimpleDateFormat formatter){
+	   //  SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+	     //String dateInString = "07/06/2013";
+	     LocalDateTime localDateTime = null;
+	     ZoneId defaultZoneId = ZoneId.systemDefault();
+	       
+	        try {
+	            Date date = formatter.parse(dateInString);	
+	            
+   	         //1. Convert Date -> Instant
+	           Instant instant = date.toInstant();	       
+	           
+	         //2. Instant + system default time zone + toLocalDateTime() = LocalDateTime
+	            localDateTime = instant.atZone(defaultZoneId).toLocalDateTime();
+	          	           
+	        } catch (ParseException e) {
+	            e.printStackTrace();
+	        }
+			return localDateTime;
+	}
+	
 }

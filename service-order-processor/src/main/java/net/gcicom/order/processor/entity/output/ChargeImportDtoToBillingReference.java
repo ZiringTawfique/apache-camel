@@ -25,6 +25,7 @@ import net.gcicom.domain.allspark.CustomerProductCharge;
 import net.gcicom.order.processor.entity.input.ChargeImportDto;
 import net.gcicom.order.processor.repository.BillingReferenceRepository;
 import net.gcicom.order.processor.service.RecordAlreadyExistsException;
+import net.gcicom.order.processor.validator.BillingReferenceValidator;
 
 
 @Component
@@ -48,28 +49,34 @@ public class ChargeImportDtoToBillingReference extends BaseEntity {
                   int loopCount=0; 
 				for (ChargeImportDto source : input) {
 					loopCount++;
-					ex.getIn().setHeader(TOTAL_RECORD_PROCESSED_COUNT, loopCount++);
+					ex.getIn().setHeader(TOTAL_RECORD_PROCESSED_COUNT, loopCount);
 					
 					
 					logger.debug("Converting ChargeImportDto to Billing reference" + source.toString());
 
-					BillingReference result = billingReferenceRepo.findByBillingReference(source.getBillingReference());
-					if(result == null){
+					List<BillingReference> result = billingReferenceRepo.findByBillingReference(String.valueOf(source.getBillingReference()));
+					if(result.size() == 0 ){
 					
 					BillingReference billingReference = new BillingReference();
 					//TODO get correct ID
-					billingReference.setBillingReferenceID(111111L);		
-					billingReference.setAccountNumber(source.getAccountNumber());
-					billingReference.setOrderNumber(source.getOrderNumber());
+					
+					if(source.getActionCode() == null)
+						throw new RecordAlreadyExistsException("Fail - No Action Code" );
+					
+					if(source.getItemType() == null)
+						throw new RecordAlreadyExistsException("Fail - No Itemtype" );
+					
+									
+					billingReference.setBillingReferenceID(111111L);					
+					billingReference.setOrderNumber(String.valueOf(source.getOrderNumber()));
 					billingReference.setServiceCode(source.getServiceCode());
-					billingReference.setBillingReference(source.getBillingReference());
-					billingReference.setBillingReferenceDescription(source.getBillingReferenceDesc());
+					
 					billingReference.setGCISalesManager(source.getGciSalesManager());
 					
 					billingReference.setBillingReferenceCreateUser(source.getItemType());
 					billingReference.setCustomerCostCentre(source.getActionCode());
 					LocalDateTime time = LocalDateTime.from(LocalDate.parse("22/04/2017", formatter).atStartOfDay());
-					billingReference.setBillingReferenceStartDate(time);
+					billingReference.setBillingReferenceStartDate(source.getCustomerServiceStartDate());
 					billingReference.setBillingReferenceEndDate(time);
 					//billingReference.setBillingReferenceEndDate(LocalDateTime.from(LocalDate.parse(source.getCustomerServiceEndDate(),formatter),atStartOfDay()));
 					
@@ -90,31 +97,18 @@ public class ChargeImportDtoToBillingReference extends BaseEntity {
 				 	billingReference.setCustomerID(2222L);
 				 	
 				 	//Default data
-				 	billingReference.setAccountNumber("2222");
-				 	billingReference.setBillingReference("22222");
-				 	billingReference.setBillingReferenceDescription("22222");
+				 	billingReference.setAccountNumber(source.getAccountNumber());
+				 	billingReference.setBillingReference(source.getBillingReference());
+				 	billingReference.setBillingReferenceDescription(source.getBillingReferenceDesc());
 				 
-				 	List<CustomerProductCharge> CustomerProductChargeList= new ArrayList<>();
+				 	//Code to add the customer product charge
+				 	
+				 	/*List<CustomerProductCharge> CustomerProductChargeList= new ArrayList<>();
 				 	
 				 	CustomerProductCharge customerproductCharge= new CustomerProductCharge();
 				 	customerproductCharge.setCustomerID(12345L);
 				 	customerproductCharge.setBillingReference(billingReference);
-				 	//TODO
-				  //customerproductCharge.setCustomerProductChargeID(Long.valueOf(source.getProductCode()));
 				 	
-				 	//Default data
-				 	//customerproductCharge.setChargeInstanceDescription(source.getDescription());				 	
-				 //	customerproductCharge.setCustomerCustomReference(source.getCustomerReference());			
-
-				 //	customerproductCharge.setOrderNumber(source.getOrderNumber());
-				 //TODO	
-				   //customerproductCharge.setChargeQuantity(Long.parseLong(source.getQuantity()));
-				 	//TODO
-				 	//customerproductCharge.setProductChargeFrequencyID(Short.valueOf(source.getChargeFrequency()));
-				 	//customerproductCharge.setUnitCostToGCI(new BigDecimal(source.getUnitCostToGCI()));
-				 	//	customerproductCharge.setUnitChargeToCustomer(new BigDecimal(source.getUnitChargeToCustomer()));
-				 	
-				 //	customerproductCharge.setChargeTaxTypeFlag(Short.valueOf(source.getTaxTypeFlag()));
 				 	customerproductCharge.setChargeStartDate(time);
 				 	customerproductCharge.setChargeEndDate(time);
 				 	customerproductCharge.setChargeBilledUntil(time);
@@ -128,19 +122,63 @@ public class ChargeImportDtoToBillingReference extends BaseEntity {
 				 	CustomerProductChargeList.add(customerproductCharge);
 				 	billingReference.setCustomerProductCharge(CustomerProductChargeList);
 				 	
+				 	logger.debug("Converted cdr " + customerproductCharge.toString());
+				 	*/
+				 	
+				 	//TODO
+				  //customerproductCharge.setCustomerProductChargeID(Long.valueOf(source.getProductCode()));
+				 	
+				 	//Default data
+				 	//customerproductCharge.setChargeInstanceDescription(source.getDescription());				 	
+				   //	customerproductCharge.setCustomerCustomReference(source.getCustomerReference());			
+
+				   //	customerproductCharge.setOrderNumber(source.getOrderNumber());
+				   //TODO	
+				   //customerproductCharge.setChargeQuantity(Long.parseLong(source.getQuantity()));
+				   //TODO
+				   //customerproductCharge.setProductChargeFrequencyID(Short.valueOf(source.getChargeFrequency()));
+				   //customerproductCharge.setUnitCostToGCI(new BigDecimal(source.getUnitCostToGCI()));
+				   //	customerproductCharge.setUnitChargeToCustomer(new BigDecimal(source.getUnitChargeToCustomer()));
+				 	
+				   //	customerproductCharge.setChargeTaxTypeFlag(Short.valueOf(source.getTaxTypeFlag()));
+
+				 	
 				 	
 					//	billingReference.setSupplierReference_1(source.getSupplier());
-					logger.debug("Converted cdr " + customerproductCharge.toString());
+					
 					cdrs.add(billingReference);
+					BillingReference billingReferencePersist = billingReferenceRepo.save(billingReference);
+					//cdrs.add(billingReference);
 					}
-					else 
-						throw new RecordAlreadyExistsException("Record Already exists with this BIlling Reference");
+					else {
+					  //=result.getBillingReferenceStartDate();
+					  //  =result.getBillingReferenceEndDate();
+						
+					boolean isValidBillingReference=	BillingReferenceValidator.billingReferenceValidation(result,source);
+					if(isValidBillingReference == false)
+						ex.setException(new RecordAlreadyExistsException("Record Already exists with this BIlling Reference",loopCount,ex)); 
+						throw new RecordAlreadyExistsException("Record Already exists with this BIlling Reference",loopCount,ex );
+					}
 				}
 				
 				
 			return cdrs;
 			
 			}
+			
+			
+		/*	public boolean ValidateBillingReference(BillingReference billingReference)
+			{
+				boolean isValid = false;
+				
+			//Validation pseudocode
+		//	LocalDateTime today= LocalDateTime.now(); 
+			//			today.isBefore(XXXX));
+						
+						
+				returnisValid;
+			}
+			*/
 	
 	
 }

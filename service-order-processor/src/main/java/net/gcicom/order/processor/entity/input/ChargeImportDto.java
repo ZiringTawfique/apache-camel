@@ -4,6 +4,8 @@
 package net.gcicom.order.processor.entity.input;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
@@ -29,7 +31,7 @@ public class ChargeImportDto {
 	String accountNumber;
 	
 	@DataField(pos = 5, required = false)
-	double nodeName;
+	String nodeName;
 		
 	@DataField(pos = 6, required = false)
 	String orderNumber;
@@ -51,10 +53,10 @@ public class ChargeImportDto {
 	String gciSalesManager;
 	
 	@DataField(pos = 12, required = false)
-	String customerServiceStartDate;
+	LocalDateTime customerServiceStartDate;
 	
 	@DataField(pos=13, required=false)
-	String customerServiceEndDate;
+	LocalDateTime customerServiceEndDate;
 	
 	
 	@DataField(pos = 14, required = false)
@@ -92,74 +94,74 @@ public class ChargeImportDto {
 	String supplierServiceReference;
 	
 	@DataField(pos=25, required=false)
-	String ProductCode;
+	String productCode;
 	
 	@DataField(pos=26, required=false)
-	String Description;
+	String description;
 	
 	@DataField(pos=27, required=false)
-	String CustomerReference;
+	String customerReference;
 	
 	@DataField(pos=28, required=false)
-	String OrderNumber;
+	String chargeOrderNumber;
 	
 	@DataField(pos=29, required=false)
-	String Quantity;
+	String quantity;
 	
 	@DataField(pos=30, required=false)
-	String ChargeFrequency;
+	String chargeFrequency;
 	
 	@DataField(pos=31, required=false)
-	String UnitCostToGCI;
+	String unitCostToGCI;
 	
 	@DataField(pos=32, required=false)
-	String UnitChargeToCustomer;
+	String unitChargeToCustomer;
 	
 	@DataField(pos=33, required=false)
-	String TaxTypeFlag;
+	String taxTypeFlag;
 	
 	@DataField(pos=34, required=false)
-	String ChargeStartDate;
+	String chargeStartDate;
 	
 	@DataField(pos=35, required=false)
-	String ChargeCeaseDate;
+	String chargeCeaseDate;
 	
 	@DataField(pos=36, required=false)
-	String ChargeBilledUntilDate;
+	String chargeBilledUntilDate;
 	
 	@DataField(pos=37, required=false)
-	String SupplierContractStartDate;
+	String chargeSupplierContractStartDate;
 	
 	@DataField(pos=38, required=false)
-	String SupplierContractEndDate;
+	String chargeSupplierContractEndDate;
 	
 	@DataField(pos=39, required=false)
-	String CustomerContractStartDate;
+	String chargeCustomerContractStartDate;
 	
 	@DataField(pos=40, required=false)
-	String CustomerContractEndDate;
+	String chargeCustomerContractEndDate;
 	
 	@DataField(pos=41, required=false)
-	String ChargeID;
-	
+	String chargeID;
+		
+	String exceptionMessage;
 
 
 
-
-	public String getCustomerServiceStartDate() {
+	public LocalDateTime getCustomerServiceStartDate() {
 		return customerServiceStartDate;
 	}
 
-	public void setCustomerServiceStartDate(String customerServiceStartDate) {
+	public void setCustomerServiceStartDate(LocalDateTime customerServiceStartDate) {
 		this.customerServiceStartDate = customerServiceStartDate;
 	}
 	
 	
-	public String getCustomerServiceEndDate() {
+	public LocalDateTime getCustomerServiceEndDate() {
 		return customerServiceEndDate;
 	}
 
-	public void setCustomerServiceEndDate(String customerServiceEndDate) {
+	public void setCustomerServiceEndDate(LocalDateTime customerServiceEndDate) {
 		this.customerServiceEndDate = customerServiceEndDate;
 	}
 
@@ -206,11 +208,11 @@ public class ChargeImportDto {
 	
 	
 	
-	public double getNodeName() {
+	public String getNodeName() {
 		return nodeName;
 	}
 
-	public void setNodeName(double nodeName) {
+	public void setNodeName(String nodeName) {
 		this.nodeName = nodeName;
 	}
 
@@ -263,12 +265,12 @@ public class ChargeImportDto {
 	}
 	
 	
-	public String getSupplierContractStartDate() {
+	public String getChargeSupplierContractStartDate() {
 		return supplierContractStartDate;
 	}
 
-	public void setSupplierContractStartDate(String supplierContractStartDate) {
-		this.supplierContractStartDate = supplierContractStartDate;
+	public void setChargeSupplierContractStartDate(String chargeSupplierContractStartDate) {
+		this.chargeSupplierContractStartDate = chargeSupplierContractStartDate;
 	}
 
 	public String getSupplierContractEndDate() {
@@ -354,102 +356,151 @@ public class ChargeImportDto {
 	
 
 	public String getProductCode() {
-		return ProductCode;
+		return productCode;
 	}
 
 	public void setProductCode(String productCode) {
-		ProductCode = productCode;
+		this.productCode = productCode;
 	}
 
 	public String getDescription() {
-		return Description;
+		return description;
 	}
 
 	public void setDescription(String description) {
-		Description = description;
+		this.description = description;
 	}
 
 	public String getCustomerReference() {
-		return CustomerReference;
+		return customerReference;
 	}
 
 	public void setCustomerReference(String customerReference) {
-		CustomerReference = customerReference;
+		this.customerReference = customerReference;
+	}
+
+	public String getChargeOrderNumber() {
+		return chargeOrderNumber;
+	}
+
+	public void setChargeOrderNumber(String chargeOrderNumber) {
+		this.chargeOrderNumber = chargeOrderNumber;
 	}
 
 	public String getQuantity() {
-		return Quantity;
+		return quantity;
 	}
 
 	public void setQuantity(String quantity) {
-		Quantity = quantity;
+		this.quantity = quantity;
 	}
 
 	public String getChargeFrequency() {
-		return ChargeFrequency;
+		return chargeFrequency;
 	}
 
 	public void setChargeFrequency(String chargeFrequency) {
-		ChargeFrequency = chargeFrequency;
+		this.chargeFrequency = chargeFrequency;
 	}
 
 	public String getUnitCostToGCI() {
-		return UnitCostToGCI;
+		return unitCostToGCI;
 	}
 
 	public void setUnitCostToGCI(String unitCostToGCI) {
-		UnitCostToGCI = unitCostToGCI;
+		this.unitCostToGCI = unitCostToGCI;
 	}
 
 	public String getUnitChargeToCustomer() {
-		return UnitChargeToCustomer;
+		return unitChargeToCustomer;
 	}
 
 	public void setUnitChargeToCustomer(String unitChargeToCustomer) {
-		UnitChargeToCustomer = unitChargeToCustomer;
+		this.unitChargeToCustomer = unitChargeToCustomer;
 	}
 
 	public String getTaxTypeFlag() {
-		return TaxTypeFlag;
+		return taxTypeFlag;
 	}
 
 	public void setTaxTypeFlag(String taxTypeFlag) {
-		TaxTypeFlag = taxTypeFlag;
+		this.taxTypeFlag = taxTypeFlag;
 	}
 
 	public String getChargeStartDate() {
-		return ChargeStartDate;
+		return chargeStartDate;
 	}
 
 	public void setChargeStartDate(String chargeStartDate) {
-		ChargeStartDate = chargeStartDate;
+		this.chargeStartDate = chargeStartDate;
 	}
 
 	public String getChargeCeaseDate() {
-		return ChargeCeaseDate;
+		return chargeCeaseDate;
 	}
 
 	public void setChargeCeaseDate(String chargeCeaseDate) {
-		ChargeCeaseDate = chargeCeaseDate;
+		this.chargeCeaseDate = chargeCeaseDate;
 	}
 
 	public String getChargeBilledUntilDate() {
-		return ChargeBilledUntilDate;
+		return chargeBilledUntilDate;
 	}
 
 	public void setChargeBilledUntilDate(String chargeBilledUntilDate) {
-		ChargeBilledUntilDate = chargeBilledUntilDate;
+		this.chargeBilledUntilDate = chargeBilledUntilDate;
+	}
+
+	public String getSupplierContractStartDate() {
+		return supplierContractStartDate;
+	}
+
+	public void setSupplierContractStartDate(String supplierContractStartDate) {
+		this.supplierContractStartDate = supplierContractStartDate;
+	}
+
+	public String getChargeSupplierContractEndDate() {
+		return chargeSupplierContractEndDate;
+	}
+
+	public void setChargeSupplierContractEndDate(String chargeSupplierContractEndDate) {
+		this.chargeSupplierContractEndDate = chargeSupplierContractEndDate;
+	}
+
+	public String getChargeCustomerContractStartDate() {
+		return chargeCustomerContractStartDate;
+	}
+
+	public void setChargeCustomerContractStartDate(String chargeCustomerContractStartDate) {
+		this.chargeCustomerContractStartDate = chargeCustomerContractStartDate;
+	}
+
+	public String getChargeCustomerContractEndDate() {
+		return chargeCustomerContractEndDate;
+	}
+
+	public void setChargeCustomerContractEndDate(String chargeCustomerContractEndDate) {
+		this.chargeCustomerContractEndDate = chargeCustomerContractEndDate;
 	}
 
 	public String getChargeID() {
-		return ChargeID;
+		return chargeID;
 	}
 
 	public void setChargeID(String chargeID) {
-		ChargeID = chargeID;
+		this.chargeID = chargeID;
 	}
 
-	
+
+
+	public String getExceptionMessage() {
+		return exceptionMessage;
+	}
+
+	public void setExceptionMessage(String exceptionMessage) {
+		this.exceptionMessage = exceptionMessage;
+	}
+
 
 
 	String supplier = "GCI";
