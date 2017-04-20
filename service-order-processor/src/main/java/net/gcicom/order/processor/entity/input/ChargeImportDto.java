@@ -60,16 +60,16 @@ public class ChargeImportDto {
 	
 	
 	@DataField(pos = 14, required = false)
-	String supplierContractStartDate;
+	LocalDateTime supplierContractStartDate;
 	
 	@DataField(pos=15, required=false)
-	String supplierContractEndDate;
+	LocalDateTime supplierContractEndDate;
 	
 	@DataField(pos=16, required=false)
-	String customerContractStartDate;
+	LocalDateTime customerContractStartDate;
 	
 	@DataField(pos=17, required=false)
-	String customerContractEndDate;
+	LocalDateTime customerContractEndDate;
 	
 	@DataField(pos=18, required=false)
 	String customerSiteName;
@@ -127,19 +127,19 @@ public class ChargeImportDto {
 	String chargeCeaseDate;
 	
 	@DataField(pos=36, required=false)
-	String chargeBilledUntilDate;
+	LocalDateTime chargeBilledUntilDate;
 	
 	@DataField(pos=37, required=false)
-	String chargeSupplierContractStartDate;
+	LocalDateTime chargeSupplierContractStartDate;
 	
 	@DataField(pos=38, required=false)
-	String chargeSupplierContractEndDate;
+	LocalDateTime chargeSupplierContractEndDate;
 	
 	@DataField(pos=39, required=false)
-	String chargeCustomerContractStartDate;
+	LocalDateTime chargeCustomerContractStartDate;
 	
 	@DataField(pos=40, required=false)
-	String chargeCustomerContractEndDate;
+	LocalDateTime chargeCustomerContractEndDate;
 	
 	@DataField(pos=41, required=false)
 	String chargeID;
@@ -265,35 +265,35 @@ public class ChargeImportDto {
 	}
 	
 	
-	public String getChargeSupplierContractStartDate() {
+	public LocalDateTime getChargeSupplierContractStartDate() {
 		return supplierContractStartDate;
 	}
 
-	public void setChargeSupplierContractStartDate(String chargeSupplierContractStartDate) {
+	public void setChargeSupplierContractStartDate(LocalDateTime chargeSupplierContractStartDate) {
 		this.chargeSupplierContractStartDate = chargeSupplierContractStartDate;
 	}
 
-	public String getSupplierContractEndDate() {
+	public LocalDateTime getSupplierContractEndDate() {
 		return supplierContractEndDate;
 	}
 
-	public void setSupplierContractEndDate(String supplierContractEndDate) {
+	public void setSupplierContractEndDate(LocalDateTime supplierContractEndDate) {
 		this.supplierContractEndDate = supplierContractEndDate;
 	}
 
-	public String getCustomerContractStartDate() {
+	public LocalDateTime getCustomerContractStartDate() {
 		return customerContractStartDate;
 	}
 
-	public void setCustomerContractStartDate(String customerContractStartDate) {
+	public void setCustomerContractStartDate(LocalDateTime customerContractStartDate) {
 		this.customerContractStartDate = customerContractStartDate;
 	}
 
-	public String getCustomerContractEndDate() {
+	public LocalDateTime getCustomerContractEndDate() {
 		return customerContractEndDate;
 	}
 
-	public void setCustomerContractEndDate(String customerContractEndDate) {
+	public void setCustomerContractEndDate(LocalDateTime customerContractEndDate) {
 		this.customerContractEndDate = customerContractEndDate;
 	}
 
@@ -443,43 +443,43 @@ public class ChargeImportDto {
 		this.chargeCeaseDate = chargeCeaseDate;
 	}
 
-	public String getChargeBilledUntilDate() {
+	public LocalDateTime getChargeBilledUntilDate() {
 		return chargeBilledUntilDate;
 	}
 
-	public void setChargeBilledUntilDate(String chargeBilledUntilDate) {
+	public void setChargeBilledUntilDate(LocalDateTime chargeBilledUntilDate) {
 		this.chargeBilledUntilDate = chargeBilledUntilDate;
 	}
 
-	public String getSupplierContractStartDate() {
+	public LocalDateTime getSupplierContractStartDate() {
 		return supplierContractStartDate;
 	}
 
-	public void setSupplierContractStartDate(String supplierContractStartDate) {
+	public void setSupplierContractStartDate(LocalDateTime supplierContractStartDate) {
 		this.supplierContractStartDate = supplierContractStartDate;
 	}
 
-	public String getChargeSupplierContractEndDate() {
+	public LocalDateTime getChargeSupplierContractEndDate() {
 		return chargeSupplierContractEndDate;
 	}
 
-	public void setChargeSupplierContractEndDate(String chargeSupplierContractEndDate) {
+	public void setChargeSupplierContractEndDate(LocalDateTime chargeSupplierContractEndDate) {
 		this.chargeSupplierContractEndDate = chargeSupplierContractEndDate;
 	}
 
-	public String getChargeCustomerContractStartDate() {
+	public LocalDateTime getChargeCustomerContractStartDate() {
 		return chargeCustomerContractStartDate;
 	}
 
-	public void setChargeCustomerContractStartDate(String chargeCustomerContractStartDate) {
+	public void setChargeCustomerContractStartDate(LocalDateTime chargeCustomerContractStartDate) {
 		this.chargeCustomerContractStartDate = chargeCustomerContractStartDate;
 	}
 
-	public String getChargeCustomerContractEndDate() {
+	public LocalDateTime getChargeCustomerContractEndDate() {
 		return chargeCustomerContractEndDate;
 	}
 
-	public void setChargeCustomerContractEndDate(String chargeCustomerContractEndDate) {
+	public void setChargeCustomerContractEndDate(LocalDateTime chargeCustomerContractEndDate) {
 		this.chargeCustomerContractEndDate = chargeCustomerContractEndDate;
 	}
 

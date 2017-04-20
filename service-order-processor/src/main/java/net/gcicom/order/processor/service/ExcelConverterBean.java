@@ -19,6 +19,7 @@ import java.time.format.ResolverStyle;
 import javax.xml.datatype.DatatypeFactory;
 import org.apache.camel.Body;
 import org.apache.camel.Exchange;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -46,7 +47,10 @@ public class ExcelConverterBean {
     private final static Log log = LogFactory.getLog(ExcelConverterBean.class);
 
     public List<ChargeImportDto> processExcelData(@Body InputStream inputStream,Exchange ex) throws IOException {
-    	
+    	DataFormatter formatter = new DataFormatter(); //creating formatter using the default locale
+   	    SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yy");
+   	    
+   	    
     	    List<ChargeImportDto> chargeImportDtoList = new ArrayList<>();    	    
     	 
     	    Workbook workbook = new XSSFWorkbook(inputStream);
@@ -135,122 +139,139 @@ public class ExcelConverterBean {
   	            	chargeImportDto.setCustomerServiceStartDate(DtFormat.format(date).toString() );   */	 
     	            //	Date date=nextCell.getDateCellValue();
     	            	
-    	            	DataFormatter formatter = new DataFormatter(); //creating formatter using the default locale
+
     	            	// Cell cell = sheet.getRow(i).getCell(0);
     	            	 String dateAsString = formatter.formatCellValue(nextCell); //R
-    	            	 SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yy");
+    	            	
     	            	 
     	            	LocalDateTime customerServiceStartDateLocalDateTime=DateTimeUtil.convertStringToLocalDateTime(dateAsString,dateFormatter);
     	            //	 LocalDateTime   customerServiceStartDateLocalDateTime = LocalDateTime.parse(date.toString(),dateTimeFormatter);
     	            	 chargeImportDto.setCustomerServiceStartDate(customerServiceStartDateLocalDateTime);
     	            	
     	                break;
-    	          /* case 12:
-    	            	chargeImportDto.setCustomerServiceEndDate((String) getCellValue(nextCell));    	            		
+    	          case 12:   
+    	        	    dateAsString = formatter.formatCellValue(nextCell);
+    	        	    LocalDateTime customerServiceEndDateLocalDateTime=null;
+    	        	    if (!(StringUtils.isBlank(dateAsString) && StringUtils.isEmpty(dateAsString) )){
+    	        	     customerServiceEndDateLocalDateTime=DateTimeUtil.convertStringToLocalDateTime(formatter.formatCellValue(nextCell),dateFormatter);
+    	        	    }
+    	            	chargeImportDto.setCustomerServiceEndDate(customerServiceEndDateLocalDateTime);    	            		
     	                break;
     	            case 13:
-    	            	chargeImportDto.setSupplierContractStartDate((String) getCellValue(nextCell));    	            		
+    	            	LocalDateTime supplierContractStartDateLocalDateTime=DateTimeUtil.convertStringToLocalDateTime(formatter.formatCellValue(nextCell),dateFormatter);
+    	            	chargeImportDto.setSupplierContractStartDate(supplierContractStartDateLocalDateTime);    	            		
     	                break;
     	            case 14:
-    	            	chargeImportDto.setSupplierContractEndDate((String) getCellValue(nextCell));    	            		
+    	            	LocalDateTime supplierContractEndDateLocalDateTime=DateTimeUtil.convertStringToLocalDateTime(formatter.formatCellValue(nextCell),dateFormatter);
+    	            	chargeImportDto.setSupplierContractEndDate(supplierContractEndDateLocalDateTime);    	            		
     	                break;
     	                
     	                     
+    	            case 15:
+    	            	LocalDateTime customerContractStartDateLocalDateTime=DateTimeUtil.convertStringToLocalDateTime(formatter.formatCellValue(nextCell),dateFormatter);
+    	            	chargeImportDto.setCustomerContractStartDate(customerContractStartDateLocalDateTime);    	            		
+    	                break;
     	            case 16:
-    	            	chargeImportDto.setCustomerContractStartDate((String) getCellValue(nextCell));    	            		
+    	            	LocalDateTime customerContractEndDateLocalDateTime=DateTimeUtil.convertStringToLocalDateTime(formatter.formatCellValue(nextCell),dateFormatter);
+    	            	chargeImportDto.setCustomerContractEndDate(customerContractEndDateLocalDateTime);    	            		
     	                break;
+    	               
+    	               
     	            case 17:
-    	            	chargeImportDto.setCustomerContractEndDate((String) getCellValue(nextCell));    	            		
-    	                break;
-    	            case 18:
     	            	chargeImportDto.setCustomerSiteName((String) getCellValue(nextCell));    	            		
     	                break;
-    	            case 19:
+    	            case 18:
     	            	chargeImportDto.setCustomerCustomReference((String) getCellValue(nextCell));    	            		
     	                break;
-    	            case 20:
+    	            case 19:
     	            	chargeImportDto.setCustomerCostCentre((String) getCellValue(nextCell));    	            		
     	                break;
     	                
-    	                
+    	                     
     	                //TODO CHeck the value
-    	            case 21:
+    	            case 20:
     	            	chargeImportDto.setChargeOrderNumber((String) getCellValue(nextCell));    	            		
     	                break;
-    	            case 22:
+    	            case 21:
     	            	chargeImportDto.setInstallationPostCode((String) getCellValue(nextCell));    	            		
     	                break;
-    	            case 23:
+    	            case 22:
     	            	chargeImportDto.setSupplierOrderNumber((String) getCellValue(nextCell));    	            		
     	                break;
-    	            case 24:
+    	            case 23:
     	            	chargeImportDto.setSupplierServiceReference((String) getCellValue(nextCell));    	            		
     	                break;
-    	            case 25:
+    	               
+    	                
+    	                
+    	            case 24:
     	            	chargeImportDto.setProductCode((String) getCellValue(nextCell));    	            		
     	                break;
     	                
     	                
     	                
     	                
-    	            case 26:
+    	            case 25:
     	            	chargeImportDto.setDescription((String) getCellValue(nextCell));    	            		
     	                break;
-    	            case 27:
+    	            case 26:
     	            	chargeImportDto.setCustomerReference((String) getCellValue(nextCell));    	            		
     	                break;
-    	            case 28:
+    	            case 27:
     	            	chargeImportDto.setChargeOrderNumber((String) getCellValue(nextCell));    	            		
     	                break;
-    	            case 29:
+    	            case 28:
     	            	chargeImportDto.setQuantity((String) getCellValue(nextCell));    	            		
     	                break;
-    	            case 30:
+    	            case 29:
     	            	chargeImportDto.setChargeFrequency((String) getCellValue(nextCell));    	            		
     	                break;
     	                
     	                
     	                   	                
-    	            case 31:
+    	            case 30:
     	            	chargeImportDto.setUnitCostToGCI((String) getCellValue(nextCell));    	            		
     	                break;
-    	            case 32:
+    	            case 31:
     	            	chargeImportDto.setUnitChargeToCustomer((String) getCellValue(nextCell));    	            		
     	                break;
-    	            case 33:
+    	            case 32:
     	            	chargeImportDto.setTaxTypeFlag((String) getCellValue(nextCell));    	            		
     	                break;
-    	            case 34:
+    	            case 33:
     	            	chargeImportDto.setChargeStartDate((String) getCellValue(nextCell));    	            		
     	                break;
-    	            case 35:
+    	            case 34:
     	            	chargeImportDto.setChargeCeaseDate((String) getCellValue(nextCell));    	            		
     	                break;
     	                
     	                
-    	                
-    	                
+    	            case 35:
+    	            LocalDateTime chargeBilledUntilDateLocalDateTime=DateTimeUtil.convertStringToLocalDateTime(formatter.formatCellValue(nextCell),dateFormatter);
+    	            	chargeImportDto.setChargeBilledUntilDate(chargeBilledUntilDateLocalDateTime);    	            		
+    	                break;
     	            case 36:
-    	            	chargeImportDto.setChargeBilledUntilDate((String) getCellValue(nextCell));    	            		
+    	            LocalDateTime chargeSupplierContractStartDateLocalDateTime=DateTimeUtil.convertStringToLocalDateTime(formatter.formatCellValue(nextCell),dateFormatter);
+    	            	chargeImportDto.setChargeSupplierContractStartDate(chargeSupplierContractStartDateLocalDateTime);    	            		
     	                break;
     	            case 37:
-    	            	chargeImportDto.setChargeSupplierContractStartDate((String) getCellValue(nextCell));    	            		
+    	            LocalDateTime chargeSupplierContractEndDateLocalDateTime=DateTimeUtil.convertStringToLocalDateTime(formatter.formatCellValue(nextCell),dateFormatter);
+    	            	chargeImportDto.setChargeSupplierContractEndDate(chargeSupplierContractEndDateLocalDateTime);    	            		
     	                break;
     	            case 38:
-    	            	chargeImportDto.setChargeSupplierContractEndDate((String) getCellValue(nextCell));    	            		
+    	            LocalDateTime chargeCustomerContractStartDateLocalDateTime=DateTimeUtil.convertStringToLocalDateTime(formatter.formatCellValue(nextCell),dateFormatter);
+    	            	chargeImportDto.setChargeCustomerContractStartDate(chargeCustomerContractStartDateLocalDateTime);    	            		
     	                break;
     	            case 39:
-    	            	chargeImportDto.setChargeCustomerContractStartDate((String) getCellValue(nextCell));    	            		
+    	            LocalDateTime chargeCustomerContractEndDateLocalDateTime=DateTimeUtil.convertStringToLocalDateTime(formatter.formatCellValue(nextCell),dateFormatter);
+    	            	chargeImportDto.setCustomerContractEndDate(chargeCustomerContractEndDateLocalDateTime);    	            		
     	                break;
-    	            case 40:
-    	            	chargeImportDto.setCustomerContractEndDate((String) getCellValue(nextCell));    	            		
-    	                break;
-    	           case 41:
+    	           case 40:
     	            	chargeImportDto.setChargeID((String) getCellValue(nextCell));    	            		
     	                break;      
     	                
     	                
-    	         */
+    	         
     	               
     	                
     	            }

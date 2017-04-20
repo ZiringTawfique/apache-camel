@@ -66,28 +66,50 @@ public class ChargeImportDtoToBillingReference extends BaseEntity {
 					if(source.getItemType() == null)
 						throw new RecordAlreadyExistsException("Fail - No Itemtype" );
 					
+					if(source.getCustomerName() == null)
+						throw new RecordAlreadyExistsException("Fail - No Customer Name" );
+					
+					if(source.getAccountNumber() == null)
+						throw new RecordAlreadyExistsException("Fail - No Account Number" );
+					
+					if(source.getNodeName() == null)
+						throw new RecordAlreadyExistsException("Fail - No Node Name" );
+					
+					if(source.getServiceCode() == null)
+					throw new RecordAlreadyExistsException("Fail - No Service Code" );
+					
+					if(source.getBillingReference() == null)
+						throw new RecordAlreadyExistsException("Fail - No Billing Reference " );
+					
 					if(source.getBillingReferenceDesc() == null)
 						throw new RecordAlreadyExistsException("Fail - No Billing Reference Description" );
+					
+					if(source.getCustomerServiceStartDate() == null)
+						throw new RecordAlreadyExistsException("Fail - No  Customer Service Start Date" );
+				
 					
 									
 					billingReference.setBillingReferenceID(111111L);					
 					billingReference.setOrderNumber(String.valueOf(source.getOrderNumber()));
 					billingReference.setServiceCode(source.getServiceCode());
-					
+					//Default data
+				 	billingReference.setAccountNumber(source.getAccountNumber());
+				 	billingReference.setBillingReference(source.getBillingReference());
+				 	billingReference.setBillingReferenceDescription(source.getBillingReferenceDesc());	
 					billingReference.setGCISalesManager(source.getGciSalesManager());
 					
 					billingReference.setBillingReferenceCreateUser(source.getItemType());
 					billingReference.setCustomerCostCentre(source.getActionCode()); 
 					LocalDateTime time = LocalDateTime.from(LocalDate.parse("22/04/2017", formatter).atStartOfDay());
 					billingReference.setBillingReferenceStartDate(source.getCustomerServiceStartDate());
-					billingReference.setBillingReferenceEndDate(time);
+					billingReference.setBillingReferenceEndDate(source.getCustomerServiceEndDate());
 					//billingReference.setBillingReferenceEndDate(LocalDateTime.from(LocalDate.parse(source.getCustomerServiceEndDate(),formatter),atStartOfDay()));
 					
-					billingReference.setSupplierContractEndDate(time);
-					billingReference.setSupplierContractStartDate(time);
+					billingReference.setSupplierContractEndDate(source.getSupplierContractEndDate());
+					billingReference.setSupplierContractStartDate(source.getSupplierContractStartDate());
 				  
-				 	billingReference.setCustomerContractStartDate(time);
-				 	billingReference.setCustomerContractEndDate(time);
+				 	billingReference.setCustomerContractStartDate(source.getCustomerContractStartDate());
+				 	billingReference.setCustomerContractEndDate(source.getCustomerContractEndDate());
 				 	
 				 	billingReference.setCustomerSiteName(source.getCustomerSiteName());
 				 	billingReference.setCustomerCustomReference(source.getCustomerCustomReference());
@@ -99,10 +121,7 @@ public class ChargeImportDtoToBillingReference extends BaseEntity {
 				 	billingReference.setSupplierServiceReference(source.getSupplierServiceReference());
 				 	billingReference.setCustomerID(2222L);
 				 	
-				 	//Default data
-				 	billingReference.setAccountNumber(source.getAccountNumber());
-				 	billingReference.setBillingReference(source.getBillingReference());
-				 	billingReference.setBillingReferenceDescription(source.getBillingReferenceDesc());
+				 	
 				 
 				 	//Code to add the customer product charge
 				 	
