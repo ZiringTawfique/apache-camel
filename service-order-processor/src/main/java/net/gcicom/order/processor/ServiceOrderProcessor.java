@@ -23,7 +23,7 @@ import net.gcicom.order.processor.entity.output.ChargeImportDtoToBillingReferenc
 import net.gcicom.order.processor.service.AlreadyProcessedFileException;
 //import net.gcicom.order.processor.service.Auditor;
 import net.gcicom.order.processor.service.BillingReferenceAggregator;
-import net.gcicom.order.processor.service.CDRProcessorErrorHandler;
+import net.gcicom.order.processor.service.ServiceOrderProcessorErrorHandler;
 //import net.gcicom.order.processor.service.ChargeImportAggregator;
 import net.gcicom.order.processor.service.CustomerProductChargeAggregator;
 import net.gcicom.order.processor.service.ExcelConverterBean;
@@ -115,7 +115,7 @@ public class ServiceOrderProcessor extends SpringRouteBuilder {
 		//Inital configuration 	
 		onException(Exception.class)
 		.logStackTrace(true)
-			.bean(CDRProcessorErrorHandler.class, "handleError")
+			.bean(ServiceOrderProcessorErrorHandler.class, "handleError")
 			.to(MOVE_FILE_ON_ERROR.concat(this.getClass().getCanonicalName()));
 
 		
@@ -129,7 +129,7 @@ public class ServiceOrderProcessor extends SpringRouteBuilder {
         		+ "&delay="+ nextRunDelay +"&include="+filePattern+"&noop="+isNoop+"&move=.success")
         	//	+ "moveFailed=.error")
         	.onException(AlreadyProcessedFileException.class)
-				.bean(CDRProcessorErrorHandler.class, "handleError")								 
+				.bean(ServiceOrderProcessorErrorHandler.class, "handleError")								 
         		.to("direct:move-error-file")
     		.end()
         	.log(LoggingLevel.INFO, logger, "START : Processing ${file:name} file")
@@ -151,7 +151,7 @@ public class ServiceOrderProcessor extends SpringRouteBuilder {
         from("direct:save-to-database")
 	        .onException(RecordAlreadyExistsException.class).useOriginalMessage()
 		    	.handled(true)
-		    	.bean(CDRProcessorErrorHandler.class, "handleRecordAlreadyExists")
+		    	.bean(ServiceOrderProcessorErrorHandler.class, "handleRecordAlreadyExists")
 		    	.log("Exception Thrown")
 	//	    	.bean(auditor, "handleEventInvalidCdr")
 		    .end()
@@ -169,11 +169,11 @@ public class ServiceOrderProcessor extends SpringRouteBuilder {
     			//.bindy(BindyType.Csv, ChargeImportDto.class)    		
     		
     			.bean(billingReferenceMapper, "convertToBillingReference")
-    		//	.bean(mapper, "convertToGCICDR(*, ${header."+ CDR_EVENT_FILE_ID +"}, ${header."+ FILE_NAME_CONSUMED +"})" )
-    	    // .aggregate(constant(true), customerProductChargeAggregator)
-             //.completionSize(batchSize)
-           //  .completionTimeout(aggregationTimeOut)//just in case cvs rows are less than batch size
-    	   //  .bean(service, "addBillingReference")
+    		  //	.bean(mapper, "convertToGCICDR(*, ${header."+ CDR_EVENT_FILE_ID +"}, ${header."+ FILE_NAME_CONSUMED +"})" )
+    	      // .aggregate(constant(true), customerProductChargeAggregator)
+               //.completionSize(batchSize)
+             //  .completionTimeout(aggregationTimeOut)//just in case cvs rows are less than batch size
+    	     //  .bean(service, "addBillingReference")
     			.log(LoggingLevel.DEBUG, logger, "END : Add CVS rows to table.");
  
 		from("direct:move-error-file")

@@ -70,6 +70,10 @@ public class ExcelConverterBean {
     	        if (nextRow.getRowNum() == 0 || nextRow.getRowNum()==1) {
                     continue;// skip first row, as it contains column names
                 }
+    	        if(nextRow.getRowNum() ==  totalRowsCount -1 || nextRow.getRowNum()== totalRowsCount -2)
+    	        {
+    	        	continue ;
+    	        }
     	        Iterator<Cell> cellIterator = nextRow.cellIterator();
     	        ChargeImportDto chargeImportDto = new ChargeImportDto();
     	        
