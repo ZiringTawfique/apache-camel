@@ -22,7 +22,10 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @PropertySource({"classpath:application.properties"})
@@ -39,9 +42,12 @@ public class DataSourceConfiguration {
     public LocalContainerEntityManagerFactoryBean allsparkEntityMF() {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(allsparkDS());
+        em.setPersistenceUnitName("allsparkEntityMF");
         em.setPackagesToScan(new String[] { "net.gcicom.domain.allspark" });
-        em.setPersistenceProvider(new HibernatePersistenceProvider());
+       // em.setPersistenceProvider(new HibernatePersistenceProvider());
 
+        HibernateJpaVendorAdapter a = new HibernateJpaVendorAdapter();
+        em.setJpaVendorAdapter(a);
         Properties p = hibernateSpecificProperties();
         p.setProperty("hibernate.ejb.entitymanager_factory_name", "allsparkEntityMF");
         em.setJpaProperties(p);
@@ -72,6 +78,14 @@ public class DataSourceConfiguration {
         
     	return p;
     	
+    }
+    
+    @Bean(name = "defaultTm")
+    public PlatformTransactionManager transactionManager() {
+    	
+    	JpaTransactionManager txManager = new JpaTransactionManager();
+    	txManager.setEntityManagerFactory(allsparkEntityMF().getObject());
+    	return txManager;
     }
 
 }

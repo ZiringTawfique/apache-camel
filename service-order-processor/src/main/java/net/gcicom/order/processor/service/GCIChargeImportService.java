@@ -71,7 +71,7 @@ public class GCIChargeImportService {
 		
 	}
 	*/
-	public void addBillingReference(List<BillingReference> cdrs) {
+	public void addBillingReferences(List<BillingReference> cdrs) {
 		
 		for (BillingReference cdr : cdrs) {
 			
@@ -84,6 +84,19 @@ public class GCIChargeImportService {
 
 		}
 	}
+	
+	public void addBillingReference(BillingReference cdr) {
+		
+	
+			//business validation here then just batch insert or insert in invalid cdr
+			logger.debug("Adding to db" + cdr.toString() );
+			
+			BillingReference result = billingReferenceRepo.save(cdr);
+			
+			logger.debug("Saved CDR " + result.toString() );
+
+		}
+	
 	
 	/*public void validateMd5(final @Header("CamelFileNameConsumed") String fileName, final @Body InputStream is) throws IOException, AlreadyProcessedFileException {
 		String METHOD_NAME="validateMd5";

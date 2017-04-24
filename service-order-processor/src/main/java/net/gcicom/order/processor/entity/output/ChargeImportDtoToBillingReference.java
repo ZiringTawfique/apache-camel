@@ -26,6 +26,7 @@ import net.gcicom.domain.allspark.BillingReference;
 import net.gcicom.domain.allspark.CustomerProductCharge;
 import net.gcicom.order.processor.entity.input.ChargeImportDto;
 import net.gcicom.order.processor.repository.BillingReferenceRepository;
+import net.gcicom.order.processor.service.GCIChargeImportService;
 import net.gcicom.order.processor.service.RecordAlreadyExistsException;
 import net.gcicom.order.processor.validator.BillingReferenceValidator;
 
@@ -35,7 +36,10 @@ public class ChargeImportDtoToBillingReference extends BaseEntity {
 			
 	@Autowired
 	BillingReferenceRepository billingReferenceRepo;
-		/**
+	
+	@Autowired
+	GCIChargeImportService gciImportService;
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
@@ -145,8 +149,10 @@ public class ChargeImportDtoToBillingReference extends BaseEntity {
 				 	
 					//	billingReference.setSupplierReference_1(source.getSupplier());
 					
-					cdrs.add(billingReference);
-					BillingReference billingReferencePersist = billingReferenceRepo.save(billingReference);
+					//cdrs.add(billingReference);
+					//BillingReference billingReferencePersist = billingReferenceRepo.save(billingReference);
+				 	
+				 	gciImportService.addBillingReference(billingReference);
 					//cdrs.add(billingReference);
 					}
 					else {
@@ -261,7 +267,32 @@ public class ChargeImportDtoToBillingReference extends BaseEntity {
 					
 					*/
 			}
+			
+			
+			
+			
+			
+			public static void BillingReferenceDateValidations(ChargeImportDto source) throws RecordAlreadyExistsException{
+				
+				if (source.getCustomerServiceStartDate().isBefore(source.getSupplierContractStartDate())	)	        		  
+						throw new RecordAlreadyExistsException("Fail - BillingReferenceStartDate cannot be before SupplierContractStartDate" );
 	
-	
-}
+				if (source.getCustomerContractStartDate().isBefore(source.getSupplierContractStartDate())	)	        		  
+					throw new RecordAlreadyExistsException("Fail - CustomerContractStartDate cannot be before SupplierContractStartDate" );
+	           
+			
+		      if (source.getSupplierContractEndDate().isBefore(source.getSupplierContractStartDate())	)	        		  
+				throw new RecordAlreadyExistsException("Fail - SupplierContractEndDate cannot be before SupplierContractStartDate" );
+		      
+		      if (source.getCustomerContractEndDate().isBefore(source.getCustomerContractStartDate())	)	        		  
+					throw new RecordAlreadyExistsException("Fail - CustomerContractEndDate cannot be before CustomerContractStartDate" );   
+		      
+              
+		      if (source.getCustomerContractStartDate().isBefore(source.getSupplierContractStartDate())	)	        		  
+					throw new RecordAlreadyExistsException("Fail - CustomerContractStartDate cannot be before SupplierContractStartDate" );
+		      
+            }
+			
+		
 
+}
