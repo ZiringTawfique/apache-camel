@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE xml>
+<configuration>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder
+			by default -->
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	    <file>${jboss.server.log.dir}/logFile.log</file>
+	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+	      <!-- daily rollover -->
+	      <fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+	
+	      <!-- keep 30 days' worth of history capped at 3GB total size -->
+	      <maxHistory>30</maxHistory>
+	    </rollingPolicy>
+	
+	    <encoder>
+	      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+	    </encoder>
+    </appender> 
+
+
+	<root level="info">
+		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
+	</root>
+	
+	<logger name="org.springframework" level="info" />
+	<logger name="org.springframework.orm.jpa" level="info"/>
+	<logger name="org.apache.camel" level="info" />
+	<logger name="org.apache.camel.impl.converter" leverl="info"/>
+	<logger name="net.gcicom" level="debug" />
+</configuration>
