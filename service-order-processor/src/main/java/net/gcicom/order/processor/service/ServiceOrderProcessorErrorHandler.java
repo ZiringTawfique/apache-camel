@@ -1,43 +1,24 @@
 package net.gcicom.order.processor.service;
 import static net.gcicom.order.processor.config.AppProperties.ERROR_FILE_LOCATION;
+import static net.gcicom.order.processor.service.ValidationTypes.RECORD_PROCESSING_ERROR;
+import static org.apache.camel.Exchange.FILE_NAME_CONSUMED;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.camel.Exchange;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import net.gcicom.order.processor.entity.input.ChargeImportDto;
 import net.gcicom.order.processor.entity.output.ExcelFileHelper;
-
-import static net.gcicom.order.processor.common.AppConstants.TOTAL_RECORD_COUNT;
-import static net.gcicom.order.processor.service.ValidationTypes.RECORD_PROCESSING_ERROR;
-
-import java.awt.print.Book;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
-import org.springframework.core.env.Environment;
-
-import static org.apache.camel.Exchange.FILE_NAME_CONSUMED;
 /**
  * Custom error handler to handle unknown errors and do error auditing  
  *TODO need more work
@@ -55,9 +36,7 @@ public class ServiceOrderProcessorErrorHandler {
 	@Value("${gci.service.order.file.out.location}")
 	private static String processedFileLocation;
 	
-	//Delimiter used in CSV file
-		private static final String COMMA_DELIMITER = ",";
-		private static final String NEW_LINE_SEPARATOR = "\n";
+
 		
 		static Map<String, Object[]> excelHeader = new HashMap<String, Object[]>();
 		
@@ -92,7 +71,7 @@ public class ServiceOrderProcessorErrorHandler {
 		
 	}
 	
-public void invalidRecord(Exchange e) {
+    public void invalidRecord(Exchange e) {
 		
 		logger.info("Handle Event" + e);
 		handleEvent(e,RECORD_PROCESSING_ERROR);
@@ -120,31 +99,8 @@ public void invalidRecord(Exchange e) {
 		          "SupplierServiceReference","ProductCode","Description","CustomerReference","OrderNumber","Quantity","ChargeFrequency","UnitCostToGCI","UnitChargeToCustomer",
 		          "TaxTypeFlag","ChargeStartDate","ChargeCeaseDate","ChargeBilledUntilDate","SupplierContractStartDate","SupplierContractEndDate","CustomerContractStartDate",
 		          "CustomerContractEndDate","ChargeID"});
-		 // data.put(i++,  exchange.getIn().getBody().toString());
-
-
-	/*	Throwable reason = exchange.getProperty(EXCEPTION_CAUGHT, Throwable.class);
-		if (reason != null) {
-			
-			logger.error("Handled event has following error \n", reason);
-			data.put("reason", reason.getMessage());
-			data.put("stacktrace", MessageFormat.format("Detail stack trace {0}", reason));
-			if (!(reason instanceof AlreadyProcessedFileException)) {
-				
-				data.put("cdr", exchange.getIn().getBody(String.class));
-			}
-			
-
-		} 
-	}
-	*/
-		/* int totalCount = (int)exchange.getIn().getHeader("TOTAL_RECORD_COUNT");
-		  
-	  int totalProcessedCount = (int)exchange.getIn().getHeader("TOTAL_RECORD_PROCESSED_COUNT");
 		
-		if(totalCount== totalCount){
-			writeCsvFile(data);
-		}*/
+	
 		 
 		 try {
 		

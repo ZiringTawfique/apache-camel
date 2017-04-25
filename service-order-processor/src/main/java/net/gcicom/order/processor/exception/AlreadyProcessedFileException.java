@@ -1,4 +1,4 @@
-package net.gcicom.order.processor.service;
+package net.gcicom.order.processor.exception;
 
 public class AlreadyProcessedFileException extends Exception {
 

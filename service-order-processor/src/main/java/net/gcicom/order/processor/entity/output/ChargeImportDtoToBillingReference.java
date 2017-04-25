@@ -2,33 +2,28 @@ package net.gcicom.order.processor.entity.output;
 
 
 
-import static net.gcicom.order.processor.common.AppConstants.TOTAL_RECORD_COUNT;
 import static net.gcicom.order.processor.common.AppConstants.TOTAL_RECORD_PROCESSED_COUNT;
+import static org.apache.camel.Exchange.FILE_NAME_CONSUMED;
 
-import java.io.InputStream;
-import java.math.BigDecimal;
 import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.apache.camel.Exchange;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import net.gcicom.domain.allspark.BillingReference;
-import net.gcicom.domain.allspark.CustomerProductCharge;
 import net.gcicom.order.processor.entity.input.ChargeImportDto;
+import net.gcicom.order.processor.exception.InvalidRecordException;
 import net.gcicom.order.processor.repository.BillingReferenceRepository;
+
+import net.gcicom.order.processor.service.FileManagementService;
 import net.gcicom.order.processor.service.GCIChargeImportService;
-import net.gcicom.order.processor.service.InvalidRecordException;
-import net.gcicom.order.processor.service.RecordAlreadyExistsException;
 import net.gcicom.order.processor.validator.BillingReferenceValidator;
 
 
@@ -40,6 +35,12 @@ public class ChargeImportDtoToBillingReference extends BaseEntity {
 	
 	@Autowired
 	GCIChargeImportService gciImportService;
+	
+	@Autowired
+	FileManagementService fileManagementService;
+	
+	@Autowired
+	Environment env;
 	/**
 	 * 
 	 */
@@ -48,11 +49,12 @@ public class ChargeImportDtoToBillingReference extends BaseEntity {
 	     DateTimeFormatter  formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		//SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-	
+	     List<ChargeImportDto> chargeImportDtoProcessed = new ArrayList<>();
 				
 			public List<BillingReference> convertToBillingReference(final List<ChargeImportDto> input, Exchange ex) throws ParseException, InvalidRecordException {
 				
 				List<BillingReference> cdrs = new ArrayList<>();
+				
                   int loopCount=0; 
 				for (ChargeImportDto source : input) {
 					loopCount++;
@@ -69,7 +71,12 @@ public class ChargeImportDtoToBillingReference extends BaseEntity {
 					
 					//ALl the field level  validation -NULL checks primarily 
 					BillingReferenceValidator.billingReferenceNullValidations(source);
+					
+					
+					//ALl the field level  validation -Allowed characters checks primarily 
 					BillingReferenceValidator.billingReferenceAllowedCharactersCheck(source);
+					
+					//ALl the field level  validation -Date validations checks primarily 
 					BillingReferenceValidator.billingReferenceDateValidations(source);
 									
 					billingReference.setBillingReferenceID(111111L);					
@@ -83,7 +90,7 @@ public class ChargeImportDtoToBillingReference extends BaseEntity {
 					
 					billingReference.setBillingReferenceCreateUser(source.getItemType());
 					billingReference.setCustomerCostCentre(source.getActionCode()); 
-					LocalDateTime time = LocalDateTime.from(LocalDate.parse("22/04/2017", formatter).atStartOfDay());
+					
 					billingReference.setBillingReferenceStartDate(source.getCustomerServiceStartDate());
 					billingReference.setBillingReferenceEndDate(source.getCustomerServiceEndDate());
 					//billingReference.setBillingReferenceEndDate(LocalDateTime.from(LocalDate.parse(source.getCustomerServiceEndDate(),formatter),atStartOfDay()));
@@ -151,7 +158,8 @@ public class ChargeImportDtoToBillingReference extends BaseEntity {
 				 	
 					//	billingReference.setSupplierReference_1(source.getSupplier());
 					
-					//cdrs.add(billingReference);
+					cdrs.add(billingReference);
+					chargeImportDtoProcessed.add(source);
 					//BillingReference billingReferencePersist = billingReferenceRepo.save(billingReference);
 				 	
 				 	gciImportService.addBillingReference(billingReference);
@@ -167,37 +175,17 @@ public class ChargeImportDtoToBillingReference extends BaseEntity {
 						throw new InvalidRecordException("Record Already exists with this BIlling Reference",loopCount,ex );
 					}
 				}
-				
+			   	 StringBuilder fileName = ex.getIn().getHeader(FILE_NAME_CONSUMED, StringBuilder.class);
+				 fileManagementService.createProcessedFile(chargeImportDtoProcessed,fileName.toString());
 				
 			return cdrs;
 			
 			}
 			
 			
-		/*	public boolean ValidateBillingReference(BillingReference billingReference)
-			{
-				boolean isValid = false;
-				
-			//Validation pseudocode
-		//	LocalDateTime today= LocalDateTime.now(); 
-			//			today.isBefore(XXXX));
-						
-						
-				returnisValid;
-			}
-			*/
-			
-	
-	
 			
 			
-		
+			 
 			
-			
-			
-			
-			
-			
-		
 
 }

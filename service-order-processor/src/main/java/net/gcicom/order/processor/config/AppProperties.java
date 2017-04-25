@@ -23,4 +23,5 @@ public final class AppProperties {
 	public static final String ALL_SPARK_DB_PASSWORD_KEY = "gci.datasource.allspark.password";
 	
 	public static final String ERROR_FILE_LOCATION="gci.service.order.file.error.location";
+	public static final String PROCESSED_FILE_LOCATION ="gci.service.order.file.out.location";
 }

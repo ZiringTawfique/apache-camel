@@ -34,12 +34,19 @@ public class ExcelFileHelper {
 		 XSSFWorkbook  workbook = new XSSFWorkbook();
 		 XSSFSheet  sheet = workbook.createSheet("Billing reference failed validation");
 		
-		 excelHeader.put("1",new Object[] {"Actioncode","ItemType","CustomerName","Account Number","NodeName","OrderNumber","ServiceCode","BillingReference","Description","EventTariffName",
+		 excelHeader.put("1",new Object[] {"ActionCode","ItemType","Customer","Customer	Customer","BillingReference","BillingReference","BillingReference","BillingReference",
+				 "BillingReference","BillingReference","BillingReference","BillingReference","BillingReference","BillingReference","BillingReference","BillingReference",	
+				 "BillingReference","BillingReference","BillingReference","BillingReference","BillingReference","BillingReference","BillingReference","Charge","Charge",
+				 "Charge","Charge","Charge","Charge","Charge","Charge","Charge","Charge","Charge","Charge","Charge","Charge","Charge"				 
+		         });
+		 excelHeader.put("2",new Object[] {"Actioncode","ItemType","CustomerName","Account Number","NodeName","OrderNumber","ServiceCode","BillingReference","Description","EventTariffName",
 		          "GCISalesManager","CustomerServiceStartDate","CustomerServiceEndDate","SupplierContractStartDate","SupplierContractEndDate","CustomerContractStartDate", 
 		          "CustomerContractEndDate","CustomerSiteName","CustomerCustomReference","CustomerCostCentre","CustomerPONumber","InstallationPostCode","SupplierOrderNumber",
 		          "SupplierServiceReference","ProductCode","Description","CustomerReference","OrderNumber","Quantity","ChargeFrequency","UnitCostToGCI","UnitChargeToCustomer",
 		          "TaxTypeFlag","ChargeStartDate","ChargeCeaseDate","ChargeBilledUntilDate","SupplierContractStartDate","SupplierContractEndDate","CustomerContractStartDate",
-		          "CustomerContractEndDate","ChargeID"});
+		          "CustomerContractEndDate","ChargeID","Rejection Reason"});
+		
+
 		 
 		    int rowCount = 0;
 		    String excelFilePath = errorFileLocation+fileName;
@@ -62,7 +69,7 @@ public class ExcelFileHelper {
 	 
 	 private static void writeBook(ChargeImportDto aBook, Row row) {
  		
-		 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YYYY");
+		 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		 LocalDateTime cellValue;
 	        
 	        
@@ -113,9 +120,7 @@ public class ExcelFileHelper {
 		    
 		     cell = row.createCell(11);
 		     if(aBook.getCustomerServiceStartDate() != null)
-		     cell.setCellValue(aBook.getCustomerServiceStartDate().toString());
-		   //   cellValue  = 	 LocalDateTime.parse(aBook.getCustomerServiceStartDate().toString());
-		   //  cell.setCellValue(cellValue.format(formatter)); 
+		   	 cell.setCellValue(aBook.getCustomerServiceStartDate().format(formatter));
 		     
 		     
 		    cell = row.createCell(12);
@@ -124,19 +129,19 @@ public class ExcelFileHelper {
 		    
 		    cell = row.createCell(13);
 		    if(aBook.getSupplierContractStartDate() != null)
-		    cell.setCellValue(aBook.getSupplierContractStartDate().toString());
+		    	cell.setCellValue(aBook.getSupplierContractStartDate().format(formatter));
 
 		    cell = row.createCell(14);
 		    if(aBook.getSupplierContractEndDate() != null)
-		    cell.setCellValue(aBook.getSupplierContractEndDate().toString());
+		    	cell.setCellValue(aBook.getSupplierContractEndDate().format(formatter));
 		    
 		    cell = row.createCell(15);
 		    if(aBook.getCustomerContractStartDate() != null)
-		    cell.setCellValue(aBook.getCustomerContractStartDate().toString());
+		    cell.setCellValue(aBook.getCustomerContractStartDate().format(formatter));
 		    
 		    cell = row.createCell(16);
 		    if(aBook.getCustomerContractEndDate() != null)
-		    cell.setCellValue(aBook.getCustomerContractEndDate().toString());
+		    cell.setCellValue(aBook.getCustomerContractEndDate().format(formatter));
 		    
 		    cell = row.createCell(17);
 		    if(aBook.getCustomerSiteName() != null)
@@ -213,43 +218,43 @@ public class ExcelFileHelper {
 		    
 		    cell = row.createCell(33);
 		    if(aBook.getChargeStartDate() != null)
-		    cell.setCellValue(aBook.getChargeStartDate().toString());
+		    cell.setCellValue(aBook.getChargeStartDate().format(formatter));
 		    
 		    
 		    cell = row.createCell(34);
 		    if(aBook.getChargeCeaseDate() != null)
-		    cell.setCellValue(aBook.getChargeCeaseDate().toString());
+		    cell.setCellValue(aBook.getChargeCeaseDate().format(formatter));
 		    
 		    cell = row.createCell(35);
 		    if(aBook.getChargeBilledUntilDate() != null)
-		    cell.setCellValue(aBook.getChargeBilledUntilDate().toString());
+		    cell.setCellValue(aBook.getChargeBilledUntilDate().format(formatter));
 		    
 		    
 		    
 		    cell = row.createCell(36);
 		    if(aBook.getSupplierContractStartDate() != null)
-		    cell.setCellValue(aBook.getSupplierContractStartDate().toString());
+		    cell.setCellValue(aBook.getSupplierContractStartDate().format(formatter));
 		    
 		    cell = row.createCell(37);
 		    if(aBook.getSupplierContractEndDate() != null)
-		    cell.setCellValue(aBook.getSupplierContractEndDate().toString());
+		    cell.setCellValue(aBook.getSupplierContractEndDate().format(formatter));
 		    
 		          		    
 		    cell = row.createCell(38);
 		    if(aBook.getCustomerContractStartDate() != null)
-		    cell.setCellValue(aBook.getCustomerContractStartDate().toString());
+		    cell.setCellValue(aBook.getCustomerContractStartDate().format(formatter));
 		    
-		    cell = row.createCell(39);
-		    if(aBook.getCustomerContractEndDate() != null)
-		    cell.setCellValue(aBook.getCustomerContractEndDate().toString());
+		  //  cell = row.createCell(39);
+		   // if(aBook.getCustomerContractEndDate() != null)
+		  //  cell.setCellValue(aBook.getCustomerContractEndDate().format(formatter));
 		   
+		  //  cell = row.createCell(40);
+		   // if(aBook.getChargeID()!= null)
+		  //  cell.setCellValue(aBook.getChargeID().toString());
+		    
+		    
+		    
 		    cell = row.createCell(40);
-		    if(aBook.getChargeID()!= null)
-		    cell.setCellValue(aBook.getChargeID().toString());
-		    
-		    
-		    
-		    cell = row.createCell(13);
 		       if(aBook.getExceptionMessage() != null)
 		       cell.setCellValue(aBook.getExceptionMessage().toString());
 		}

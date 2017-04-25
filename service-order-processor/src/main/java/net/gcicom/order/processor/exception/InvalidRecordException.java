@@ -1,5 +1,4 @@
-package net.gcicom.order.processor.service;
-
+package net.gcicom.order.processor.exception;
 import static net.gcicom.order.processor.common.AppConstants.TOTAL_RECORD_PROCESSED_COUNT;
 
 import org.apache.camel.Exchange;

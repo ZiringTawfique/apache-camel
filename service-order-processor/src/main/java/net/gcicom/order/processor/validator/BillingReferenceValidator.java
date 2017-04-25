@@ -9,8 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import net.gcicom.domain.allspark.BillingReference;
 import net.gcicom.order.processor.entity.input.ChargeImportDto;
-import net.gcicom.order.processor.service.InvalidRecordException;
-import net.gcicom.order.processor.service.RecordAlreadyExistsException;
+import net.gcicom.order.processor.exception.InvalidRecordException;
+import net.gcicom.order.processor.exception.RecordAlreadyExistsException;
 
 public class BillingReferenceValidator {
 

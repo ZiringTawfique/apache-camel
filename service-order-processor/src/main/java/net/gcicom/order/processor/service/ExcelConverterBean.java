@@ -4,41 +4,27 @@ import static net.gcicom.order.processor.common.AppConstants.TOTAL_RECORD_COUNT;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.ResolverStyle;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-import javax.xml.datatype.DatatypeFactory;
 import org.apache.camel.Body;
 import org.apache.camel.Exchange;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.sl.draw.binding.ObjectFactory;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.stereotype.Component;
-
-import net.gcicom.common.util.DateTimeUtil;
-import net.gcicom.order.processor.entity.input.ChargeImportDto;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.stereotype.Component;
+
+import net.gcicom.common.util.DateTimeUtil;
+import net.gcicom.order.processor.entity.input.ChargeImportDto;
 /**
  * Uses POI to convert an Excel spreadsheet to the desired JAXB XML format.
  */
@@ -229,8 +215,7 @@ public class ExcelConverterBean {
     	                break;
     	            case 29:
     	            	chargeImportDto.setChargeFrequency((String) getCellValue(nextCell));    	            		
-    	                break;
-    	                
+    	                break;    	                
     	                
     	                   	                
     	            case 30:
@@ -243,10 +228,12 @@ public class ExcelConverterBean {
     	            	chargeImportDto.setTaxTypeFlag((String) getCellValue(nextCell));    	            		
     	                break;
     	            case 33:
-    	            	chargeImportDto.setChargeStartDate((String) getCellValue(nextCell));    	            		
+    	            	LocalDateTime chargeStartDateLocalDateTime=DateTimeUtil.convertStringToLocalDateTime(formatter.formatCellValue(nextCell),dateFormatter);    	            	
+    	            	chargeImportDto.setChargeStartDate(chargeStartDateLocalDateTime);    	            		
     	                break;
     	            case 34:
-    	            	chargeImportDto.setChargeCeaseDate((String) getCellValue(nextCell));    	            		
+    	            	LocalDateTime chargeCeaseDateLocalDateTime=DateTimeUtil.convertStringToLocalDateTime(formatter.formatCellValue(nextCell),dateFormatter);
+    	            	chargeImportDto.setChargeCeaseDate(chargeCeaseDateLocalDateTime);    	            		
     	                break;
     	                
     	                

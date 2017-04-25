@@ -20,7 +20,7 @@ import net.gcicom.order.processor.entity.input.ChargeImportDto;
 import net.gcicom.order.processor.entity.output.ChargeImportDtoToBillingReference;
 //import net.gcicom.order.processor.entity.output.ChargeImportDtoToGciChargeImportMapper;
 
-import net.gcicom.order.processor.service.AlreadyProcessedFileException;
+import net.gcicom.order.processor.exception.AlreadyProcessedFileException;
 //import net.gcicom.order.processor.service.Auditor;
 import net.gcicom.order.processor.service.BillingReferenceAggregator;
 import net.gcicom.order.processor.service.ServiceOrderProcessorErrorHandler;
@@ -28,12 +28,13 @@ import net.gcicom.order.processor.service.ServiceOrderProcessorErrorHandler;
 import net.gcicom.order.processor.service.CustomerProductChargeAggregator;
 import net.gcicom.order.processor.service.ExcelConverterBean;
 import net.gcicom.order.processor.service.GCIChargeImportService;
-import net.gcicom.order.processor.service.RecordAlreadyExistsException;
+import net.gcicom.order.processor.exception.InvalidRecordException;
+import net.gcicom.order.processor.exception.RecordAlreadyExistsException;
 
 
 
 /**
- * A Simple Camel route builder to process AbzorbO2 CDR feed
+ * A Simple Camel route builder to process Service Order  feed
  *
  */
 @Component
@@ -55,23 +56,23 @@ public class ServiceOrderProcessor extends SpringRouteBuilder {
 	@Value("${gci.service.order.file.out.location}")
 	private String outFileLocation;
 	
-	@Value("${gci.abzorb2cdr.parallel.processing}")
+	@Value("${gci.service.order.parallel.processing}")
 	private boolean isParallelProcessing = true;
 	
-	@Value("${gci.abzorb2cdr.batch.size}")
+	@Value("${gci.service.order.batch.size}")
 	private Integer batchSize = 1000;
 	
 	@Value("${gci.route.tracing}")
 	private boolean tracing = true;
 
-	@Value("${gci.abzorb2cdr.initial.delay}")
+	@Value("${gci.service.order.initial.delay}")
 	private Integer initDelay = 1000;
 	
-	@Value("${gci.abzorb2cdr.next.run.delay}")
+	@Value("${gci.service.order.next.run.delay}")
 	private Integer nextRunDelay = 1000;
 	
 	
-	@Value("${gci.abzorb2cdr.file.name.pattern}")
+	@Value("${gci.service.order.file.name.pattern}")
 	private String filePattern;
 	
 	@Value("${gci.isNoop}")
@@ -140,8 +141,8 @@ public class ServiceOrderProcessor extends SpringRouteBuilder {
         	.bean(excelConverterBean,"processExcelData")
         	.split(body())
         	
-           //   	.parallelProcessing()
-        	//		.streaming()
+            // .parallelProcessing()
+        	//	.streaming()
         	.to("direct:save-to-database")
            //	.bean(auditor, "endEvent")
         	//.bean(billingReferenceAggregator, "")
@@ -149,9 +150,9 @@ public class ServiceOrderProcessor extends SpringRouteBuilder {
         
         //get the data and save in db
         from("direct:save-to-database")
-	        .onException(RecordAlreadyExistsException.class).useOriginalMessage()
+	        .onException(InvalidRecordException.class).useOriginalMessage()
 		    	.handled(true)
-		    	.bean(ServiceOrderProcessorErrorHandler.class, "handleRecordAlreadyExists")
+		    	.bean(ServiceOrderProcessorErrorHandler.class, "invalidRecord")
 		    	.log("Exception Thrown")
 	//	    	.bean(auditor, "handleEventInvalidCdr")
 		    .end()
@@ -169,9 +170,9 @@ public class ServiceOrderProcessor extends SpringRouteBuilder {
     			//.bindy(BindyType.Csv, ChargeImportDto.class)    		
     		
     			.bean(billingReferenceMapper, "convertToBillingReference")
-    		  //	.bean(mapper, "convertToGCICDR(*, ${header."+ CDR_EVENT_FILE_ID +"}, ${header."+ FILE_NAME_CONSUMED +"})" )
+    		  // .bean(mapper, "convertToGCICDR(*, ${header."+ CDR_EVENT_FILE_ID +"}, ${header."+ FILE_NAME_CONSUMED +"})" )
     	      // .aggregate(constant(true), customerProductChargeAggregator)
-               //.completionSize(batchSize)
+              // .completionSize(batchSize)
              //  .completionTimeout(aggregationTimeOut)//just in case cvs rows are less than batch size
     	     //  .bean(service, "addBillingReference")
     			.log(LoggingLevel.DEBUG, logger, "END : Add CVS rows to table.");

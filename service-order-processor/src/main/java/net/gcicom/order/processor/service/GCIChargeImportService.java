@@ -1,13 +1,14 @@
 package net.gcicom.order.processor.service;
 
+import static net.gcicom.order.processor.common.AppConstants.TOTAL_RECORD_COUNT;
+import static org.apache.camel.Exchange.FILE_NAME_CONSUMED;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Scanner;
 
-import org.apache.camel.Body;
 import org.apache.camel.Exchange;
-import org.apache.camel.Header;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import net.gcicom.domain.allspark.BillingReference;
-import net.gcicom.domain.allspark.CustomerProductCharge;
+import net.gcicom.order.processor.exception.AlreadyProcessedFileException;
 //import net.gcicom.order.processor.entity.output.GCIChargeImport;
 //import net.gcicom.order.processor.entity.output.MD5;
 import net.gcicom.order.processor.repository.BillingReferenceRepository;
 import net.gcicom.order.processor.repository.CustomerProductChargeRepository;
-import static org.apache.camel.Exchange.FILE_NAME_CONSUMED;
-import static net.gcicom.order.processor.common.AppConstants.TOTAL_RECORD_COUNT;
 //import net.gcicom.order.processor.repository.GCIChargeImportRepository;
 //import net.gcicom.order.processor.repository.Md5Repository;
 /**
@@ -36,8 +35,8 @@ public class GCIChargeImportService {
 
 	Logger logger = LoggerFactory.getLogger(GCIChargeImportService.class);
 	
-//	@Autowired
-//	GCIChargeImportRepository gciChargeImportRepo;
+  //	@Autowired
+  //	GCIChargeImportRepository gciChargeImportRepo;
 	
 	@Autowired
 	BillingReferenceRepository billingReferenceRepo;
@@ -46,11 +45,12 @@ public class GCIChargeImportService {
 	@Autowired
 	CustomerProductChargeRepository customerProductChargeRepo;
 	
-//	@Autowired
-//  Md5Repository md5Repo;
+   // commented the Auditor and MD5checksum checking	
+   //@Autowired
+  //  Md5Repository md5Repo;
 	
-//@Autowired
-//	Auditor auditor;
+  //@Autowired
+  //  Auditor auditor;
 	
 	/**
 	 * @param cdrs

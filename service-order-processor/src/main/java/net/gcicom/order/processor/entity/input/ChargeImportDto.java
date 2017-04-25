@@ -3,13 +3,10 @@
  */
 package net.gcicom.order.processor.entity.input;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
-import org.apache.poi.ss.usermodel.Cell;
 
 /**
  * @author Sathish Natarajan
@@ -121,10 +118,10 @@ public class ChargeImportDto {
 	String taxTypeFlag;
 	
 	@DataField(pos=34, required=false)
-	String chargeStartDate;
+	LocalDateTime chargeStartDate;
 	
 	@DataField(pos=35, required=false)
-	String chargeCeaseDate;
+	LocalDateTime chargeCeaseDate;
 	
 	@DataField(pos=36, required=false)
 	LocalDateTime chargeBilledUntilDate;
@@ -427,19 +424,19 @@ public class ChargeImportDto {
 		this.taxTypeFlag = taxTypeFlag;
 	}
 
-	public String getChargeStartDate() {
+	public LocalDateTime getChargeStartDate() {
 		return chargeStartDate;
 	}
 
-	public void setChargeStartDate(String chargeStartDate) {
+	public void setChargeStartDate(LocalDateTime chargeStartDate) {
 		this.chargeStartDate = chargeStartDate;
 	}
 
-	public String getChargeCeaseDate() {
+	public LocalDateTime getChargeCeaseDate() {
 		return chargeCeaseDate;
 	}
 
-	public void setChargeCeaseDate(String chargeCeaseDate) {
+	public void setChargeCeaseDate(LocalDateTime chargeCeaseDate) {
 		this.chargeCeaseDate = chargeCeaseDate;
 	}
 

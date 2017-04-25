@@ -23,7 +23,7 @@ Application server should be started with -Dspring.profiles.active=development j
 	mvn clean package
 
 
-# New Supplier On-boarding
+# Service Order Pocessor 
 
 
 ### Prerequisites
@@ -35,10 +35,10 @@ Access to CDRFormatSpecification spreadsheet,  Supplier Specification at file://
 
 Add below supplier specific properties in application.properties to support schedule timer run.
 
-	gci.{user_definedSupplierIdentifier}.file.in.location=
-	gci.{user_definedSupplierIdentifier}.file.name.pattern=
-	gci.{user_definedSupplierIdentifier}.timer=
-	gci.{user_definedSupplierIdentifier}.autostart=true 
+	gci.{user_defined}.file.in.location=
+	gci.{user_defined}.file.name.pattern=
+	gci.{user_defined}.timer=
+	gci.{user_defined}.autostart=true 
 
 autostart must be true unless you don't want to run it. For example on a developer machine, you may want to avoid running lots of polling jobs automatically
 
