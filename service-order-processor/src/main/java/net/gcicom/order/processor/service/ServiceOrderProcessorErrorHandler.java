@@ -105,8 +105,10 @@ public class ServiceOrderProcessorErrorHandler {
 		 try {
 		
 			String  errorFileLocation= env.getProperty(ERROR_FILE_LOCATION);
+			String[] fileNameAsArray = fileName.toString().split("\\.");
+			String actualFileName = fileNameAsArray[0]+"_Error."+fileNameAsArray[1];
 			 
-			ExcelFileHelper.writeExcelFile(chargeImportDtoList,errorFileLocation,fileName.toString());
+			ExcelFileHelper.writeExcelFile(chargeImportDtoList,errorFileLocation,actualFileName.toString());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -3,6 +3,7 @@ package net.gcicom.order.processor.entity.output;
 
 
 import static net.gcicom.order.processor.common.AppConstants.TOTAL_RECORD_PROCESSED_COUNT;
+import static net.gcicom.order.processor.config.AppProperties.ERROR_FILE_LOCATION;
 import static org.apache.camel.Exchange.FILE_NAME_CONSUMED;
 
 import java.text.ParseException;
@@ -176,7 +177,10 @@ public class ChargeImportDtoToBillingReference extends BaseEntity {
 					}
 				}
 			   	 StringBuilder fileName = ex.getIn().getHeader(FILE_NAME_CONSUMED, StringBuilder.class);
-				 fileManagementService.createProcessedFile(chargeImportDtoProcessed,fileName.toString());
+			   	
+				String[] fileNameAsArray = fileName.toString().split("\\.");
+				String actualFileName = fileNameAsArray[0]+"_Processed."+fileNameAsArray[1];
+				 fileManagementService.createProcessedFile(chargeImportDtoProcessed,actualFileName.toString());
 				
 			return cdrs;
 			
